@@ -35,6 +35,16 @@ namespace MasterBot
             subBotHandler.Update(this);
         }
 
+        private void onMessage(object sender, PlayerIOClient.Message m)
+        {
+            subBotHandler.onMessage(this, m);
+        }
+
+        private void onDisconnect(object sender, string reason)
+        {
+            Disconnect(reason);
+        }
+
         public void Login(string game, string email, string password)
         {
             PlayerIO.QuickConnect.SimpleConnect(
@@ -75,16 +85,6 @@ namespace MasterBot
                 subBotHandler.onDisconnect(this, reason);
                 connection.Disconnect();
             }
-        }
-
-        public void onMessage(object sender, PlayerIOClient.Message m)
-        {
-            subBotHandler.onMessage(this, m);
-        }
-
-        public void onDisconnect(object sender, string reason)
-        {
-            Disconnect(reason);
         }
     }
 }
