@@ -83,11 +83,23 @@ namespace MasterBot
             buttonConnect.Enabled = true;
             if(success)
             {
-                buttonConnect.Text = "Connected";
+                buttonConnect.Text = "Disconnect";
             }
             else
             {
                 buttonConnect.Text = "Failed";
+                Timer timer = new Timer();
+                timer.Interval = 1000;
+                timer.Tick += new EventHandler(new Action<object, EventArgs>((object sender, EventArgs e) =>
+                {
+                    buttonConnect.Invoke(new Action(() =>
+                    {
+                        buttonConnect.Text = "Connect";
+                        timer.Stop();
+                    }));
+                }));
+                timer.Start();
+                loggingIn = false;
             }
             connecting = false;
         }

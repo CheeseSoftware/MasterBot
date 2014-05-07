@@ -71,6 +71,7 @@ namespace MasterBot
                 delegate(PlayerIOClient.Connection tempConnection)
                 {
                     connection = tempConnection;
+                    connection.Send("init");
                     mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
                     connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                     connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
