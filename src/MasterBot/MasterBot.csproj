@@ -48,10 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
+    <Compile Include="Room\Block\BlockCoinDoor.cs" />
+    <Compile Include="Room\Block\BlockCoinGate.cs" />
     <Compile Include="Room\Block\BlockMatrix.cs" />
     <Compile Include="Room\Block\NormalBlock.cs" />
     <Compile Include="Room\Block\IBlock.cs" />
     <Compile Include="ICmdSource.cs" />
+    <Compile Include="Room\Block\BlockPortal.cs" />
     <Compile Include="Room\IRoom.cs" />
     <Compile Include="Room\Room.cs" />
     <Compile Include="SubBot\ISubBotHandler.cs" />
