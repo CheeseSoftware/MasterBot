@@ -104,5 +104,10 @@ namespace MasterBot
             connecting = false;
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RtbConsole.WriteLine("%chello! %cHello!", Color.Red, Color.Green);
+        }
+
     }
 }

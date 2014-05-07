@@ -49,6 +49,10 @@
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
     <Compile Include="ICmdSource.cs" />
+    <Compile Include="IRichTextConsole.cs" />
+    <Compile Include="Gui\RickTextConsole.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\ISubBotHandler.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\ISubBot.cs" />
