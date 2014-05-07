@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MasterBot.SubBot;
 using MasterBot.Room.Block;
+using MasterBot.Movement;
 using System.Windows.Forms;
 
 namespace MasterBot.Room
@@ -12,6 +13,7 @@ namespace MasterBot.Room
     public class Room : IRoom, ISubBot
     {
         private BlockMatrix blockMap = null;
+        private Dictionary<int, Player> players = new Dictionary<int, Player>();
 
         public string owner = "";
         public string title = "";
@@ -151,6 +153,11 @@ namespace MasterBot.Room
             //potions end "pe"
         }
 
+        public IBlock getBlock(int layer, int x, int y)
+        {
+            return blockMap.getBlock(layer, x, y);
+        }
+
         public void onConnect(MasterBot masterBot)
         {
 
@@ -168,6 +175,25 @@ namespace MasterBot.Room
                 case "init":
                     {
                         DeserializeInit(m);
+                        break;
+                    }
+                case "add":
+                    {
+                        int id = m.GetInt(0);
+                        if (!players.ContainsKey(id))
+                        {
+                            Player player = new Player(this, id, m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0);
+                            players.Add(id, player);
+                        }
+                        break;
+                    }
+                case "left":
+                    {
+                        int id = m.GetInt(0);
+                        if (!players.ContainsKey(id))
+                        {
+                            players.Remove(id);
+                        }
                         break;
                     }
             }

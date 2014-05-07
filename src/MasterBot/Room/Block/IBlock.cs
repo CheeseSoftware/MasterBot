@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    interface IBlock
+    public interface IBlock
     {
         int Id { get; }
         int LayerId { get; }
