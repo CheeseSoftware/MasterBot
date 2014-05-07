@@ -95,21 +95,42 @@ namespace MasterBot.Room
                             case 361: //spikes
                                 {
                                     int rotation = m.GetInt(i + 2);
+                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockSpikes(rotation));
                                     i++;
                                     break;
                                 }
                             case 77: //piano
+                                {
+                                    int note = m.GetInt(i + 2);
+                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockPiano(note));
+                                    i++;
+                                    break;
+                                }
                             case 83: //drums
                                 {
                                     int note = m.GetInt(i + 2);
+                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockDrums(note));
                                     i++;
                                     break;
                                 }
                             case 1000: //text
-                            case 385: //sign
-                            case 374: //world portal
                                 {
                                     string text = m.GetString(i + 2);
+                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockText(text));
+                                    i++;
+                                    break;
+                                }
+                            case 385: //sign
+                                {
+                                    string text = m.GetString(i + 2);
+                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockSign(text));
+                                    i++;
+                                    break;
+                                }
+                            case 374: //world portal
+                                {
+                                    string destination = m.GetString(i + 2);
+                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockWorldPortal(destination));
                                     i++;
                                     break;
                                 }

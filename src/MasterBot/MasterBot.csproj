@@ -51,6 +51,7 @@
     <Compile Include="Room\Block\BlockCoinDoor.cs" />
     <Compile Include="Room\Block\BlockCoinGate.cs" />
     <Compile Include="Room\Block\BlockMatrix.cs" />
+    <Compile Include="Room\Block\BlockSpikes.cs" />
     <Compile Include="Room\Block\NormalBlock.cs" />
     <Compile Include="Room\Block\IBlock.cs" />
     <Compile Include="ICmdSource.cs" />
