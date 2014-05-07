@@ -12,5 +12,7 @@ namespace MasterBot.SubBot
         void RemoveSubBot(string name);
         ISubBot GetSubBot(string name);
         Dictionary<string, ISubBot> SubBots { get; }
+
+        void onCommand(MasterBot masterBot, string cmd, string[] args, ICmdSource cmdSource);
     }
 }

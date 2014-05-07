@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot
 {
-    public class Player : ICmdSource
+    public interface ICmdSource
     {
     }
 }

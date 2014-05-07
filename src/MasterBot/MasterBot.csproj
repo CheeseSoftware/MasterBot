@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PlayerIOClient">
-      <HintPath>..\PlayerIOClient.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Seist-Skylight-9edd1f2\Skylight\bin\Debug\PlayerIOClient.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
+    <Compile Include="ICmdSource.cs" />
     <Compile Include="SubBot\ISubBotHandler.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\ISubBot.cs" />

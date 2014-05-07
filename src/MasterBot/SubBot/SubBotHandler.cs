@@ -70,11 +70,11 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void onCommand(MasterBot masterBot, string cmd, string[] args, Player player)
+        public void onCommand(MasterBot masterBot, string cmd, string[] args, ICmdSource cmdSource)
         {
             foreach (ISubBot subBot in subBots.Values)
             {
-                subBot.onCommand(masterBot, cmd, args, player);
+                subBot.onCommand(masterBot, cmd, args, cmdSource);
             }
         }
 
