@@ -50,8 +50,13 @@
     <Compile Include="Bot\IBot.cs" />
     <Compile Include="Room\Block\BlockCoinDoor.cs" />
     <Compile Include="Room\Block\BlockCoinGate.cs" />
+    <Compile Include="Room\Block\BlockDrums.cs" />
     <Compile Include="Room\Block\BlockMatrix.cs" />
+    <Compile Include="Room\Block\BlockPiano.cs" />
+    <Compile Include="Room\Block\BlockSign.cs" />
     <Compile Include="Room\Block\BlockSpikes.cs" />
+    <Compile Include="Room\Block\BlockText.cs" />
+    <Compile Include="Room\Block\BlockWorldPortal.cs" />
     <Compile Include="Room\Block\NormalBlock.cs" />
     <Compile Include="Room\Block\IBlock.cs" />
     <Compile Include="ICmdSource.cs" />

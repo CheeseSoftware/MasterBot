@@ -28,7 +28,6 @@ namespace MasterBot.Room
 
         private void DeserializeInit(PlayerIOClient.Message m)
         {
-            MessageBox.Show(m.ToString());
             owner = m.GetString(0);
             title = m.GetString(1);
             plays = m.GetInt(2);
