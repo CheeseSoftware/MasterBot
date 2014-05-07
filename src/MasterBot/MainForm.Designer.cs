@@ -41,12 +41,9 @@
             this.textBoxEmail = new System.Windows.Forms.TextBox();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonLogin = new System.Windows.Forms.Button();
-<<<<<<< HEAD
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.RtbConsole = new Gui.RickTextConsole();
-=======
->>>>>>> 69d8077378e267ab11f4695821f2bb93a5384c61
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageConnectLogin.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
@@ -184,7 +181,6 @@
             this.buttonLogin.UseVisualStyleBackColor = true;
             this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
-<<<<<<< HEAD
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -225,8 +221,6 @@
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
             // 
-=======
->>>>>>> 69d8077378e267ab11f4695821f2bb93a5384c61
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -259,13 +253,10 @@
         private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.TextBox textBoxRoomId;
         private System.Windows.Forms.Label labelRoomId;
-<<<<<<< HEAD
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button1;
         private Gui.RickTextConsole RtbConsole;
-=======
->>>>>>> 69d8077378e267ab11f4695821f2bb93a5384c61
     }
 }
 
