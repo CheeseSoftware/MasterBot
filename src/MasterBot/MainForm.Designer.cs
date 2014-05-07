@@ -41,24 +41,26 @@
             this.textBoxEmail = new System.Windows.Forms.TextBox();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonLogin = new System.Windows.Forms.Button();
+<<<<<<< HEAD
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.RtbConsole = new Gui.RickTextConsole();
+=======
+>>>>>>> 69d8077378e267ab11f4695821f2bb93a5384c61
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageConnectLogin.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
             // 
             this.tabControlMainTabs.Controls.Add(this.tabPageConnectLogin);
             this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMainTabs.Location = new System.Drawing.Point(3, 3);
+            this.tabControlMainTabs.Location = new System.Drawing.Point(0, 0);
             this.tabControlMainTabs.Name = "tabControlMainTabs";
             this.tabControlMainTabs.SelectedIndex = 0;
-            this.tabControlMainTabs.Size = new System.Drawing.Size(338, 236);
+            this.tabControlMainTabs.Size = new System.Drawing.Size(491, 262);
             this.tabControlMainTabs.TabIndex = 0;
             // 
             // tabPageConnectLogin
@@ -69,7 +71,7 @@
             this.tabPageConnectLogin.Location = new System.Drawing.Point(4, 22);
             this.tabPageConnectLogin.Name = "tabPageConnectLogin";
             this.tabPageConnectLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConnectLogin.Size = new System.Drawing.Size(330, 210);
+            this.tabPageConnectLogin.Size = new System.Drawing.Size(483, 236);
             this.tabPageConnectLogin.TabIndex = 0;
             this.tabPageConnectLogin.Text = "ConnectLogin";
             this.tabPageConnectLogin.UseVisualStyleBackColor = true;
@@ -112,6 +114,7 @@
             this.textBoxRoomId.Name = "textBoxRoomId";
             this.textBoxRoomId.Size = new System.Drawing.Size(167, 20);
             this.textBoxRoomId.TabIndex = 1;
+            this.textBoxRoomId.Text = "PWO0ktzRcQbkI";
             // 
             // labelRoomId
             // 
@@ -181,6 +184,7 @@
             this.buttonLogin.UseVisualStyleBackColor = true;
             this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
+<<<<<<< HEAD
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -221,12 +225,14 @@
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
             // 
+=======
+>>>>>>> 69d8077378e267ab11f4695821f2bb93a5384c61
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 262);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(491, 262);
+            this.Controls.Add(this.tabControlMainTabs);
             this.Name = "MainForm";
             this.Text = "MasterBot";
             this.tabControlMainTabs.ResumeLayout(false);
@@ -235,8 +241,6 @@
             this.groupBoxConnect.PerformLayout();
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -255,10 +259,13 @@
         private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.TextBox textBoxRoomId;
         private System.Windows.Forms.Label labelRoomId;
+<<<<<<< HEAD
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button1;
         private Gui.RickTextConsole RtbConsole;
+=======
+>>>>>>> 69d8077378e267ab11f4695821f2bb93a5384c61
     }
 }
 

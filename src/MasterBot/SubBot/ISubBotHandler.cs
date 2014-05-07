@@ -12,11 +12,5 @@ namespace MasterBot.SubBot
         void RemoveSubBot(string name);
         ISubBot GetSubBot(string name);
         Dictionary<string, ISubBot> SubBots { get; }
-
-        /*public void onConnect(MasterBot masterBot);
-        public void onDisconnect(MasterBot masterBot, string reason);
-        public void onMessage(MasterBot masterBot, PlayerIOClient.Message m);
-        public void onCommand(MasterBot masterBot, string cmd, string[] args, ICmdSource cmdSource);
-        public void Update(MasterBot masterBot); Antar vi inte ska ha dessa?*/
     }
 }

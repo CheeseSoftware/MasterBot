@@ -35,6 +35,7 @@
     <Reference Include="PlayerIOClient">
       <HintPath>..\..\..\..\..\..\..\Seist-Skylight-9edd1f2\Skylight\bin\Debug\PlayerIOClient.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,14 +46,35 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
+    <Compile Include="Movement\BlObject.cs" />
+    <Compile Include="Movement\Config.cs" />
+    <Compile Include="Movement\ItemId.cs" />
+    <Compile Include="Movement\Player.cs" />
+    <Compile Include="Movement\SynchronizedObject.cs" />
+    <Compile Include="Movement\SynchronizedSprite.cs" />
+    <Compile Include="Room\Block\BlockCoinDoor.cs" />
+    <Compile Include="Room\Block\BlockCoinGate.cs" />
+    <Compile Include="Room\Block\BlockDrums.cs" />
+    <Compile Include="Room\Block\BlockMatrix.cs" />
+    <Compile Include="Room\Block\BlockPiano.cs" />
+    <Compile Include="Room\Block\BlockSign.cs" />
+    <Compile Include="Room\Block\BlockSpikes.cs" />
+    <Compile Include="Room\Block\BlockText.cs" />
+    <Compile Include="Room\Block\BlockWorldPortal.cs" />
+    <Compile Include="Room\Block\NormalBlock.cs" />
+    <Compile Include="Room\Block\IBlock.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IRichTextConsole.cs" />
     <Compile Include="Gui\RickTextConsole.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Room\Block\BlockPortal.cs" />
+    <Compile Include="Room\IRoom.cs" />
+    <Compile Include="Room\Room.cs" />
     <Compile Include="SubBot\ISubBotHandler.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\ISubBot.cs" />
@@ -63,7 +85,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Bot\MasterBot.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
