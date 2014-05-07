@@ -13,7 +13,7 @@ namespace MasterBot.Room
     public class Room : IRoom, ISubBot
     {
         private BlockMatrix blockMap = null;
-        private Dictionary<int, Player> players = new Dictionary<int, Player>();
+        private Dictionary<int, PhysicsPlayer> players = new Dictionary<int, PhysicsPlayer>();
 
         public string owner = "";
         public string title = "";
@@ -182,7 +182,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (!players.ContainsKey(id))
                         {
-                            Player player = new Player(this, id, m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0);
+                            PhysicsPlayer player = new PhysicsPlayer(this, id, m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0);
                             players.Add(id, player);
                         }
                         break;

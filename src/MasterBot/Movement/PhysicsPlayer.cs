@@ -21,7 +21,7 @@ namespace MasterBot.Movement
     import states.*;
     import ui.*;*/
 
-    public class Player : SynchronizedSprite
+    public class PhysicsPlayer : SynchronizedSprite
     {
         /*protected var Ding:Class;
         protected var Crown:Class;
@@ -126,6 +126,8 @@ namespace MasterBot.Movement
         public static bool HasSolitude = false;
         private Room.Room room;
 
+        public int smiley;
+
         int cx = 0;
         int cy = 0;
         bool isgodmod = false;
@@ -143,10 +145,13 @@ namespace MasterBot.Movement
         double tx = 0;
         double ty = 0;
 
-        public Player(Room.Room room, int ID, string name, int frame, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
+        public PhysicsPlayer(Room.Room room, int ID, string name, int smiley, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
             : base(null, 16)
         {
             this.room = room;
+            this.smiley = smiley;
+            this.isgod = isGod;
+            this.ismod = isMod;
             //this.Ding = Player_Ding;
             //this.Crown = Player_Crown;
             //this.CrownSilver = Player_CrownSilver;
@@ -243,7 +248,7 @@ namespace MasterBot.Movement
             }
             //else
             //Console.WriteLine("NOT returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
-            Player _loc_2 = this;
+            PhysicsPlayer _loc_2 = this;
 
             if (_loc_2.isgod || _loc_2.ismod)
             {
