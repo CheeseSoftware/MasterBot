@@ -9,7 +9,7 @@ using PlayerIOClient;
 
 namespace MasterBot
 {
-    class MasterBot : IBot
+    public class MasterBot : IBot
     {
         private Timer updateTimer = new Timer();
 
@@ -24,7 +24,7 @@ namespace MasterBot
         public MasterBot()
         {
             subBotHandler = new SubBotHandler();
-            Application.Run(mainForm = new MainForm());
+            Application.Run(mainForm = new MainForm(this));
 
             updateTimer.Interval = 50;
             updateTimer.Tick += updateTimer_Tick;
@@ -35,12 +35,12 @@ namespace MasterBot
             subBotHandler.Update(this);
         }
 
-        private void onMessage(object sender, PlayerIOClient.Message m)
+        public void onMessage(object sender, PlayerIOClient.Message m)
         {
             subBotHandler.onMessage(this, m);
         }
 
-        private void onDisconnect(object sender, string reason)
+        public void onDisconnect(object sender, string reason)
         {
             Disconnect(reason);
         }
@@ -54,9 +54,11 @@ namespace MasterBot
                 delegate(Client tempClient)
                 {
                     client = tempClient;
+                    mainForm.Invoke(new Action(() => { mainForm.onLoginFinished(true); }));
                 },
                 delegate(PlayerIOError tempError)
                 {
+                    mainForm.Invoke(new Action(() => { mainForm.onLoginFinished(false); }));
                     MessageBox.Show(tempError.ToString());
                 });
         }
@@ -69,11 +71,13 @@ namespace MasterBot
                 delegate(PlayerIOClient.Connection tempConnection)
                 {
                     connection = tempConnection;
+                    mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
                     connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                     connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
                 },
                 delegate(PlayerIOError tempError)
                 {
+                    mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
                     MessageBox.Show(tempError.ToString());
                 });
         }

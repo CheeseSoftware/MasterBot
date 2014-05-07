@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    interface ISubBotHandler
+    public interface ISubBotHandler
     {
         void AddSubBot(string name, ISubBot subBot);
         void RemoveSubBot(string name);

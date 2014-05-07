@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot
 {
-    class Player
+    public class Player
     {
     }
 }

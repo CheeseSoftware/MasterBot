@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    interface ISubBot
+    public interface ISubBot
     {
         void onConnect(MasterBot masterBot);
         void onDisconnect(MasterBot masterBot, string reason);

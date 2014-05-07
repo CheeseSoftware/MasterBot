@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    class SubBotHandler : ISubBot, ISubBotHandler
+    public class SubBotHandler : ISubBot, ISubBotHandler
     {
         Dictionary<string, ISubBot> subBots = new Dictionary<string, ISubBot>();
 

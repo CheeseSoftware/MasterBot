@@ -28,12 +28,175 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.tabControlMainTabs = new System.Windows.Forms.TabControl();
+            this.tabPageConnectLogin = new System.Windows.Forms.TabPage();
+            this.groupBoxLogin = new System.Windows.Forms.GroupBox();
+            this.labelPassword = new System.Windows.Forms.Label();
+            this.labelEmail = new System.Windows.Forms.Label();
+            this.textBoxEmail = new System.Windows.Forms.TextBox();
+            this.textBoxPassword = new System.Windows.Forms.TextBox();
+            this.buttonLogin = new System.Windows.Forms.Button();
+            this.groupBoxConnect = new System.Windows.Forms.GroupBox();
+            this.labelRoomId = new System.Windows.Forms.Label();
+            this.textBoxRoomId = new System.Windows.Forms.TextBox();
+            this.buttonConnect = new System.Windows.Forms.Button();
+            this.tabControlMainTabs.SuspendLayout();
+            this.tabPageConnectLogin.SuspendLayout();
+            this.groupBoxLogin.SuspendLayout();
+            this.groupBoxConnect.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // tabControlMainTabs
+            // 
+            this.tabControlMainTabs.Controls.Add(this.tabPageConnectLogin);
+            this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlMainTabs.Location = new System.Drawing.Point(0, 0);
+            this.tabControlMainTabs.Name = "tabControlMainTabs";
+            this.tabControlMainTabs.SelectedIndex = 0;
+            this.tabControlMainTabs.Size = new System.Drawing.Size(491, 262);
+            this.tabControlMainTabs.TabIndex = 0;
+            // 
+            // tabPageConnectLogin
+            // 
+            this.tabPageConnectLogin.Controls.Add(this.groupBoxConnect);
+            this.tabPageConnectLogin.Controls.Add(this.groupBoxLogin);
+            this.tabPageConnectLogin.Location = new System.Drawing.Point(4, 22);
+            this.tabPageConnectLogin.Name = "tabPageConnectLogin";
+            this.tabPageConnectLogin.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageConnectLogin.Size = new System.Drawing.Size(483, 236);
+            this.tabPageConnectLogin.TabIndex = 0;
+            this.tabPageConnectLogin.Text = "ConnectLogin";
+            this.tabPageConnectLogin.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxLogin
+            // 
+            this.groupBoxLogin.Controls.Add(this.labelPassword);
+            this.groupBoxLogin.Controls.Add(this.labelEmail);
+            this.groupBoxLogin.Controls.Add(this.textBoxEmail);
+            this.groupBoxLogin.Controls.Add(this.textBoxPassword);
+            this.groupBoxLogin.Controls.Add(this.buttonLogin);
+            this.groupBoxLogin.Location = new System.Drawing.Point(8, 6);
+            this.groupBoxLogin.Name = "groupBoxLogin";
+            this.groupBoxLogin.Size = new System.Drawing.Size(243, 102);
+            this.groupBoxLogin.TabIndex = 4;
+            this.groupBoxLogin.TabStop = false;
+            this.groupBoxLogin.Text = "Login";
+            // 
+            // labelPassword
+            // 
+            this.labelPassword.AutoSize = true;
+            this.labelPassword.Location = new System.Drawing.Point(6, 48);
+            this.labelPassword.Name = "labelPassword";
+            this.labelPassword.Size = new System.Drawing.Size(56, 13);
+            this.labelPassword.TabIndex = 4;
+            this.labelPassword.Text = "Password:";
+            // 
+            // labelEmail
+            // 
+            this.labelEmail.AutoSize = true;
+            this.labelEmail.Location = new System.Drawing.Point(27, 22);
+            this.labelEmail.Name = "labelEmail";
+            this.labelEmail.Size = new System.Drawing.Size(35, 13);
+            this.labelEmail.TabIndex = 3;
+            this.labelEmail.Text = "Email:";
+            // 
+            // textBoxEmail
+            // 
+            this.textBoxEmail.Location = new System.Drawing.Point(70, 19);
+            this.textBoxEmail.Name = "textBoxEmail";
+            this.textBoxEmail.Size = new System.Drawing.Size(167, 20);
+            this.textBoxEmail.TabIndex = 1;
+            this.textBoxEmail.Text = "gustav9797@hotmail.se";
+            // 
+            // textBoxPassword
+            // 
+            this.textBoxPassword.Location = new System.Drawing.Point(70, 45);
+            this.textBoxPassword.Name = "textBoxPassword";
+            this.textBoxPassword.PasswordChar = '*';
+            this.textBoxPassword.Size = new System.Drawing.Size(167, 20);
+            this.textBoxPassword.TabIndex = 2;
+            this.textBoxPassword.Text = "kasekakorna";
+            // 
+            // buttonLogin
+            // 
+            this.buttonLogin.Location = new System.Drawing.Point(162, 73);
+            this.buttonLogin.Name = "buttonLogin";
+            this.buttonLogin.Size = new System.Drawing.Size(75, 23);
+            this.buttonLogin.TabIndex = 0;
+            this.buttonLogin.Text = "Login";
+            this.buttonLogin.UseVisualStyleBackColor = true;
+            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
+            // 
+            // groupBoxConnect
+            // 
+            this.groupBoxConnect.Controls.Add(this.buttonConnect);
+            this.groupBoxConnect.Controls.Add(this.textBoxRoomId);
+            this.groupBoxConnect.Controls.Add(this.labelRoomId);
+            this.groupBoxConnect.Location = new System.Drawing.Point(8, 114);
+            this.groupBoxConnect.Name = "groupBoxConnect";
+            this.groupBoxConnect.Size = new System.Drawing.Size(243, 70);
+            this.groupBoxConnect.TabIndex = 5;
+            this.groupBoxConnect.TabStop = false;
+            this.groupBoxConnect.Text = "Connect";
+            // 
+            // labelRoomId
+            // 
+            this.labelRoomId.AutoSize = true;
+            this.labelRoomId.Location = new System.Drawing.Point(6, 16);
+            this.labelRoomId.Name = "labelRoomId";
+            this.labelRoomId.Size = new System.Drawing.Size(52, 13);
+            this.labelRoomId.TabIndex = 0;
+            this.labelRoomId.Text = "Room ID:";
+            // 
+            // textBoxRoomId
+            // 
+            this.textBoxRoomId.Location = new System.Drawing.Point(70, 13);
+            this.textBoxRoomId.Name = "textBoxRoomId";
+            this.textBoxRoomId.Size = new System.Drawing.Size(167, 20);
+            this.textBoxRoomId.TabIndex = 1;
+            // 
+            // buttonConnect
+            // 
+            this.buttonConnect.Location = new System.Drawing.Point(162, 39);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(75, 23);
+            this.buttonConnect.TabIndex = 2;
+            this.buttonConnect.Text = "Connect";
+            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(491, 262);
+            this.Controls.Add(this.tabControlMainTabs);
+            this.Name = "MainForm";
+            this.Text = "MasterBot";
+            this.tabControlMainTabs.ResumeLayout(false);
+            this.tabPageConnectLogin.ResumeLayout(false);
+            this.groupBoxLogin.ResumeLayout(false);
+            this.groupBoxLogin.PerformLayout();
+            this.groupBoxConnect.ResumeLayout(false);
+            this.groupBoxConnect.PerformLayout();
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.TabControl tabControlMainTabs;
+        private System.Windows.Forms.TabPage tabPageConnectLogin;
+        private System.Windows.Forms.TextBox textBoxEmail;
+        private System.Windows.Forms.Button buttonLogin;
+        private System.Windows.Forms.TextBox textBoxPassword;
+        private System.Windows.Forms.GroupBox groupBoxLogin;
+        private System.Windows.Forms.Label labelPassword;
+        private System.Windows.Forms.Label labelEmail;
+        private System.Windows.Forms.GroupBox groupBoxConnect;
+        private System.Windows.Forms.Button buttonConnect;
+        private System.Windows.Forms.TextBox textBoxRoomId;
+        private System.Windows.Forms.Label labelRoomId;
     }
 }
 
