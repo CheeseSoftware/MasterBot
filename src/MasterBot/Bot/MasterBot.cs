@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MasterBot.SubBot;
+using MasterBot.Room;
 using PlayerIOClient;
 
 namespace MasterBot
@@ -17,6 +18,7 @@ namespace MasterBot
         public SubBotHandler subBotHandler;
         public Client client;
         public Connection connection;
+        public Room.Room room;
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
@@ -24,6 +26,7 @@ namespace MasterBot
         public MasterBot()
         {
             subBotHandler = new SubBotHandler();
+            subBotHandler.AddSubBot("Room", room = new Room.Room());
             Application.Run(mainForm = new MainForm(this));
 
             updateTimer.Interval = 50;
