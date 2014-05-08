@@ -43,12 +43,16 @@
             this.buttonLogin = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.RtbConsole = new Gui.RickTextConsole();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageConnectLogin.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
@@ -185,23 +189,23 @@
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.ForeColor = System.Drawing.Color.White;
-            this.textBox1.Location = new System.Drawing.Point(346, 442);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 0, 0, 0);
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(238, 20);
+            this.textBox1.Size = new System.Drawing.Size(214, 13);
             this.textBox1.TabIndex = 2;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.RtbConsole, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.tabControlMainTabs, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -211,16 +215,40 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(584, 462);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.RtbConsole);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(347, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(234, 436);
+            this.panel1.TabIndex = 4;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Transparent;
+            this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 419);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(230, 13);
+            this.panel2.TabIndex = 4;
+            // 
             // RtbConsole
             // 
             this.RtbConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.RtbConsole.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RtbConsole.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RtbConsole.ForeColor = System.Drawing.Color.White;
-            this.RtbConsole.Location = new System.Drawing.Point(347, 3);
+            this.RtbConsole.Location = new System.Drawing.Point(0, 0);
+            this.RtbConsole.Margin = new System.Windows.Forms.Padding(0, 0, 50, 0);
             this.RtbConsole.Name = "RtbConsole";
-            this.RtbConsole.Size = new System.Drawing.Size(234, 436);
+            this.RtbConsole.Size = new System.Drawing.Size(230, 432);
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
+            this.RtbConsole.TextChanged += new System.EventHandler(this.RtbConsole_TextChanged);
             // 
             // MainForm
             // 
@@ -237,7 +265,9 @@
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -260,6 +290,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button button1;
         private Gui.RickTextConsole RtbConsole;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
     }
 }
 
