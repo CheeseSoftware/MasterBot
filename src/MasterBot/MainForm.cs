@@ -95,6 +95,7 @@ namespace MasterBot
                     buttonConnect.Invoke(new Action(() =>
                     {
                         buttonConnect.Text = "Connect";
+                        buttonConnect.Enabled = true;
                         timer.Stop();
                     }));
                 }));

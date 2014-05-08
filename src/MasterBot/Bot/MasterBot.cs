@@ -88,6 +88,8 @@ namespace MasterBot
                         MessageBox.Show(tempError.ToString());
                     });
             }
+            else
+                mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
         }
 
         public void Disconnect(string reason)
