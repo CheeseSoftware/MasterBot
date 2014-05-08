@@ -66,10 +66,10 @@ namespace MasterBot
             }
             Timer timer = new Timer();
             timer.Interval = 1000;
-            timer.Tick += new EventHandler(new Action<object, EventArgs>((object sender, EventArgs e) => 
+            timer.Tick += new EventHandler(new Action<object, EventArgs>((object sender, EventArgs e) =>
             {
-                buttonLogin.Invoke(new Action(() => 
-                { 
+                buttonLogin.Invoke(new Action(() =>
+                {
                     buttonLogin.Text = "Login";
                     timer.Stop();
                 }));
@@ -81,7 +81,7 @@ namespace MasterBot
         public void onConnectFinished(bool success)
         {
             buttonConnect.Enabled = true;
-            if(success)
+            if (success)
             {
                 buttonConnect.Text = "Disconnect";
             }
@@ -110,24 +110,13 @@ namespace MasterBot
             RtbConsole.WriteLine("%chello! %cHello!", Color.Red, Color.Green);
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        private void RtbConsoleInput_KeyDown(object sender, KeyEventArgs e)
         {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void RtbConsole_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged_1(object sender, EventArgs e)
-        {
-
+            if (e.KeyCode == Keys.Enter)
+            {
+                RtbConsole.Text += RtbConsoleInput.Text + Environment.NewLine;
+                RtbConsoleInput.Clear();
+            }
         }
 
     }
