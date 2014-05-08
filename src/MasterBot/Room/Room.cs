@@ -51,32 +51,12 @@ namespace MasterBot.Room
             }
         }
 
-        private void DeserializeInit(PlayerIOClient.Message m)
+        private uint LoadWorld(PlayerIOClient.Message m, int ws, int width, int height)
         {
-            owner = m.GetString(0);
-            title = m.GetString(1);
-            plays = m.GetInt(2);
-            woots = m.GetInt(3);
-            totalWoots = m.GetInt(4);
-            worldKey = m.GetString(5);
-
-            //irrelevant information
-            /*int myId = m.GetInt(6);
-            int myX = m.GetInt(7);
-            int myY = m.GetInt(8);
-            string myName = m.GetString(9);
-            bool IHaveCode = m.GetBoolean(10);*/
-
-            isOwner = m.GetBoolean(11);
-            width = m.GetInt(12);
-            height = m.GetInt(13);
-            isTutorialRoom = m.GetBoolean(14);
-            gravity = m.GetFloat(15);
-            potionsAllowed = m.GetBoolean(16);
-
             blockMap = new BlockMatrix(width, height);
             //world start at 17 "ws"
-            for (uint i = 18; !(m[i] is string); i++)
+            uint i = 18;
+            for (; !(m[i + 2] is string); i++)
             {
                 if (m[i] is byte[])
                 {
@@ -169,7 +149,34 @@ namespace MasterBot.Room
                     i += 3;
                 }
             }
+            return i + 2;
             //world end "we"
+        }
+
+        private void DeserializeInit(PlayerIOClient.Message m)
+        {
+            owner = m.GetString(0);
+            title = m.GetString(1);
+            plays = m.GetInt(2);
+            woots = m.GetInt(3);
+            totalWoots = m.GetInt(4);
+            worldKey = m.GetString(5);
+
+            //irrelevant information
+            /*int myId = m.GetInt(6);
+            int myX = m.GetInt(7);
+            int myY = m.GetInt(8);
+            string myName = m.GetString(9);
+            bool IHaveCode = m.GetBoolean(10);*/
+
+            isOwner = m.GetBoolean(11);
+            width = m.GetInt(12);
+            height = m.GetInt(13);
+            isTutorialRoom = m.GetBoolean(14);
+            gravity = m.GetFloat(15);
+            potionsAllowed = m.GetBoolean(16);
+
+            uint we = LoadWorld(m, 17, width, height);
 
             //potions start "ps"
             //not implemented
@@ -199,6 +206,11 @@ namespace MasterBot.Room
                     {
                         DeserializeInit(m);
                         masterBot.connection.Send("init2");
+                        break;
+                    }
+                case "reset":
+                    {
+                        MessageBox.Show(m.ToString());
                         break;
                     }
                 case "add":
@@ -288,6 +300,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                             players[id].ismod = m.GetBoolean(1);
+                        
                         break;
                     }
                 case "lostaccess":
@@ -316,7 +329,7 @@ namespace MasterBot.Room
                     break;
                 case "pt":
                     break;
-                case "lb":
+                case "lb": 
                     break;
                 case "br":
                     break;
@@ -347,8 +360,6 @@ namespace MasterBot.Room
                 case "clear":
                     break;
                 case "tele":
-                    break;
-                case "reset":
                     break;
                 case "saved":
                     break;

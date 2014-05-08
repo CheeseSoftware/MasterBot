@@ -69,22 +69,25 @@ namespace MasterBot
 
         public void Connect(string roomId)
         {
-            client.Multiplayer.JoinRoom(
-                roomId, 
-                null,
-                delegate(PlayerIOClient.Connection tempConnection)
-                {
-                    connection = tempConnection;
-                    connection.Send("init");
-                    mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
-                    connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
-                    connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
-                },
-                delegate(PlayerIOError tempError)
-                {
-                    mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
-                    MessageBox.Show(tempError.ToString());
-                });
+            if (LoggedIn)
+            {
+                client.Multiplayer.JoinRoom(
+                    roomId,
+                    null,
+                    delegate(PlayerIOClient.Connection tempConnection)
+                    {
+                        connection = tempConnection;
+                        connection.Send("init");
+                        mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
+                        connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
+                        connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
+                    },
+                    delegate(PlayerIOError tempError)
+                    {
+                        mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
+                        MessageBox.Show(tempError.ToString());
+                    });
+            }
         }
 
         public void Disconnect(string reason)
