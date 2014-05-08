@@ -48,16 +48,17 @@
             this.tabPageConnectLogin.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
             // 
             this.tabControlMainTabs.Controls.Add(this.tabPageConnectLogin);
             this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMainTabs.Location = new System.Drawing.Point(0, 0);
+            this.tabControlMainTabs.Location = new System.Drawing.Point(3, 3);
             this.tabControlMainTabs.Name = "tabControlMainTabs";
             this.tabControlMainTabs.SelectedIndex = 0;
-            this.tabControlMainTabs.Size = new System.Drawing.Size(491, 262);
+            this.tabControlMainTabs.Size = new System.Drawing.Size(338, 436);
             this.tabControlMainTabs.TabIndex = 0;
             // 
             // tabPageConnectLogin
@@ -68,7 +69,7 @@
             this.tabPageConnectLogin.Location = new System.Drawing.Point(4, 22);
             this.tabPageConnectLogin.Name = "tabPageConnectLogin";
             this.tabPageConnectLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConnectLogin.Size = new System.Drawing.Size(483, 236);
+            this.tabPageConnectLogin.Size = new System.Drawing.Size(330, 410);
             this.tabPageConnectLogin.TabIndex = 0;
             this.tabPageConnectLogin.Text = "ConnectLogin";
             this.tabPageConnectLogin.UseVisualStyleBackColor = true;
@@ -187,7 +188,7 @@
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.ForeColor = System.Drawing.Color.White;
-            this.textBox1.Location = new System.Drawing.Point(346, 242);
+            this.textBox1.Location = new System.Drawing.Point(346, 442);
             this.textBox1.Margin = new System.Windows.Forms.Padding(2, 0, 0, 0);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(238, 20);
@@ -198,16 +199,16 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel1.Controls.Add(this.tabControlMainTabs, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.RtbConsole, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tabControlMainTabs, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(584, 262);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(584, 462);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // RtbConsole
@@ -217,7 +218,7 @@
             this.RtbConsole.ForeColor = System.Drawing.Color.White;
             this.RtbConsole.Location = new System.Drawing.Point(347, 3);
             this.RtbConsole.Name = "RtbConsole";
-            this.RtbConsole.Size = new System.Drawing.Size(234, 236);
+            this.RtbConsole.Size = new System.Drawing.Size(234, 436);
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
             // 
@@ -225,8 +226,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 262);
-            this.Controls.Add(this.tabControlMainTabs);
+            this.ClientSize = new System.Drawing.Size(584, 462);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainForm";
             this.Text = "MasterBot";
             this.tabControlMainTabs.ResumeLayout(false);
@@ -235,6 +236,8 @@
             this.groupBoxConnect.PerformLayout();
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
