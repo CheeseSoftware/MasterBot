@@ -51,11 +51,11 @@ namespace MasterBot.Room
             }
         }
 
-        private uint LoadWorld(PlayerIOClient.Message m, int ws, int width, int height)
+        private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
             blockMap = new BlockMatrix(width, height);
             //world start at 17 "ws"
-            uint i = 18;
+            uint i = ws;
             for (; !(m[i + 2] is string); i++)
             {
                 if (m[i] is byte[])
@@ -210,7 +210,7 @@ namespace MasterBot.Room
                     }
                 case "reset":
                     {
-                        MessageBox.Show(m.ToString());
+                        LoadWorld(m, 0, width, height);
                         break;
                     }
                 case "add":
