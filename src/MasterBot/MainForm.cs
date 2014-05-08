@@ -15,11 +15,11 @@ namespace MasterBot
         private bool loggingIn = false;
         private bool connecting = false;
 
-        public MasterBot masterBot;
+        public IBot bot;
 
-        public MainForm(MasterBot masterBot)
+        public MainForm(IBot bot)
         {
-            this.masterBot = masterBot;
+            this.bot = bot;
             InitializeComponent();
         }
 
@@ -28,7 +28,7 @@ namespace MasterBot
             if (!loggingIn)
             {
                 loggingIn = true;
-                masterBot.Login("everybody-edits-su9rn58o40itdbnw69plyw", textBoxEmail.Text, textBoxPassword.Text);
+                bot.Login("everybody-edits-su9rn58o40itdbnw69plyw", textBoxEmail.Text, textBoxPassword.Text);
                 buttonLogin.Enabled = false;
                 buttonLogin.Text = "Logging in..";
             }
@@ -38,16 +38,18 @@ namespace MasterBot
         {
             if (!connecting)
             {
-                if (!masterBot.Connected)
+                if (!bot.Connected)
                 {
-                    connecting = true;
-                    masterBot.Connect(textBoxRoomId.Text);
-                    buttonConnect.Enabled = false;
-                    buttonConnect.Text = "Connecting..";
+                    if (bot.Connect(textBoxRoomId.Text))
+                    {
+                        connecting = true;
+                        buttonConnect.Enabled = false;
+                        buttonConnect.Text = "Connecting..";
+                    }
                 }
                 else
                 {
-                    masterBot.Disconnect("Exited");
+                    bot.Disconnect("Exited");
                     buttonConnect.Text = "Connect";
                 }
             }
@@ -114,9 +116,15 @@ namespace MasterBot
         {
             if (e.KeyCode == Keys.Enter)
             {
-                RtbConsole.Text += RtbConsoleInput.Text + Environment.NewLine;
+                RtbConsole.WriteLine(">" + RtbConsoleInput.Text);
+                //bot.SubBotHandler.onCommand(bot, )
                 RtbConsoleInput.Clear();
             }
+        }
+
+        private void RtbConsole_TextChanged(object sender, EventArgs e)
+        {
+             
         }
 
     }

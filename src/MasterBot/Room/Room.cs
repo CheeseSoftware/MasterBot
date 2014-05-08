@@ -12,30 +12,31 @@ namespace MasterBot.Room
 {
     public class Room : IRoom, ISubBot
     {
-        private MasterBot masterBot;
-        private BlockMatrix blockMap = null;
+        private IBot bot;
+        private BlockMap blockMap = null;
         private Dictionary<int, Player> players = new Dictionary<int, Player>();
         private Timer playerTickTimer = new Timer();
 
-        public string owner = "";
-        public string title = "";
-        public int plays = 0;
-        public int woots = 0;
-        public int totalWoots = 0;
-        public string worldKey = "";
-        public bool isOwner = false;
-        public int width = 0;
-        public int height = 0;
-        public bool isTutorialRoom = false;
-        public float gravity = 0.0F;
-        public bool potionsAllowed = false;
+        private string owner = "";
+        private string title = "";
+        private int plays = 0;
+        private int woots = 0;
+        private int totalWoots = 0;
+        private string worldKey = "";
+        private bool isOwner = false;
+        private int width = 0;
+        private int height = 0;
+        private bool isTutorialRoom = false;
+        private float gravity = 0.0F;
+        private bool potionsAllowed = false;
+        private bool hasAccess = false;
 
-        public bool hasAccess = false;
-        public bool HasCode { get { return isOwner || hasAccess; } }
+        private HashSet<BlockWithPos> blocksSent = new HashSet<BlockWithPos>();
+        private Queue<BlockWithPos> blocksToSend = new Queue<BlockWithPos>();
 
-        public Room(MasterBot masterBot)
+        public Room(IBot bot)
         {
-            this.masterBot = masterBot;
+            this.bot = bot;
             playerTickTimer.Tick += UpdatePhysics;
             playerTickTimer.Interval = 10;
         }
@@ -58,6 +59,7 @@ namespace MasterBot.Room
             int y;
             int blockId;
             int playerId;
+            IBlock result = null;
 
             if (m.Type == "b")
             {
@@ -67,7 +69,7 @@ namespace MasterBot.Room
                 blockId = m.GetInt(3);
                 if (m.Count >= 5)
                     playerId = m.GetInt(4);
-                blockMap.setBlock(layer, x, y, new NormalBlock(blockId, layer));
+                result = new NormalBlock(blockId, layer);
             }
             else
             {
@@ -83,18 +85,18 @@ namespace MasterBot.Room
                         {
                             int coins = m.GetInt(3);
                             if (blockId == 43)
-                                blockMap.setBlock(layer, x, y, new BlockCoinDoor(coins));
+                                result = new BlockCoinDoor(coins);
                             else if (blockId == 165)
-                                blockMap.setBlock(layer, x, y, new BlockCoinGate(coins));
+                                result = new BlockCoinGate(coins);
                             break;
                         }
                     case "bs":
                         {
                             int note = m.GetInt(3);
                             if (blockId == 77)
-                                blockMap.setBlock(layer, x, y, new BlockPiano(note));
+                                result = new BlockPiano(note);
                             else if (blockId == 83)
-                                blockMap.setBlock(layer, x, y, new BlockDrums(note));
+                                result = new BlockDrums(note);
                             break;
                         }
                     case "pt":
@@ -103,40 +105,49 @@ namespace MasterBot.Room
                             int portalId = m.GetInt(4);
                             int targetId = m.GetInt(5);
                             //playerId = m.GetInt(6);
-                            blockMap.setBlock(layer, x, y, new BlockPortal(rotation, portalId, targetId));
+                            result = new BlockPortal(rotation, portalId, targetId);
                             break;
                         }
                     case "lb":
                         {
                             string text = m.GetString(3);
-                            blockMap.setBlock(layer, x, y, new BlockText(text));
+                            result = new BlockText(text);
                             break;
                         }
                     case "br":
                         {
                             int rotation = m.GetInt(3);
-                            blockMap.setBlock(layer, x, y, new BlockSpikes(rotation));
+                            result = new BlockSpikes(rotation);
                             break;
                         }
                     case "wp":
                         {
                             string destination = m.GetString(3);
-                            blockMap.setBlock(layer, x, y, new BlockWorldPortal(destination));
+                            result = new BlockWorldPortal(destination);
                             break;
                         }
                     case "ts":
                         {
                             string text = m.GetString(3);
-                            blockMap.setBlock(layer, x, y, new BlockSign(text));
+                            result = new BlockSign(text);
                             break;
                         }
+                }
+            }
+            if (result != null)
+            {
+                blockMap.setBlock(x, y, result);
+                BlockWithPos b = new BlockWithPos(x, y, result);
+                if(blocksSent.Contains(b))
+                {
+                    blocksSent.Remove(b);
                 }
             }
         }
 
         private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
-            blockMap = new BlockMatrix(width, height);
+            blockMap = new BlockMap(width, height);
             //world start at 17 "ws"
             uint i = ws;
             for (; !(m[i + 2] is string); i++)
@@ -163,69 +174,69 @@ namespace MasterBot.Room
                                     int rotation = m.GetInt(i + 2);
                                     int id = m.GetInt(i + 3);
                                     int destination = m.GetInt(i + 4);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockPortal(rotation, id, destination));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockPortal(rotation, id, destination));
                                     toAdd = 3;
                                     break;
                                 }
                             case 43: //coin door
                                 {
                                     int coins = m.GetInt(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockCoinDoor(coins));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockCoinDoor(coins));
                                     toAdd = 1;
                                     break;
                                 }
                             case 165: //coin gate
                                 {
                                     int coins = m.GetInt(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockCoinGate(coins));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockCoinGate(coins));
                                     toAdd = 1;
                                     break;
                                 }
                             case 361: //spikes
                                 {
                                     int rotation = m.GetInt(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockSpikes(rotation));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockSpikes(rotation));
                                     toAdd = 1;
                                     break;
                                 }
                             case 77: //piano
                                 {
                                     int note = m.GetInt(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockPiano(note));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockPiano(note));
                                     toAdd = 1;
                                     break;
                                 }
                             case 83: //drums
                                 {
                                     int note = m.GetInt(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockDrums(note));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockDrums(note));
                                     toAdd = 1;
                                     break;
                                 }
                             case 1000: //text
                                 {
                                     string text = m.GetString(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockText(text));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockText(text));
                                     toAdd = 1;
                                     break;
                                 }
                             case 385: //sign
                                 {
                                     string text = m.GetString(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockSign(text));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockSign(text));
                                     toAdd = 1;
                                     break;
                                 }
                             case 374: //world portal
                                 {
                                     string destination = m.GetString(i + 2);
-                                    blockMap.setBlock(layer, xIndex, yIndex, new BlockWorldPortal(destination));
+                                    blockMap.setBlock(xIndex, yIndex, new BlockWorldPortal(destination));
                                     toAdd = 1;
                                     break;
                                 }
                             default:
                                 {
-                                    blockMap.setBlock(layer, xIndex, yIndex, new NormalBlock(blockId, layer));
+                                    blockMap.setBlock(xIndex, yIndex, new NormalBlock(blockId, layer));
                                     break;
                                 }
                         }
@@ -268,29 +279,56 @@ namespace MasterBot.Room
             //potions end "pe"
         }
 
+        private void BlockRepairLoop()
+        {
+            while (blocksToSend.Count > 0)
+            {
+                BlockWithPos block = blocksToSend.Dequeue();
+                block.Block.Send(bot, block.X, block.Y);
+                System.Threading.Thread.Sleep(5);
+            }
+        }
+
+        private void CheckSentBlocks()
+        {
+            foreach(BlockWithPos block in blocksSent)
+            {
+                if (block.Block.TimeSincePlaced > 1000)
+                    blocksToSend.Enqueue(block);
+            }
+        }
+        
         public IBlock getBlock(int layer, int x, int y)
         {
             return blockMap.getBlock(layer, x, y);
         }
 
-        public void onConnect(MasterBot masterBot)
+        public void setBlock(int x, int y, IBlock block)
+        {
+            blocksToSend.Enqueue(new BlockWithPos(x, y, block));
+            //block.Send(bot, x, y);
+            //blocksSent.Add(new BlockWithPos(x, y, block));
+            //blockMap.setBlock(x, y, block);
+        }
+
+        public void onConnect(IBot bot)
         {
             playerTickTimer.Start();
         }
 
-        public void onDisconnect(MasterBot masterBot, string reason)
+        public void onDisconnect(IBot bot, string reason)
         {
             playerTickTimer.Stop();
         }
 
-        public void onMessage(MasterBot masterBot, PlayerIOClient.Message m)
+        public void onMessage(IBot bot, PlayerIOClient.Message m)
         {
             switch (m.Type)
             {
                 case "init":
                     {
                         DeserializeInit(m);
-                        masterBot.connection.Send("init2");
+                        bot.Connection.Send("init2");
                         break;
                     }
                 case "reset":
@@ -438,6 +476,8 @@ namespace MasterBot.Room
                     break;
                 case "clear":
                     blockMap.Clear();
+                    blocksToSend.Clear();
+                    blocksSent.Clear();
                     break;
                 case "tele":
                     {
@@ -447,7 +487,7 @@ namespace MasterBot.Room
                             int playerId = m.GetInt(1);
                             int x = m.GetInt(2);
                             int y = m.GetInt(3);
-                            if(players.ContainsKey(playerId))
+                            if (players.ContainsKey(playerId))
                             {
                                 players[playerId].x = x;
                                 players[playerId].y = y;
@@ -460,15 +500,79 @@ namespace MasterBot.Room
             }
         }
 
-        public void onCommand(MasterBot masterBot, string cmd, string[] args, ICmdSource cmdSource)
+        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
         {
 
         }
 
-        public void Update(MasterBot masterBot)
+        public void Update(IBot bot)
         {
 
         }
 
+        public string Owner
+        {
+            get { return owner; }
+        }
+
+        public string Title
+        {
+            get { return title; }
+        }
+
+        public int Plays
+        {
+            get { return plays; }
+        }
+
+        public int Woots
+        {
+            get { return woots; }
+        }
+
+        public int TotalWoots
+        {
+            get { return totalWoots; }
+        }
+
+        public string WorldKey
+        {
+            get { return worldKey; }
+        }
+
+        public bool IsOwner
+        {
+            get { return isOwner; }
+        }
+
+        public int Width
+        {
+            get { return width; }
+        }
+
+        public int Height
+        {
+            get { return height; }
+        }
+
+        public bool TutorialRoom
+        {
+            get { return TutorialRoom; }
+        }
+
+        public float Gravity
+        {
+            get { return gravity; }
+        }
+
+        public bool PotionsAllowed
+        {
+            get { return potionsAllowed; }
+        }
+
+        public bool HasCode
+        {
+            get { return isOwner || hasAccess; }
+        }
     }
 }

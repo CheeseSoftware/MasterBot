@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tabControlMainTabs = new System.Windows.Forms.TabControl();
-            this.tabPageConnectLogin = new System.Windows.Forms.TabPage();
+            this.tabPageLoginConnect = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBoxConnect = new System.Windows.Forms.GroupBox();
             this.buttonConnect = new System.Windows.Forms.Button();
@@ -45,19 +45,26 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.RtbConsoleInput = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tabPageMinimap = new System.Windows.Forms.TabPage();
+            this.flowLayoutPanelMinimap = new System.Windows.Forms.FlowLayoutPanel();
+            this.pictureBoxMinimap = new System.Windows.Forms.PictureBox();
             this.RtbConsole = new Gui.RickTextConsole();
             this.tabControlMainTabs.SuspendLayout();
-            this.tabPageConnectLogin.SuspendLayout();
+            this.tabPageLoginConnect.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tabPageMinimap.SuspendLayout();
+            this.flowLayoutPanelMinimap.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMinimap)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
             // 
-            this.tabControlMainTabs.Controls.Add(this.tabPageConnectLogin);
+            this.tabControlMainTabs.Controls.Add(this.tabPageLoginConnect);
+            this.tabControlMainTabs.Controls.Add(this.tabPageMinimap);
             this.tabControlMainTabs.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMainTabs.Location = new System.Drawing.Point(3, 3);
@@ -66,18 +73,18 @@
             this.tabControlMainTabs.Size = new System.Drawing.Size(484, 456);
             this.tabControlMainTabs.TabIndex = 0;
             // 
-            // tabPageConnectLogin
+            // tabPageLoginConnect
             // 
-            this.tabPageConnectLogin.Controls.Add(this.button1);
-            this.tabPageConnectLogin.Controls.Add(this.groupBoxConnect);
-            this.tabPageConnectLogin.Controls.Add(this.groupBoxLogin);
-            this.tabPageConnectLogin.Location = new System.Drawing.Point(4, 22);
-            this.tabPageConnectLogin.Name = "tabPageConnectLogin";
-            this.tabPageConnectLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageConnectLogin.Size = new System.Drawing.Size(476, 430);
-            this.tabPageConnectLogin.TabIndex = 0;
-            this.tabPageConnectLogin.Text = "ConnectLogin";
-            this.tabPageConnectLogin.UseVisualStyleBackColor = true;
+            this.tabPageLoginConnect.Controls.Add(this.button1);
+            this.tabPageLoginConnect.Controls.Add(this.groupBoxConnect);
+            this.tabPageLoginConnect.Controls.Add(this.groupBoxLogin);
+            this.tabPageLoginConnect.Location = new System.Drawing.Point(4, 22);
+            this.tabPageLoginConnect.Name = "tabPageLoginConnect";
+            this.tabPageLoginConnect.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageLoginConnect.Size = new System.Drawing.Size(476, 430);
+            this.tabPageLoginConnect.TabIndex = 0;
+            this.tabPageLoginConnect.Text = "LoginConnect";
+            this.tabPageLoginConnect.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -239,6 +246,34 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(720, 462);
             this.tableLayoutPanel2.TabIndex = 4;
             // 
+            // tabPageMinimap
+            // 
+            this.tabPageMinimap.Controls.Add(this.flowLayoutPanelMinimap);
+            this.tabPageMinimap.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMinimap.Name = "tabPageMinimap";
+            this.tabPageMinimap.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMinimap.Size = new System.Drawing.Size(476, 430);
+            this.tabPageMinimap.TabIndex = 1;
+            this.tabPageMinimap.Text = "Minimap";
+            this.tabPageMinimap.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanelMinimap
+            // 
+            this.flowLayoutPanelMinimap.Controls.Add(this.pictureBoxMinimap);
+            this.flowLayoutPanelMinimap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanelMinimap.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanelMinimap.Name = "flowLayoutPanelMinimap";
+            this.flowLayoutPanelMinimap.Size = new System.Drawing.Size(470, 424);
+            this.flowLayoutPanelMinimap.TabIndex = 0;
+            // 
+            // pictureBoxMinimap
+            // 
+            this.pictureBoxMinimap.Location = new System.Drawing.Point(3, 3);
+            this.pictureBoxMinimap.Name = "pictureBoxMinimap";
+            this.pictureBoxMinimap.Size = new System.Drawing.Size(0, 0);
+            this.pictureBoxMinimap.TabIndex = 0;
+            this.pictureBoxMinimap.TabStop = false;
+            // 
             // RtbConsole
             // 
             this.RtbConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -251,6 +286,7 @@
             this.RtbConsole.Size = new System.Drawing.Size(214, 426);
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
+            this.RtbConsole.TextChanged += new System.EventHandler(this.RtbConsole_TextChanged);
             // 
             // MainForm
             // 
@@ -261,7 +297,7 @@
             this.Name = "MainForm";
             this.Text = "MasterBot";
             this.tabControlMainTabs.ResumeLayout(false);
-            this.tabPageConnectLogin.ResumeLayout(false);
+            this.tabPageLoginConnect.ResumeLayout(false);
             this.groupBoxConnect.ResumeLayout(false);
             this.groupBoxConnect.PerformLayout();
             this.groupBoxLogin.ResumeLayout(false);
@@ -270,6 +306,9 @@
             this.tableLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tabPageMinimap.ResumeLayout(false);
+            this.flowLayoutPanelMinimap.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMinimap)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -277,7 +316,7 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControlMainTabs;
-        private System.Windows.Forms.TabPage tabPageConnectLogin;
+        private System.Windows.Forms.TabPage tabPageLoginConnect;
         private System.Windows.Forms.TextBox textBoxEmail;
         private System.Windows.Forms.Button buttonLogin;
         private System.Windows.Forms.TextBox textBoxPassword;
@@ -294,6 +333,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox RtbConsoleInput;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TabPage tabPageMinimap;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelMinimap;
+        private System.Windows.Forms.PictureBox pictureBoxMinimap;
     }
 }
 

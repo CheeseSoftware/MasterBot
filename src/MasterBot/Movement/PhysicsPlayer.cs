@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System;
 using MasterBot.Room.Block;
+using MasterBot.Room;
 namespace MasterBot.Movement
 {
     /*import Player.*;
@@ -124,7 +125,7 @@ namespace MasterBot.Movement
         private double _currentThrust;
         private static List<string> admins = new List<string> { "benjaminsen", "cyclone", "toby", "rpgmaster2000", "mrshoe", "mrvoid" };
         public static bool HasSolitude = false;
-        private Room.Room room;
+        private IRoom room;
 
         public int smiley;
 
@@ -145,7 +146,7 @@ namespace MasterBot.Movement
         double tx = 0;
         double ty = 0;
 
-        public PhysicsPlayer(Room.Room room, int ID, string name, int smiley, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
+        public PhysicsPlayer(IRoom room, int ID, string name, int smiley, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
             : base(null, 16)
         {
             this.room = room;
@@ -241,7 +242,7 @@ namespace MasterBot.Movement
             List<int> _loc_8 = new List<int>();
             //int _loc_10 = 0;
             int _loc_11 = 0;
-            if (param1.x < 16 || param1.y < 16 || param1.x >= room.width * 16 || param1.y >= room.height * 16)
+            if (param1.x < 16 || param1.y < 16 || param1.x >= room.Width * 16 || param1.y >= room.Height * 16)
             {
                 //Console.WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
                 return 1;
@@ -266,7 +267,7 @@ namespace MasterBot.Movement
             {
                 for (int yy = -2; yy < 1; yy++)
                 {
-                    if (_loc_3 + xx > 0 && _loc_3 + xx <room.width && _loc_4 + yy > 0 && _loc_4 + yy <= room.height)
+                    if (_loc_3 + xx > 0 && _loc_3 + xx <room.Width && _loc_4 + yy > 0 && _loc_4 + yy <= room.Height)
                     {
                         for (int xTest = 0; xTest < 16; xTest++)
                         {
@@ -675,9 +676,9 @@ namespace MasterBot.Movement
                     //Console.WriteLine("entered portal with id " + currentBlock.thisID + " and target id " + currentTarget + " and rotation " + currentBlock.rotation);
 
                     //targetPortalList = world.getPortals(world.getPortal(cx, cy).target);
-                    for (int x = 1; x < room.width; x++)
+                    for (int x = 1; x < room.Width; x++)
                     {
-                        for (int y = 1; y < room.height; y++)
+                        for (int y = 1; y < room.Height; y++)
                         {
                             IBlock block = room.getBlock(0, x, y);
                             if (block is BlockPortal && block.Id == currentTarget)

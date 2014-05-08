@@ -19,5 +19,11 @@ namespace MasterBot.Room.Block
             this.myId = myId;
             this.destinationId = destinationId;
         }
+
+        public override void Send(IBot bot, int x, int y)
+        {
+            bot.Connection.Send("b", bot.Room.WorldKey, Layer, x, y, Id, rotation, myId, destinationId);
+            datePlaced = DateTime.Now;
+        }
     }
 }

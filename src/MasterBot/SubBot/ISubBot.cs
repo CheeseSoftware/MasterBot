@@ -8,10 +8,10 @@ namespace MasterBot.SubBot
 {
     public interface ISubBot
     {
-        void onConnect(MasterBot masterBot);
-        void onDisconnect(MasterBot masterBot, string reason);
-        void onMessage(MasterBot masterBot, PlayerIOClient.Message m);
-        void onCommand(MasterBot masterBot, string cmd, string[] args, ICmdSource cmdSource);
-        void Update(MasterBot masterBot);
+        void onConnect(IBot bot);
+        void onDisconnect(IBot bot, string reason);
+        void onMessage(IBot bot, PlayerIOClient.Message m);
+        void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource);
+        void Update(IBot bot);
     }
 }

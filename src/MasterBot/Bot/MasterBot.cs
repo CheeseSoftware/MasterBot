@@ -14,20 +14,43 @@ namespace MasterBot
     public class MasterBot : IBot
     {
         private Timer updateTimer = new Timer();
-
-        public MainForm mainForm;
-        public SubBotHandler subBotHandler;
-        public Client client;
-        public Connection connection;
-        public Room.Room room;
+        private MainForm mainForm;
+        private SubBotHandler subBotHandler;
+        private Client client;
+        private Connection connection;
+        private Room.IRoom room;
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
+        public ISubBotHandler SubBotHandler
+        {
+            get { return subBotHandler; }
+        }
+
+        public MainForm MainForm
+        {
+            get { return mainForm; }
+        }
+
+        public Client Client
+        {
+            get { return client; }
+        }
+
+        public Connection Connection
+        {
+            get { return connection; }
+        }
+
+        public IRoom Room
+        {
+            get { return room; }
+        }
 
         public MasterBot()
         {
             subBotHandler = new SubBotHandler();
-            subBotHandler.AddSubBot("Room", room = new Room.Room(this));
+            subBotHandler.AddSubBot("Room", (ISubBot)(room = new Room.Room(this)));
             Application.Run(mainForm = new MainForm(this));
 
             updateTimer.Interval = 50;
@@ -67,7 +90,7 @@ namespace MasterBot
                 });
         }
 
-        public void Connect(string roomId)
+        public bool Connect(string roomId)
         {
             if (LoggedIn)
             {
@@ -78,18 +101,18 @@ namespace MasterBot
                     {
                         connection = tempConnection;
                         connection.Send("init");
-                        mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
                         connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                         connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
+                        mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
                     },
                     delegate(PlayerIOError tempError)
                     {
                         mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
                         MessageBox.Show(tempError.ToString());
                     });
+                return true;
             }
-            else
-                mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
+            return false;
         }
 
         public void Disconnect(string reason)

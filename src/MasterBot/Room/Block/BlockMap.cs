@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockMatrix
+    class BlockMap
     {
-        private IBlock[,] backgroundMap = null;
-        private IBlock[,] foregroundMap = null;
+        private Stack<IBlock>[,] backgroundMap = null;
+        private Stack<IBlock>[,] foregroundMap = null;
         private int width;
         private int height;
 
-        public BlockMatrix(int width, int height)
+        public BlockMap(int width, int height)
         {
-            backgroundMap = new IBlock[width + 1, height + 1];
-            foregroundMap = new IBlock[width + 1, height + 1];
+            backgroundMap = new Stack<IBlock>[width + 1, height + 1];
+            foregroundMap = new Stack<IBlock>[width + 1, height + 1];
             this.width = width;
             this.height = height;
+            Reset();
         }
 
         private bool isWithinMatrix(int x, int y)
@@ -28,14 +29,26 @@ namespace MasterBot.Room.Block
             return false;
         }
 
-        public void setBlock(int layer, int x, int y, IBlock block)
+        private void Reset()
+        {
+            for(int x = 0; x < width; x++)
+            {
+                for(int y = 0; y < height; y++)
+                {
+                    backgroundMap[x, y] = new Stack<IBlock>();
+                    foregroundMap[x, y] = new Stack<IBlock>();
+                }
+            }
+        }
+
+        public void setBlock(int x, int y, IBlock block)
         {
             if(isWithinMatrix(x, y))
             {
-                if (layer == 0)
-                    foregroundMap[x, y] = block;
-                else if (layer == 1)
-                    backgroundMap[x, y] = block;
+                if (block.Layer == 0)
+                    foregroundMap[x, y].Push(block);
+                else if (block.Layer == 1)
+                    backgroundMap[x, y].Push(block);
             }
         }
 
@@ -51,21 +64,20 @@ namespace MasterBot.Room.Block
         public IBlock getBlock(int x, int y)
         {
             if (isWithinMatrix(x, y))
-                return foregroundMap[x, y];
+                return foregroundMap[x, y].Peek();
             return null;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
             if (isWithinMatrix(x, y))
-                return backgroundMap[x, y];
+                return backgroundMap[x, y].Peek();
             return null;
         }
 
         public void Clear()
         {
-            backgroundMap = new IBlock[width + 1, height + 1];
-            foregroundMap = new IBlock[width + 1, height + 1];
+            Reset();
         }
     }
 }

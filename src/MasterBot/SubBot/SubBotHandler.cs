@@ -46,43 +46,43 @@ namespace MasterBot.SubBot
             get { return subBots; }
         }
 
-        public void onConnect(MasterBot masterBot)
+        public void onConnect(IBot bot)
         {
             foreach (ISubBot subBot in subBots.Values)
             {
-                subBot.onConnect(masterBot);
+                subBot.onConnect(bot);
             }
         }
 
-        public void onDisconnect(MasterBot masterBot, string reason)
+        public void onDisconnect(IBot bot, string reason)
         {
             foreach (ISubBot subBot in subBots.Values)
             {
-                subBot.onDisconnect(masterBot, reason);
+                subBot.onDisconnect(bot, reason);
             }
         }
 
-        public void onMessage(MasterBot masterBot, PlayerIOClient.Message m)
+        public void onMessage(IBot bot, PlayerIOClient.Message m)
         {
             foreach(ISubBot subBot in subBots.Values)
             {
-                subBot.onMessage(masterBot, m);
+                subBot.onMessage(bot, m);
             }
         }
 
-        public void onCommand(MasterBot masterBot, string cmd, string[] args, ICmdSource cmdSource)
+        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
         {
             foreach (ISubBot subBot in subBots.Values)
             {
-                subBot.onCommand(masterBot, cmd, args, cmdSource);
+                subBot.onCommand(bot, cmd, args, cmdSource);
             }
         }
 
-        public void Update(MasterBot masterBot)
+        public void Update(IBot bot)
         {
             foreach (ISubBot subBot in subBots.Values)
             {
-                subBot.Update(masterBot);
+                subBot.Update(bot);
             }
         }
 
