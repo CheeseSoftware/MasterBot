@@ -51,6 +51,89 @@ namespace MasterBot.Room
             }
         }
 
+        private void HandleBlockPlace(PlayerIOClient.Message m)
+        {
+            int layer;
+            int x;
+            int y;
+            int blockId;
+            int playerId;
+
+            if (m.Type == "b")
+            {
+                layer = m.GetInt(0);
+                x = m.GetInt(1);
+                y = m.GetInt(2);
+                blockId = m.GetInt(3);
+                if (m.Count >= 5)
+                    playerId = m.GetInt(4);
+                blockMap.setBlock(layer, x, y, new NormalBlock(blockId, layer));
+            }
+            else
+            {
+                layer = 0;
+                x = m.GetInt(0);
+                y = m.GetInt(1);
+                blockId = m.GetInt(2);
+                if (m.Type != "pt" && m.Type != "bs")
+                    playerId = m.GetInt(4);
+                switch (m.Type)
+                {
+                    case "bc":
+                        {
+                            int coins = m.GetInt(3);
+                            if (blockId == 43)
+                                blockMap.setBlock(layer, x, y, new BlockCoinDoor(coins));
+                            else if (blockId == 165)
+                                blockMap.setBlock(layer, x, y, new BlockCoinGate(coins));
+                            break;
+                        }
+                    case "bs":
+                        {
+                            int note = m.GetInt(3);
+                            if (blockId == 77)
+                                blockMap.setBlock(layer, x, y, new BlockPiano(note));
+                            else if (blockId == 83)
+                                blockMap.setBlock(layer, x, y, new BlockDrums(note));
+                            break;
+                        }
+                    case "pt":
+                        {
+                            int rotation = m.GetInt(3);
+                            int portalId = m.GetInt(4);
+                            int targetId = m.GetInt(5);
+                            //playerId = m.GetInt(6);
+                            blockMap.setBlock(layer, x, y, new BlockPortal(rotation, portalId, targetId));
+                            break;
+                        }
+                    case "lb":
+                        {
+                            string text = m.GetString(3);
+                            blockMap.setBlock(layer, x, y, new BlockText(text));
+                            break;
+                        }
+                    case "br":
+                        {
+                            int rotation = m.GetInt(3);
+                            blockMap.setBlock(layer, x, y, new BlockSpikes(rotation));
+                            break;
+                        }
+                    case "wp":
+                        {
+                            string destination = m.GetString(3);
+                            blockMap.setBlock(layer, x, y, new BlockWorldPortal(destination));
+                            break;
+                        }
+                    case "ts":
+                        {
+                            string text = m.GetString(3);
+                            blockMap.setBlock(layer, x, y, new BlockSign(text));
+                            break;
+                        }
+                }
+            }
+        }
+
         private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
             blockMap = new BlockMatrix(width, height);
@@ -64,6 +147,8 @@ namespace MasterBot.Room
                     int layer = m.GetInt(i - 1);
                     byte[] xArray = m.GetByteArray(i);
                     byte[] yArray = m.GetByteArray(i + 1);
+
+                    uint toAdd = 0;
 
                     for (int x = 0; x < xArray.Length; x += 2)
                     {
@@ -79,63 +164,63 @@ namespace MasterBot.Room
                                     int id = m.GetInt(i + 3);
                                     int destination = m.GetInt(i + 4);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockPortal(rotation, id, destination));
-                                    i += 3;
+                                    toAdd = 3;
                                     break;
                                 }
                             case 43: //coin door
                                 {
                                     int coins = m.GetInt(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockCoinDoor(coins));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 165: //coin gate
                                 {
                                     int coins = m.GetInt(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockCoinGate(coins));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 361: //spikes
                                 {
                                     int rotation = m.GetInt(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockSpikes(rotation));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 77: //piano
                                 {
                                     int note = m.GetInt(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockPiano(note));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 83: //drums
                                 {
                                     int note = m.GetInt(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockDrums(note));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 1000: //text
                                 {
                                     string text = m.GetString(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockText(text));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 385: //sign
                                 {
                                     string text = m.GetString(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockSign(text));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             case 374: //world portal
                                 {
                                     string destination = m.GetString(i + 2);
                                     blockMap.setBlock(layer, xIndex, yIndex, new BlockWorldPortal(destination));
-                                    i++;
+                                    toAdd = 1;
                                     break;
                                 }
                             default:
@@ -145,7 +230,7 @@ namespace MasterBot.Room
                                 }
                         }
                     }
-
+                    i += toAdd;
                     i += 3;
                 }
             }
@@ -300,7 +385,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                             players[id].ismod = m.GetBoolean(1);
-                        
+
                         break;
                     }
                 case "lostaccess":
@@ -322,20 +407,14 @@ namespace MasterBot.Room
                 case "upgrade":
                     break;
                 case "b":
-                    break;
                 case "bc":
-                    break;
                 case "bs":
-                    break;
                 case "pt":
-                    break;
-                case "lb": 
-                    break;
+                case "lb":
                 case "br":
-                    break;
                 case "wp":
-                    break;
                 case "ts":
+                    HandleBlockPlace(m);
                     break;
                 case "show":
                     break;
@@ -358,9 +437,24 @@ namespace MasterBot.Room
                 case "autotext":
                     break;
                 case "clear":
+                    blockMap.Clear();
                     break;
                 case "tele":
-                    break;
+                    {
+                        bool usedReset = m.GetBoolean(0);
+                        for (int i = 1; i <= m.Count - 1; i += 3)
+                        {
+                            int playerId = m.GetInt(1);
+                            int x = m.GetInt(2);
+                            int y = m.GetInt(3);
+                            if(players.ContainsKey(playerId))
+                            {
+                                players[playerId].x = x;
+                                players[playerId].y = y;
+                            }
+                        }
+                        break;
+                    }
                 case "saved":
                     break;
             }

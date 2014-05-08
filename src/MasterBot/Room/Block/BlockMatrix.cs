@@ -61,5 +61,11 @@ namespace MasterBot.Room.Block
                 return backgroundMap[x, y];
             return null;
         }
+
+        public void Clear()
+        {
+            backgroundMap = new IBlock[width + 1, height + 1];
+            foregroundMap = new IBlock[width + 1, height + 1];
+        }
     }
 }
