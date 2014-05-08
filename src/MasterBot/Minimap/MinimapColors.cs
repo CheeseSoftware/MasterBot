@@ -5,9 +5,9 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 
-namespace NewEEBot
+namespace MasterBot.Minimap
 {
-    public class MinimapColors
+    public static class MinimapColors
     {
         private static int backgroundBricksBMD = 0;
         private static int forgroundBricksBMD = 1;
@@ -26,11 +26,6 @@ namespace NewEEBot
         private static Dictionary<int, Color> colorCodes = new Dictionary<int, Color>();
         
         public static Dictionary<int, Color> ColorCodes { get { return colorCodes; } }
-
-        static MinimapColors()
-        {
-            CreateColorCodes();
-        }
 
         public static Color UIntToColor(uint color)
         {

@@ -55,6 +55,23 @@ namespace MasterBot
             }
         }
 
+        public void UpdateMinimap(Bitmap bitmap)
+        {
+            if (bitmap != null)
+            {
+                try
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        pictureBoxMinimap.Size = bitmap.Size;
+                        pictureBoxMinimap.Image = bitmap;
+                    }));
+                }
+                catch { }
+
+            }
+        }
+
         public void onLoginFinished(bool success)
         {
             if (success)

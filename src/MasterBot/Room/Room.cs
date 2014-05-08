@@ -147,7 +147,7 @@ namespace MasterBot.Room
 
         private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
-            blockMap = new BlockMap(width, height);
+            blockMap = new BlockMap(bot, width, height);
             //world start at 17 "ws"
             uint i = ws;
             for (; !(m[i + 2] is string); i++)

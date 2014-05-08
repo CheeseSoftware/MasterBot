@@ -3,23 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MasterBot.Room.Block
 {
-    class BlockMap
+    public class BlockMap
     {
         private Stack<IBlock>[,] backgroundMap = null;
         private Stack<IBlock>[,] foregroundMap = null;
         private int width;
         private int height;
 
-        public BlockMap(int width, int height)
+        public Minimap.Minimap minimap;
+
+        public BlockMap(IBot bot, int width, int height)
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
             this.width = width;
             this.height = height;
+            minimap = new Minimap.Minimap(bot, width, height);
+            Timer updateMinimapTimer = new Timer();
+            updateMinimapTimer.Interval = 50;
+            updateMinimapTimer.AutoReset = true;
+            updateMinimapTimer.Elapsed += UpdateMinimap;
+            updateMinimapTimer.Start();
             Reset();
+        }
+
+        private void UpdateMinimap(object sender, EventArgs e)
+        {
+            minimap.Update(this);
         }
 
         private bool isWithinMatrix(int x, int y)
@@ -63,14 +77,14 @@ namespace MasterBot.Room.Block
 
         public IBlock getBlock(int x, int y)
         {
-            if (isWithinMatrix(x, y))
+            if (isWithinMatrix(x, y) && foregroundMap[x, y].Count > 0)
                 return foregroundMap[x, y].Peek();
             return null;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
-            if (isWithinMatrix(x, y))
+            if (isWithinMatrix(x, y) && backgroundMap[x, y].Count > 0)
                 return backgroundMap[x, y].Peek();
             return null;
         }
