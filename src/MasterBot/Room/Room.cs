@@ -12,8 +12,10 @@ namespace MasterBot.Room
 {
     public class Room : IRoom, ISubBot
     {
+        private MasterBot masterBot;
         private BlockMatrix blockMap = null;
-        private Dictionary<int, PhysicsPlayer> players = new Dictionary<int, PhysicsPlayer>();
+        private Dictionary<int, Player> players = new Dictionary<int, Player>();
+        private Timer playerTickTimer = new Timer();
 
         public string owner = "";
         public string title = "";
@@ -27,6 +29,27 @@ namespace MasterBot.Room
         public bool isTutorialRoom = false;
         public float gravity = 0.0F;
         public bool potionsAllowed = false;
+
+        public bool hasAccess = false;
+        public bool HasCode { get { return isOwner || hasAccess; } }
+
+        public Room(MasterBot masterBot)
+        {
+            this.masterBot = masterBot;
+            playerTickTimer.Tick += UpdatePhysics;
+            playerTickTimer.Interval = 10;
+        }
+
+        private void UpdatePhysics(object sender, EventArgs e)
+        {
+            lock (players)
+            {
+                foreach (PhysicsPlayer player in players.Values)
+                {
+                    player.tick();
+                }
+            }
+        }
 
         private void DeserializeInit(PlayerIOClient.Message m)
         {
@@ -160,12 +183,12 @@ namespace MasterBot.Room
 
         public void onConnect(MasterBot masterBot)
         {
-
+            playerTickTimer.Start();
         }
 
         public void onDisconnect(MasterBot masterBot, string reason)
         {
-
+            playerTickTimer.Stop();
         }
 
         public void onMessage(MasterBot masterBot, PlayerIOClient.Message m)
@@ -175,6 +198,7 @@ namespace MasterBot.Room
                 case "init":
                     {
                         DeserializeInit(m);
+                        masterBot.connection.Send("init2");
                         break;
                     }
                 case "add":
@@ -182,7 +206,8 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (!players.ContainsKey(id))
                         {
-                            PhysicsPlayer player = new PhysicsPlayer(this, id, m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0);
+                            Player player = new Player(this, id, m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
+                            player.isclubmember = m.GetBoolean(12);
                             players.Add(id, player);
                         }
                         break;
@@ -190,12 +215,143 @@ namespace MasterBot.Room
                 case "left":
                     {
                         int id = m.GetInt(0);
-                        if (!players.ContainsKey(id))
+                        if (players.ContainsKey(id))
                         {
                             players.Remove(id);
                         }
                         break;
                     }
+                case "m":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                        {
+                            players[id].x = m.GetDouble(1);
+                            players[id].y = m.GetDouble(2);
+                            players[id].speedX = m.GetDouble(3);
+                            players[id].speedY = m.GetDouble(4);
+                            players[id].modifierX = m.GetInt(5);
+                            players[id].modifierY = m.GetInt(6);
+                            players[id].horizontal = m.GetInt(7);
+                            players[id].vertical = m.GetInt(8);
+                            players[id].coins = m.GetInt(9);
+                            players[id].purple = m.GetBoolean(10);
+                            players[id].Levitation = m.GetBoolean(11);
+                        }
+                        break;
+                    }
+                case "c":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                        {
+                            players[id].coins = m.GetInt(1);
+                        }
+                        break;
+                    }
+                case "k":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                        {
+                            players[id].hascrown = true;
+                        }
+                        break;
+                    }
+                case "ks":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                        {
+                            players[id].hascrownsilver = true;
+                        }
+                        break;
+                    }
+                case "face":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                        {
+                            players[id].smiley = m.GetInt(1);
+                        }
+                        break;
+                    }
+                case "god":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                            players[id].isgod = m.GetBoolean(1);
+                        break;
+                    }
+                case "mod":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                            players[id].ismod = m.GetBoolean(1);
+                        break;
+                    }
+                case "lostaccess":
+                    {
+                        hasAccess = false;
+                        break;
+                    }
+                case "access":
+                    {
+                        hasAccess = true;
+                        break;
+                    }
+                case "info":
+                    break;
+                case "p":
+                    break;
+                case "write":
+                    break;
+                case "upgrade":
+                    break;
+                case "b":
+                    break;
+                case "bc":
+                    break;
+                case "bs":
+                    break;
+                case "pt":
+                    break;
+                case "lb":
+                    break;
+                case "br":
+                    break;
+                case "wp":
+                    break;
+                case "ts":
+                    break;
+                case "show":
+                    break;
+                case "hide":
+                    break;
+                case "allowpotions":
+                    break;
+                case "wu":
+                    break;
+                case "w":
+                    break;
+                case "levelup":
+                    break;
+                case "say":
+                    break;
+                case "say_old":
+                    break;
+                case "updatemeta":
+                    break;
+                case "autotext":
+                    break;
+                case "clear":
+                    break;
+                case "tele":
+                    break;
+                case "reset":
+                    break;
+                case "saved":
+                    break;
             }
         }
 

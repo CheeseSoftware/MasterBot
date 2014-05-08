@@ -1305,7 +1305,7 @@ namespace MasterBot.Movement
                 }
                 this.changed = false;
             }*/
-            if (this.hasLevitation())
+            if (this.Levitation)
             {
                 this.updateThrust();
             }
@@ -1854,9 +1854,16 @@ namespace MasterBot.Movement
             return this._isInvulnerable;
         }// end function
 
-        public bool hasLevitation()
+        public bool Levitation
         {
-            return this._hasLevitation;
+            get
+            {
+                return this._hasLevitation;
+            }
+            set
+            {
+                this._hasLevitation = value;
+            }
         }// end function
 
         public void hasLevitation(bool param1)

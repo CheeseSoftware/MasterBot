@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using MasterBot.SubBot;
 using MasterBot.Room;
 using PlayerIOClient;
+using MasterBot.Movement;
 
 namespace MasterBot
 {
@@ -26,7 +27,7 @@ namespace MasterBot
         public MasterBot()
         {
             subBotHandler = new SubBotHandler();
-            subBotHandler.AddSubBot("Room", room = new Room.Room());
+            subBotHandler.AddSubBot("Room", room = new Room.Room(this));
             Application.Run(mainForm = new MainForm(this));
 
             updateTimer.Interval = 50;
@@ -89,10 +90,8 @@ namespace MasterBot
         public void Disconnect(string reason)
         {
             if (Connected)
-            {
-                subBotHandler.onDisconnect(this, reason);
                 connection.Disconnect();
-            }
+            subBotHandler.onDisconnect(this, reason);
         }
     }
 }
