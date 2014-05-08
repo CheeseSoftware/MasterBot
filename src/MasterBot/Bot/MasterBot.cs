@@ -22,7 +22,7 @@ namespace MasterBot
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
-        public ISubBotHandler SubBotHandler
+        public SubBotHandler SubBotHandler
         {
             get { return subBotHandler; }
         }

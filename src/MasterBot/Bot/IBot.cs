@@ -12,7 +12,7 @@ namespace MasterBot
     {
         bool LoggedIn { get; }
         bool Connected { get; }
-        ISubBotHandler SubBotHandler { get; }
+        SubBotHandler SubBotHandler { get; }
         MainForm MainForm { get; }
         Client Client { get; }
         Connection Connection { get; }

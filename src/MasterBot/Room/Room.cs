@@ -467,6 +467,24 @@ namespace MasterBot.Room
                 case "levelup":
                     break;
                 case "say":
+                    {
+                        int id = m.GetInt(0);
+                        string text = m.GetString(1);
+                        if(players.ContainsKey(id))
+                        {
+                            Player player = players[id];
+                            if(text.Length > 0 && text[0].Equals('!'))
+                            {
+                                string textCommandCharRemoved = text.Remove(0, 1);
+                                string[] textSplit = textCommandCharRemoved.Split(' ');
+                                string cmd = textSplit[0];
+                                string[] args = new string[textSplit.Length - 1];
+                                if (textSplit.Length > 0)
+                                    Array.Copy(textSplit, 1, args, 0, textSplit.Length - 1);
+                                bot.SubBotHandler.onCommand(bot, cmd, args, player);
+                            }
+                        }
+                    }
                     break;
                 case "say_old":
                     break;

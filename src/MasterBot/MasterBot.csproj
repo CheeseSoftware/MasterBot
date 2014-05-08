@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
+    <Compile Include="Minimap\ItemLayer.cs" />
+    <Compile Include="Minimap\MinimapColors.cs" />
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
     <Compile Include="Movement\ItemId.cs" />
