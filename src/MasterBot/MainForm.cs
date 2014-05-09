@@ -126,7 +126,7 @@ namespace MasterBot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            RtbConsole.WriteLine("%chello! %cHello!", Color.Red, Color.Green);
+            RtbConsole.WriteLine("%c%Chello! %CHello!", Color.Black, Color.Red, Color.Green);
         }
 
         private void RtbConsoleInput_KeyDown(object sender, KeyEventArgs e)

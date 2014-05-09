@@ -285,7 +285,7 @@
             this.RtbConsole.Margin = new System.Windows.Forms.Padding(0);
             this.RtbConsole.Name = "RtbConsole";
             this.RtbConsole.ReadOnly = true;
-            this.RtbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.RtbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.RtbConsole.Size = new System.Drawing.Size(224, 439);
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";

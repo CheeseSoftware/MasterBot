@@ -173,11 +173,9 @@ namespace Gui
                     CEnd();
                     cEnd();
                     EndFont();
-                    //BEnd();
-                    //IEnd();
-                    //UEnd();
 
                     this.Select(this.Text.Length, 0);
+
                     this.ScrollToCaret();
 
                 }));
