@@ -45,7 +45,7 @@ namespace MasterBot.Movement
             return;
         }// end function
 
-        public int blockX
+        protected int blockX
         {
             get
             {
@@ -53,7 +53,7 @@ namespace MasterBot.Movement
             }
         }
 
-        public int blockY
+        protected int blockY
         {
             get
             {
@@ -61,7 +61,7 @@ namespace MasterBot.Movement
             }
         }
 
-        public double posX
+        protected double posX
         {
             get
             {
@@ -69,7 +69,7 @@ namespace MasterBot.Movement
             }
         }
 
-        public double posY
+        protected double posY
         {
             get
             {

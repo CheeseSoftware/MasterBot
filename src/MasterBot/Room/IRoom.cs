@@ -22,9 +22,14 @@ namespace MasterBot.Room
         float Gravity { get; }
         bool PotionsAllowed { get; }
         bool HasCode { get; }
+        bool HideRed { get; }
+        bool HideGreen { get; }
+        bool HideBlue { get; }
+        bool HideTimeDoor { get; }
         Dictionary<int, Player> Players { get; }
 
         IBlock getBlock(int layer, int x, int y);
+        Stack<IBlock> getOldBlocks(int layer, int x, int y);
         void setBlock(int x, int y, IBlock block);
     }
 }

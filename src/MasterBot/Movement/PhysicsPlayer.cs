@@ -128,6 +128,8 @@ namespace MasterBot.Movement
         private IRoom room;
 
         public int smiley;
+        public bool hasChat;
+        public bool isFriend;
 
         int cx = 0;
         int cy = 0;
@@ -146,13 +148,24 @@ namespace MasterBot.Movement
         double tx = 0;
         double ty = 0;
 
-        public PhysicsPlayer(IRoom room, int ID, string name, int smiley, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
+        public double X { get { return x; } set { x = value; } }
+        public double Y { get { return y; } set { y = value; } }
+        public int BlockX { get { return blockX; } set { x = value * 16; } }
+        public int BlockY { get { return blockY; } set { y = value * 16; } }
+
+        public PhysicsPlayer(IRoom room, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
             : base(null, 16)
         {
             this.room = room;
             this.smiley = smiley;
             this.isgod = isGod;
             this.ismod = isMod;
+            this._id = id;
+            this.hasChat = hasChat;
+            this.coins = coins;
+            this.purple = purple;
+            this.isFriend = isFriend;
+            this.level = level;
             //this.Ding = Player_Ding;
             //this.Crown = Player_Crown;
             //this.CrownSilver = Player_CrownSilver;
@@ -186,8 +199,8 @@ namespace MasterBot.Movement
             //this.connection = param4;
             //this.world = param1;
             //this.hitmap = param1;
-            this.x = 16;
-            this.y = 16;
+            this.x = xPos;
+            this.y = yPos;
             this.isme = false;
             this.name = name;
             //this.chat = new Chat(param2.indexOf(" ") != -1 ? ("") : (param2));
@@ -242,7 +255,7 @@ namespace MasterBot.Movement
             List<int> _loc_8 = new List<int>();
             //int _loc_10 = 0;
             int _loc_11 = 0;
-            if (param1.x < 16 || param1.y < 16 || param1.x >= room.Width * 16 || param1.y >= room.Height * 16)
+            if (param1.x < 0 || param1.y < 0 || param1.x >= room.Width * 16 - 8|| param1.y >= room.Height * 16 - 8)
             {
                 //Console.WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
                 return 1;
@@ -276,137 +289,138 @@ namespace MasterBot.Movement
                                 if (hitTest((int)(xTest + _loc_2.x + xx * 16), (int)(yTest + _loc_2.y + yy * 16)))
                                 {
                                     double _loc_9 = _loc_4;
-                                    _loc_11 = room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16)).Id;
+                                    IBlock currentBlock = room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
+                                    _loc_11 = currentBlock.Id;
                                     if (ItemId.isSolid(_loc_11))
                                     {
                                         switch (_loc_11)
                                         {
                                             case 23:
                                                 {
-                                                    /*if (this.hideRed)
+                                                    if (room.HideRed)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 24:
                                                 {
-                                                    /*if (this.hideGreen)
+                                                    if (room.HideGreen)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 25:
                                                 {
-                                                    /*if (this.hideBlue)
+                                                    if (room.HideBlue)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 26:
                                                 {
-                                                    /*if (!this.hideRed)
+                                                    if (!room.HideRed)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 27:
                                                 {
-                                                    /*if (!this.hideGreen)
+                                                    if (!room.HideGreen)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 28:
                                                 {
-                                                    /*if (!this.hideBlue)
+                                                    if (!room.HideBlue)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 156:
                                                 {
-                                                    /*if (this._hideTimedoor)
+                                                    if (room.HideTimeDoor)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 157:
                                                 {
-                                                    /*if (!this._hideTimedoor)
+                                                    if (!room.HideTimeDoor)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.DOOR_PURPLE:
                                                 {
-                                                    /*if (this.hidePurple)
+                                                    if (this.purple)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.GATE_PURPLE:
                                                 {
-                                                    /*if (!this.hidePurple)
+                                                    if (!this.purple)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.DOOR_CLUB:
                                                 {
-                                                    /*if (_loc_2.isclubmember)
+                                                    if (isclubmember)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.GATE_CLUB:
                                                 {
-                                                    /*if (!_loc_2.isclubmember)
+                                                    if (!isclubmember)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.COINDOOR:
                                                 {
-                                                    /*if (this.getCoinValue(_loc_10, _loc_9) <= _loc_2.coins)
+                                                    if (currentBlock is BlockCoinDoor && ((BlockCoinDoor)currentBlock).coins <= coins)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.COINGATE:
                                                 {
-                                                    /*if (this.getCoinValue(_loc_10, _loc_9) > this.showCoinGate)
+                                                    if (currentBlock is BlockCoinGate && ((BlockCoinGate)currentBlock).coins > coins)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.ZOMBIE_GATE:
                                                 {
-                                                    /*if (_loc_2.zombie)
+                                                    if (_zombie)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case ItemId.ZOMBIE_DOOR:
                                                 {
-                                                    /*if (!_loc_2.zombie)
+                                                    if (!_zombie)
                                                     {
-                                                        break;
-                                                    }*/
+                                                        continue;
+                                                    }
                                                     break;
                                                 }
                                             case 50:
@@ -681,7 +695,7 @@ namespace MasterBot.Movement
                         for (int y = 1; y < room.Height; y++)
                         {
                             IBlock block = room.getBlock(0, x, y);
-                            if (block is BlockPortal && block.Id == currentTarget)
+                            if (block is BlockPortal && ((BlockPortal)block).myId == currentTarget)
                             {
                                 //Console.WriteLine("found portal target " + block.targetID);
                                 targetPortalList.Add(new Point(x << 4, y << 4));

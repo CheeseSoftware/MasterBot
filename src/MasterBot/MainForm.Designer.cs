@@ -88,11 +88,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(249, 44);
+            this.button1.Location = new System.Drawing.Point(395, 402);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 6;
-            this.button1.Text = "Test";
+            this.button1.Text = "console test";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -207,6 +207,7 @@
             // 
             // flowLayoutPanelMinimap
             // 
+            this.flowLayoutPanelMinimap.BackColor = System.Drawing.Color.Black;
             this.flowLayoutPanelMinimap.Controls.Add(this.pictureBoxMinimap);
             this.flowLayoutPanelMinimap.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelMinimap.Location = new System.Drawing.Point(3, 3);

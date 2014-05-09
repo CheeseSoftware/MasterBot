@@ -8,6 +8,7 @@ using MasterBot.SubBot;
 using MasterBot.Room;
 using PlayerIOClient;
 using MasterBot.Movement;
+using MasterBot.Minimap;
 
 namespace MasterBot
 {
@@ -22,39 +23,22 @@ namespace MasterBot
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
-        public SubBotHandler SubBotHandler
-        {
-            get { return subBotHandler; }
-        }
-
-        public MainForm MainForm
-        {
-            get { return mainForm; }
-        }
-
-        public Client Client
-        {
-            get { return client; }
-        }
-
-        public Connection Connection
-        {
-            get { return connection; }
-        }
-
-        public IRoom Room
-        {
-            get { return room; }
-        }
 
         public MasterBot()
         {
+            MinimapColors.CreateColorCodes();
             subBotHandler = new SubBotHandler();
             subBotHandler.AddSubBot("Room", (ISubBot)(room = new Room.Room(this)));
-            Application.Run(mainForm = new MainForm(this));
+            subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest());
+            mainForm = new MainForm(this);
+            mainForm.FormClosing += delegate 
+            { 
+                Disconnect("Form Closing");
+            };
 
             updateTimer.Interval = 50;
             updateTimer.Tick += updateTimer_Tick;
+            Application.Run(mainForm);
         }
 
         private void updateTimer_Tick(object sender, EventArgs e)
@@ -121,6 +105,31 @@ namespace MasterBot
             if (Connected)
                 connection.Disconnect();
             subBotHandler.onDisconnect(this, reason);
+        }
+
+        public SubBotHandler SubBotHandler
+        {
+            get { return subBotHandler; }
+        }
+
+        public MainForm MainForm
+        {
+            get { return mainForm; }
+        }
+
+        public Client Client
+        {
+            get { return client; }
+        }
+
+        public Connection Connection
+        {
+            get { return connection; }
+        }
+
+        public IRoom Room
+        {
+            get { return room; }
         }
     }
 }

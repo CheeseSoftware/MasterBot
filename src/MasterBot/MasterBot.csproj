@@ -56,6 +56,7 @@
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
     <Compile Include="Movement\ItemId.cs" />
+    <Compile Include="Movement\MicroTimer.cs" />
     <Compile Include="Movement\PhysicsPlayer.cs" />
     <Compile Include="Movement\SynchronizedObject.cs" />
     <Compile Include="Movement\SynchronizedSprite.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Room\Block\BlockPortal.cs" />
     <Compile Include="Room\IRoom.cs" />
     <Compile Include="Room\Room.cs" />
+    <Compile Include="SubBot\BlockPlaceTest.cs" />
     <Compile Include="SubBot\ISubBotHandler.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\ISubBot.cs" />

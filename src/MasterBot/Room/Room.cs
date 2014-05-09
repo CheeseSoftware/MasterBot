@@ -7,8 +7,6 @@ using MasterBot.SubBot;
 using MasterBot.Room.Block;
 using MasterBot.Movement;
 using System.Timers;
-using System.Diagnostics;
-using System.Threading;
 
 namespace MasterBot.Room
 {
@@ -17,8 +15,8 @@ namespace MasterBot.Room
         private IBot bot;
         private BlockMap blockMap = null;
         private Dictionary<int, Player> players = new Dictionary<int, Player>();
-        private Stopwatch playerTickStopwatch = new Stopwatch();
-        private Thread playerTickThread;
+        private MicroTimer playerTickTimer = new MicroTimer();
+        //private Thread playerTickThread;
 
         private string owner = "";
         private string title = "";
@@ -33,6 +31,10 @@ namespace MasterBot.Room
         private float gravity = 0.0F;
         private bool potionsAllowed = false;
         private bool hasAccess = false;
+        private bool hideRed = false;
+        private bool hideGreen = false;
+        private bool hideBlue = false;
+        private bool hideTimeDoor = false;
 
         private HashSet<BlockWithPos> blocksSent = new HashSet<BlockWithPos>();
         private Queue<BlockWithPos> blocksToSend = new Queue<BlockWithPos>();
@@ -40,24 +42,18 @@ namespace MasterBot.Room
         public Room(IBot bot)
         {
             this.bot = bot;
-            playerTickThread = new Thread(UpdatePhysics);
-            playerTickThread.Start();
+            //playerTickThread = new Thread(UpdatePhysics);
+            playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
+            playerTickTimer.MicroTimerElapsed += UpdatePhysics;
+            playerTickTimer.Start();
         }
 
-        private void UpdatePhysics()
+        private void UpdatePhysics(object sender, EventArgs e)
         {
-            playerTickStopwatch.Start();
-            while (bot.Connected)
+            Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
+            foreach (PhysicsPlayer player in tempPlayers.Values)
             {
-                if (playerTickStopwatch.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
-                {
-                    playerTickStopwatch.Restart();
-                    foreach (PhysicsPlayer player in players.Values)
-                    {
-                        player.tick();
-                    }
-                }
-                Thread.Sleep(1);
+                player.tick();
             }
         }
 
@@ -156,10 +152,16 @@ namespace MasterBot.Room
 
         private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
-            blockMap = new BlockMap(bot, width, height);
+            if (blockMap == null)
+                blockMap = new BlockMap(bot, width, height);
+            else
+            {
+                blockMap.setSize(width, height);
+                blockMap.Clear();
+            }
             //world start at 17 "ws"
             uint i = ws;
-            for (; !(m[i + 2] is string); i++)
+            for (; (int)(i - 2) <= ws || !(m[i - 2] is string); i++)
             {
                 if (m[i] is byte[])
                 {
@@ -307,6 +309,11 @@ namespace MasterBot.Room
             }
         }
 
+        public Stack<IBlock> getOldBlocks(int layer, int x, int y)
+        {
+            return blockMap.getOldBlocks(layer, x, y);
+        }
+
         public IBlock getBlock(int layer, int x, int y)
         {
             return blockMap.getBlock(layer, x, y);
@@ -322,12 +329,21 @@ namespace MasterBot.Room
 
         public void onConnect(IBot bot)
         {
-
+            //playerTickThread = new Thread(UpdatePhysics);
+            //playerTickThread.Start();
+            playerTickTimer.Start();
         }
 
         public void onDisconnect(IBot bot, string reason)
         {
-
+            playerTickTimer.Stop();
+            if (blockMap != null)
+            {
+                blockMap.Die();
+                blockMap.Clear();
+            }
+            if (players != null)
+                players.Clear();
         }
 
         public void onMessage(IBot bot, PlayerIOClient.Message m)
@@ -342,6 +358,8 @@ namespace MasterBot.Room
                     }
                 case "reset":
                     {
+                        blocksToSend.Clear();
+                        blocksSent.Clear();
                         LoadWorld(m, 0, width, height);
                         break;
                     }
@@ -350,7 +368,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (!players.ContainsKey(id))
                         {
-                            Player player = new Player(this, id, m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
+                            Player player = new Player(this, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
                             player.isclubmember = m.GetBoolean(12);
                             players.Add(id, player);
                         }
@@ -464,8 +482,44 @@ namespace MasterBot.Room
                     HandleBlockPlace(m);
                     break;
                 case "show":
+                    {
+                        string type = m.GetString(0);
+                        switch(type)
+                        {
+                            case "red":
+                                this.hideRed = false;
+                                break;
+                            case "green":
+                                this.hideGreen = false;
+                                break;
+                            case "blue":
+                                this.hideBlue = false;
+                                break;
+                            case "timedoor":
+                                this.hideTimeDoor = false;
+                                break;
+                        }
+                    }
                     break;
                 case "hide":
+                    {
+                        string type = m.GetString(0);
+                        switch (type)
+                        {
+                            case "red":
+                                this.hideRed = true;
+                                break;
+                            case "green":
+                                this.hideGreen = true;
+                                break;
+                            case "blue":
+                                this.hideBlue = true;
+                                break;
+                            case "timedoor":
+                                this.hideTimeDoor = true;
+                                break;
+                        }
+                    }
                     break;
                 case "allowpotions":
                     break;
@@ -474,6 +528,13 @@ namespace MasterBot.Room
                 case "w":
                     break;
                 case "levelup":
+                    {
+                        int id = m.GetInt(0);
+                        if (players.ContainsKey(id))
+                        {
+                            players[id].level = m.GetInt(1);
+                        }
+                    }
                     break;
                 case "say":
                     {
@@ -498,11 +559,19 @@ namespace MasterBot.Room
                 case "say_old":
                     break;
                 case "updatemeta":
+                    {
+                        owner = m.GetString(0);
+                        title = m.GetString(1);
+                        plays = m.GetInt(2);
+                        woots = m.GetInt(3);
+                        totalWoots = m.GetInt(4);
+                    }
                     break;
                 case "autotext":
                     break;
                 case "clear":
                     blockMap.Clear();
+                    blockMap.DrawBorder();
                     blocksToSend.Clear();
                     blocksSent.Clear();
                     break;
@@ -602,10 +671,30 @@ namespace MasterBot.Room
             get { return isOwner || hasAccess; }
         }
 
+        public bool HideRed
+        {
+            get { return hideRed; }
+        }
+
+        public bool HideGreen
+        {
+            get { return hideGreen; }
+        }
+
+        public bool HideBlue
+        {
+            get { return hideBlue; }
+        }
+
+        public bool HideTimeDoor
+        {
+            get { return hideTimeDoor; }
+        }
 
         public Dictionary<int, Player> Players
         {
             get { return players; }
         }
+
     }
 }

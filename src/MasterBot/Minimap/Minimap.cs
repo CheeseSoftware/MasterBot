@@ -21,10 +21,9 @@ namespace MasterBot.Minimap
             this.width = width;
             this.height = height;
             this.players = players;
-            MinimapColors.CreateColorCodes();
         }
 
-        private void Clear(Bitmap bitmap, Color clearColor)
+        /*private void Clear(Bitmap bitmap, Color clearColor)
         {
             for (int x = 0; x < bitmap.Width; x++)
             {
@@ -33,15 +32,15 @@ namespace MasterBot.Minimap
                     bitmap.SetPixel(x, y, clearColor);
                 }
             }
-        }
+        }*/
 
         public void Update(BlockMap blockMap)
         {
             Bitmap bitmap = new Bitmap(width, height);
-            Clear(bitmap, Color.Black);
-            for (int x = 0; x < bitmap.Width; x++)
+            //Clear(bitmap, Color.Black);
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < bitmap.Height; y++)
+                for (int y = 0; y < height; y++)
                 {
                     IBlock background = blockMap.getBackgroundBlock(x, y);
                     IBlock foreground = blockMap.getBlock(x, y);
@@ -53,15 +52,17 @@ namespace MasterBot.Minimap
                     if (background != null && background.Id != 0 && MinimapColors.ColorCodes.ContainsKey(background.Id))
                     {
                         bitmap.SetPixel(x, y, MinimapColors.ColorCodes[background.Id]);
+                        continue;
                     }
+                    bitmap.SetPixel(x, y, Color.Black);
                 }
             }
             Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
             foreach (Player player in tempPlayers.Values)
             {
-                if (player.blockX >= 0 && player.blockX < width)
-                    if (player.blockY >= 0 && player.blockY < height)
-                        bitmap.SetPixel(player.blockX, player.blockY, Color.White);
+                if (player.BlockX >= 0 && player.BlockX < width)
+                    if (player.BlockY >= 0 && player.BlockY < height)
+                        bitmap.SetPixel(player.BlockX, player.BlockY, Color.White);
             }
             bot.MainForm.UpdateMinimap(bitmap);
         }

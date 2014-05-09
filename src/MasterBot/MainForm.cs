@@ -141,7 +141,7 @@ namespace MasterBot
 
         private void RtbConsole_TextChanged(object sender, EventArgs e)
         {
-             
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)

@@ -10,10 +10,13 @@ namespace MasterBot
 {
     public class Player : PhysicsPlayer, ICmdSource
     {
-        public Player(IRoom room, int ID, string name, int smiley, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
-            : base(room, ID, name, smiley, xPos, yPos, isGod, isMod, bla, coins, purple, isFriend, level)
-        {
+        private int id;
+        public int Id { get { return id; } }
 
+        public Player(IRoom room, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
+            : base(room, id, name, smiley, xPos, yPos, isGod, isMod, hasChat, coins, purple, isFriend, level)
+        {
+            this.id = id;
         }
     }
 }
