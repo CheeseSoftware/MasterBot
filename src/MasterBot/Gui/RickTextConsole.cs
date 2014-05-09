@@ -34,49 +34,40 @@ namespace Gui
                     int startIndex = 0;
                     int colorIndex = 0;
 
-                    int cStart = -1, CStart = -1, bStart = -1, iStart = -1, uStart = -1;
+                    int fontStart = this.Text.Length;
+                    int cStart = this.Text.Length;
+                    int CStart = this.Text.Length;
                     Color cColor = Color.White;
                     Color CColor = Color.FromArgb(32, 32, 32);
+                    FontStyle fontStyle = FontStyle.Regular;
+
+
 
                     #region lambda
+                    Action EndFont = () =>
+                    {
+                        this.Select(fontStart, this.Text.Length - fontStart);
+                        this.SelectionFont = new Font(this.SelectionFont, fontStyle);
+                        fontStart = this.Text.Length;
+                    };
+
                     Action cEnd = () =>
                     {
                         if (cStart != -1)
                         {
                             this.Select(cStart, this.Text.Length - cStart);
                             this.SelectionColor = cColor;
+                            cStart = this.Text.Length;
                         }
                     };
+
                     Action CEnd = () =>
                     {
                         if (CStart != -1)
                         {
                             this.Select(CStart, this.Text.Length - CStart);
                             this.SelectionBackColor = CColor;
-                        }
-                    };
-                    Action bEnd = () =>
-                    {
-                        if (bStart != -1)
-                        {
-                            this.Select(bStart, this.Text.Length - bStart);
-                            this.SelectionFont = new Font(this.SelectionFont, FontStyle.Bold);
-                        }
-                    };
-                    Action iEnd = () =>
-                    {
-                        if (iStart != -1)
-                        {
-                            this.Select(iStart, this.Text.Length - iStart);
-                            this.SelectionFont = new Font(this.SelectionFont, FontStyle.Italic);
-                        }
-                    };
-                    Action uEnd = () =>
-                    {
-                        if (iStart != -1)
-                        {
-                            this.Select(iStart, this.Text.Length - iStart);
-                            this.SelectionFont = new Font(this.SelectionFont, FontStyle.Underline);
+                            CStart = this.Text.Length;
                         }
                     };
                     #endregion
@@ -87,8 +78,10 @@ namespace Gui
                         {
                             if (text[i] == '%')
                             {
+                                RickTextBox.AppendText(text.Substring(startIndex, i - 1 - startIndex));
                                 this.AppendText("%");
                                 startIndex = i + 1;
+                                i++;
                             }
                             else
                             {
@@ -103,25 +96,23 @@ namespace Gui
                                     case 'S':
                                         cEnd();
                                         CEnd();
-                                        bEnd();
-                                        iEnd();
-                                        uEnd();
+                                        EndFont();
+                                        fontStyle = FontStyle.Regular;
+                                        cColor = Color.White;
+                                        CColor = Color.FromArgb(32, 32, 32);
                                         break;
                                     case 'e':
                                     case 'E':
                                         cEnd();
                                         CEnd();
-                                        bEnd();
+                                        EndFont();
+                                        fontStyle = FontStyle.Bold;
 
                                         cStart = this.Text.Length;
                                         CStart = this.Text.Length;
-                                        bStart = this.Text.Length;
 
-                                        cColor = color[colorIndex];
-                                        colorIndex = (colorIndex + 1) % color.Length;
-
-                                        CColor = color[colorIndex];
-                                        colorIndex = (colorIndex + 1) % color.Length;
+                                        cColor = Color.Red;
+                                        CColor = Color.Black;
                                         break;
                                     case 'c':
                                         cEnd();
@@ -136,25 +127,30 @@ namespace Gui
                                         colorIndex = (colorIndex + 1) % color.Length;
                                         break;
                                     case 'B':
-                                        bEnd();
-                                        bStart = this.Text.Length;
+                                        EndFont();
+                                        fontStyle |= FontStyle.Bold;
+                                        //BEnd();
+                                        //BStart(); // = this.Text.Length;
                                         break;
                                     case 'b':
-                                        bEnd();
+                                        EndFont();
+                                        fontStyle &= ~FontStyle.Bold;
                                         break;
                                     case 'I':
-                                        iEnd();
-                                        iStart = this.Text.Length;
+                                        EndFont();
+                                        fontStyle |= FontStyle.Italic;
                                         break;
                                     case 'i':
-                                        iEnd();
+                                        EndFont();
+                                        fontStyle &= ~FontStyle.Italic;
                                         break;
                                     case 'U':
-                                        uEnd();
-                                        uStart = this.Text.Length;
+                                        EndFont();
+                                        fontStyle |= FontStyle.Underline;
                                         break;
                                     case 'u':
-                                        uEnd();
+                                        EndFont();
+                                        fontStyle &= ~FontStyle.Underline;
                                         break;
 
                                     default:
@@ -176,9 +172,10 @@ namespace Gui
 
                     CEnd();
                     cEnd();
-                    bEnd();
-                    iEnd();
-                    uEnd();
+                    EndFont();
+                    //BEnd();
+                    //IEnd();
+                    //UEnd();
 
                     this.Select(this.Text.Length, 0);
                     this.ScrollToCaret();

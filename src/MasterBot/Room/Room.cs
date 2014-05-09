@@ -47,7 +47,7 @@ namespace MasterBot.Room
         private void UpdatePhysics()
         {
             playerTickStopwatch.Start();
-            while (true)
+            while (bot.Connected)
             {
                 if (playerTickStopwatch.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                 {
