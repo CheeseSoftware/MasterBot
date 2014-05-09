@@ -22,9 +22,9 @@ namespace MasterBot.Room.Block
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
             this.width = width;
             this.height = height;
-            minimap = new Minimap.Minimap(bot, width, height);
+            minimap = new Minimap.Minimap(bot, width, height, bot.Room.Players);
             Timer updateMinimapTimer = new Timer();
-            updateMinimapTimer.Interval = 50;
+            updateMinimapTimer.Interval = 5;
             updateMinimapTimer.AutoReset = true;
             updateMinimapTimer.Elapsed += UpdateMinimap;
             updateMinimapTimer.Start();
@@ -45,9 +45,9 @@ namespace MasterBot.Room.Block
 
         private void Reset()
         {
-            for(int x = 0; x < width; x++)
+            for(int x = 0; x < width + 1; x++)
             {
-                for(int y = 0; y < height; y++)
+                for(int y = 0; y < height + 1; y++)
                 {
                     backgroundMap[x, y] = new Stack<IBlock>();
                     foregroundMap[x, y] = new Stack<IBlock>();
@@ -72,21 +72,21 @@ namespace MasterBot.Room.Block
                 return getBlock(x, y);
             else if (layer == 1)
                 return getBackgroundBlock(x, y);
-            return null;
+            return new NormalBlock(0, 0);
         }
 
         public IBlock getBlock(int x, int y)
         {
             if (isWithinMatrix(x, y) && foregroundMap[x, y].Count > 0)
                 return foregroundMap[x, y].Peek();
-            return null;
+            return new NormalBlock(0, 0); ;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
             if (isWithinMatrix(x, y) && backgroundMap[x, y].Count > 0)
                 return backgroundMap[x, y].Peek();
-            return null;
+            return new NormalBlock(0, 1); ;
         }
 
         public void Clear()

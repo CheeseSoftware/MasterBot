@@ -104,6 +104,7 @@ namespace MasterBot
                         connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                         connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
                         mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
+                        subBotHandler.onConnect(this);
                     },
                     delegate(PlayerIOError tempError)
                     {

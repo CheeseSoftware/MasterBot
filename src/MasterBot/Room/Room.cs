@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using MasterBot.SubBot;
 using MasterBot.Room.Block;
 using MasterBot.Movement;
-using System.Windows.Forms;
+using System.Timers;
+using System.Diagnostics;
+using System.Threading;
 
 namespace MasterBot.Room
 {
@@ -15,7 +17,8 @@ namespace MasterBot.Room
         private IBot bot;
         private BlockMap blockMap = null;
         private Dictionary<int, Player> players = new Dictionary<int, Player>();
-        private Timer playerTickTimer = new Timer();
+        private Stopwatch playerTickStopwatch = new Stopwatch();
+        private Thread playerTickThread;
 
         private string owner = "";
         private string title = "";
@@ -37,18 +40,24 @@ namespace MasterBot.Room
         public Room(IBot bot)
         {
             this.bot = bot;
-            playerTickTimer.Tick += UpdatePhysics;
-            playerTickTimer.Interval = 10;
+            playerTickThread = new Thread(UpdatePhysics);
+            playerTickThread.Start();
         }
 
-        private void UpdatePhysics(object sender, EventArgs e)
+        private void UpdatePhysics()
         {
-            lock (players)
+            playerTickStopwatch.Start();
+            while (true)
             {
-                foreach (PhysicsPlayer player in players.Values)
+                if (playerTickStopwatch.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                 {
-                    player.tick();
+                    playerTickStopwatch.Restart();
+                    foreach (PhysicsPlayer player in players.Values)
+                    {
+                        player.tick();
+                    }
                 }
+                Thread.Sleep(1);
             }
         }
 
@@ -138,7 +147,7 @@ namespace MasterBot.Room
             {
                 blockMap.setBlock(x, y, result);
                 BlockWithPos b = new BlockWithPos(x, y, result);
-                if(blocksSent.Contains(b))
+                if (blocksSent.Contains(b))
                 {
                     blocksSent.Remove(b);
                 }
@@ -291,13 +300,13 @@ namespace MasterBot.Room
 
         private void CheckSentBlocks()
         {
-            foreach(BlockWithPos block in blocksSent)
+            foreach (BlockWithPos block in blocksSent)
             {
                 if (block.Block.TimeSincePlaced > 1000)
                     blocksToSend.Enqueue(block);
             }
         }
-        
+
         public IBlock getBlock(int layer, int x, int y)
         {
             return blockMap.getBlock(layer, x, y);
@@ -313,12 +322,12 @@ namespace MasterBot.Room
 
         public void onConnect(IBot bot)
         {
-            playerTickTimer.Start();
+
         }
 
         public void onDisconnect(IBot bot, string reason)
         {
-            playerTickTimer.Stop();
+
         }
 
         public void onMessage(IBot bot, PlayerIOClient.Message m)
@@ -470,10 +479,10 @@ namespace MasterBot.Room
                     {
                         int id = m.GetInt(0);
                         string text = m.GetString(1);
-                        if(players.ContainsKey(id))
+                        if (players.ContainsKey(id))
                         {
                             Player player = players[id];
-                            if(text.Length > 0 && text[0].Equals('!'))
+                            if (text.Length > 0 && text[0].Equals('!'))
                             {
                                 string textCommandCharRemoved = text.Remove(0, 1);
                                 string[] textSplit = textCommandCharRemoved.Split(' ');
@@ -591,6 +600,12 @@ namespace MasterBot.Room
         public bool HasCode
         {
             get { return isOwner || hasAccess; }
+        }
+
+
+        public Dictionary<int, Player> Players
+        {
+            get { return players; }
         }
     }
 }
