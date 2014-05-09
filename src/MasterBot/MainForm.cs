@@ -133,7 +133,7 @@ namespace MasterBot
         {
             if (e.KeyCode == Keys.Enter)
             {
-                RtbConsole.WriteLine("%B> %b" + RtbConsoleInput.Text/*.Replace("%", "%%")*/, Color.Red, Color.Green);
+                RtbConsole.WriteLine("%B> %b" + RtbConsoleInput.Text.Replace("%", "%%"));
                 //bot.SubBotHandler.onCommand(bot, )
                 RtbConsoleInput.Clear();
             }
