@@ -61,10 +61,11 @@ namespace MasterBot
             {
                 try
                 {
+                    Bitmap temp = new Bitmap(bitmap);
                     this.Invoke(new Action(() =>
                     {
-                        pictureBoxMinimap.Size = bitmap.Size;
-                        pictureBoxMinimap.Image = bitmap;
+                        pictureBoxMinimap.Size = temp.Size;
+                        pictureBoxMinimap.Image = temp;
                     }));
                 }
                 catch { }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,18 @@ namespace MasterBot.Room.Block
         {
             this.id = id;
             this.layer = layer;
+        }
+
+        public Color Color
+        {
+            get 
+            {
+                if (id == 0)
+                    return Color.Black;
+                else if (Minimap.MinimapColors.ColorCodes.ContainsKey(id))
+                    return Minimap.MinimapColors.ColorCodes[id];
+                return Color.Black;
+            }
         }
 
         public int Id

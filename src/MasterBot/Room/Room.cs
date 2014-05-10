@@ -16,6 +16,7 @@ namespace MasterBot.Room
         private BlockMap blockMap = null;
         private Dictionary<int, Player> players = new Dictionary<int, Player>();
         private MicroTimer playerTickTimer = new MicroTimer();
+        private Minimap.Minimap minimap = null;
         //private Thread playerTickThread;
 
         private string owner = "";
@@ -51,8 +52,10 @@ namespace MasterBot.Room
         private void UpdatePhysics(object sender, EventArgs e)
         {
             Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
-            foreach (PhysicsPlayer player in tempPlayers.Values)
+            foreach (Player player in tempPlayers.Values)
             {
+                if (player.Moved && minimap != null)
+                    minimap.DrawPlayer(player);
                 player.tick();
             }
         }
@@ -139,8 +142,9 @@ namespace MasterBot.Room
                         }
                 }
             }
-            if (result != null)
+            if (result != null && blockMap != null)
             {
+                bot.SubBotHandler.onBlockChange(bot, x, y, result, blockMap.getBlock(layer, x, y));
                 blockMap.setBlock(x, y, result);
                 BlockWithPos b = new BlockWithPos(x, y, result);
                 if (blocksSent.Contains(b))
@@ -152,6 +156,10 @@ namespace MasterBot.Room
 
         private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
+            if (minimap == null)
+            {
+                minimap = new Minimap.Minimap(bot, width, height, players);
+            }
             if (blockMap == null)
                 blockMap = new BlockMap(bot, width, height);
             else
@@ -251,6 +259,7 @@ namespace MasterBot.Room
                                     break;
                                 }
                         }
+                       bot.SubBotHandler.onBlockChange(bot, xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
                     }
                     i += toAdd;
                     i += 3;
@@ -329,6 +338,8 @@ namespace MasterBot.Room
 
         public void onConnect(IBot bot)
         {
+            if (minimap != null)
+                minimap.onConnect(bot);
             //playerTickThread = new Thread(UpdatePhysics);
             //playerTickThread.Start();
             playerTickTimer.Start();
@@ -337,11 +348,10 @@ namespace MasterBot.Room
         public void onDisconnect(IBot bot, string reason)
         {
             playerTickTimer.Stop();
+            if (minimap != null)
+                minimap.onDisconnect(bot, reason);
             if (blockMap != null)
-            {
-                blockMap.Die();
                 blockMap.Clear();
-            }
             if (players != null)
                 players.Clear();
         }
@@ -696,5 +706,15 @@ namespace MasterBot.Room
             get { return players; }
         }
 
+        public void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
+        {
+            if (minimap != null)
+                minimap.onBlockChange(bot, x, y, newBlock, oldBlock);
+        }
+
+        public BlockMap BlockMap
+        {
+            get { return blockMap; }
+        }
     }
 }

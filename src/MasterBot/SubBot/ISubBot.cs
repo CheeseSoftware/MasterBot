@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MasterBot.Room.Block;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace MasterBot.SubBot
         void onDisconnect(IBot bot, string reason);
         void onMessage(IBot bot, PlayerIOClient.Message m);
         void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource);
+        void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock);
         void Update(IBot bot);
     }
 }

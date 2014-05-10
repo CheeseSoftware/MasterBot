@@ -1,6 +1,7 @@
 ﻿using MasterBot.SubBot;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,6 @@ namespace MasterBot.Room.Block
         private Stack<IBlock>[,] foregroundMap = null;
         private int width;
         private int height;
-        private Timer updateMinimapTimer;
-
-        public Minimap.Minimap minimap;
 
         public BlockMap(IBot bot, int width, int height)
         {
@@ -24,18 +22,7 @@ namespace MasterBot.Room.Block
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
             this.width = width;
             this.height = height;
-            minimap = new Minimap.Minimap(bot, width, height, bot.Room.Players);
-            updateMinimapTimer = new Timer();
-            updateMinimapTimer.Interval = 20;
-            updateMinimapTimer.AutoReset = true;
-            updateMinimapTimer.Elapsed += UpdateMinimap;
-            updateMinimapTimer.Start();
             Reset();
-        }
-
-        private void UpdateMinimap(object sender, EventArgs e)
-        {
-            minimap.Update(this);
         }
 
         private bool isWithinMatrix(int x, int y)
@@ -78,11 +65,6 @@ namespace MasterBot.Room.Block
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
             this.width = width;
             this.height = height;
-        }
-
-        public void Die()
-        {
-            updateMinimapTimer.Stop();
         }
 
         public void setBlock(int x, int y, IBlock block)
@@ -134,6 +116,14 @@ namespace MasterBot.Room.Block
         public void Clear()
         {
             Reset();
+        }
+
+        public Color getColor(int x, int y)
+        {
+            if (getBlock(x, y).Id != 0)
+                return getBlock(x, y).Color;
+            else
+                return getBackgroundBlock(x, y).Color;
         }
     }
 }

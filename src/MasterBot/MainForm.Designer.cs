@@ -173,7 +173,7 @@
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(167, 20);
             this.textBoxEmail.TabIndex = 1;
-            this.textBoxEmail.Text = "gustav9797@hotmail.se";
+            this.textBoxEmail.Text = "guhammar@gmail.com";
             // 
             // textBoxPassword
             // 
@@ -182,7 +182,7 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(167, 20);
             this.textBoxPassword.TabIndex = 2;
-            this.textBoxPassword.Text = "kasekakorna";
+            this.textBoxPassword.Text = "technic";
             // 
             // buttonLogin
             // 

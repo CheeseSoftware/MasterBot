@@ -5,15 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MasterBot.Room.Block;
+using MasterBot.SubBot;
+using System.Timers;
+using System.Threading;
+using System.Diagnostics;
 
 namespace MasterBot.Minimap
 {
-    public class Minimap
+    public class Minimap : ISubBot
     {
         private IBot bot;
         private int width;
         private int height;
         private Dictionary<int, Player> players = new Dictionary<int, Player>();
+        private Bitmap bitmap;
+        private Thread updateThread;
+        private Queue<KeyValuePair<Point, Color>> pixelsToSet = new Queue<KeyValuePair<Point, Color>>();
+        private Stopwatch minimapUpdateStopwatch = new Stopwatch();
+        private int minimapUpdateDelay = 20;
 
         public Minimap(IBot bot, int width, int height, Dictionary<int, Player> players)
         {
@@ -21,50 +30,75 @@ namespace MasterBot.Minimap
             this.width = width;
             this.height = height;
             this.players = players;
+            this.bitmap = new Bitmap(width, height);
+            updateThread = new Thread(UpdateMinimap);
+            updateThread.Start();
         }
 
-        /*private void Clear(Bitmap bitmap, Color clearColor)
+        private void UpdateMinimap()
         {
-            for (int x = 0; x < bitmap.Width; x++)
+            minimapUpdateStopwatch.Start();
+            while (true)
             {
-                for (int y = 0; y < bitmap.Height; y++)
+                while (pixelsToSet.Count > 0)
                 {
-                    bitmap.SetPixel(x, y, clearColor);
+                    lock (pixelsToSet)
+                    {
+                        KeyValuePair<Point, Color> pixel = pixelsToSet.Dequeue();
+                        bitmap.SetPixel(pixel.Key.X, pixel.Key.Y, pixel.Value);
+                    }
+                }
+                if (minimapUpdateStopwatch.ElapsedMilliseconds >= minimapUpdateDelay)
+                {
+                    bot.MainForm.UpdateMinimap(bitmap);
+                    minimapUpdateStopwatch.Restart();
                 }
             }
-        }*/
+        }
 
-        public void Update(BlockMap blockMap)
+        public void DrawPlayer(Player player)
         {
-            Bitmap bitmap = new Bitmap(width, height);
-            //Clear(bitmap, Color.Black);
-            for (int x = 0; x < width; x++)
+            lock (pixelsToSet)
             {
-                for (int y = 0; y < height; y++)
+                if (player.OldBlockX != -1 && player.OldBlockY != -1)
+                    pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(player.OldBlockX, player.OldBlockY), bot.Room.BlockMap.getColor(player.OldBlockX, player.OldBlockY)));
+                pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(player.BlockX, player.BlockY), Color.White));
+            }
+        }
+
+        public void onConnect(IBot bot)
+        {
+            updateThread = new Thread(UpdateMinimap);
+            updateThread.Start();
+        }
+
+        public void onDisconnect(IBot bot, string reason)
+        {
+            updateThread.Abort();
+        }
+
+        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        {
+        }
+
+        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        {
+        }
+
+        public void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
+        {
+            if (newBlock.Id != oldBlock.Id)
+            {
+                if ((newBlock.Layer == 0 || (newBlock.Layer == 1 && bot.Room.getBlock(0, x, y).Id == 0)) && MinimapColors.ColorCodes.ContainsKey(newBlock.Id))
                 {
-                    IBlock background = blockMap.getBackgroundBlock(x, y);
-                    IBlock foreground = blockMap.getBlock(x, y);
-                    if (foreground != null && foreground.Id != 0 && MinimapColors.ColorCodes.ContainsKey(foreground.Id))
-                    {
-                        bitmap.SetPixel(x, y, MinimapColors.ColorCodes[foreground.Id]);
-                        continue;
-                    }
-                    if (background != null && background.Id != 0 && MinimapColors.ColorCodes.ContainsKey(background.Id))
-                    {
-                        bitmap.SetPixel(x, y, MinimapColors.ColorCodes[background.Id]);
-                        continue;
-                    }
-                    bitmap.SetPixel(x, y, Color.Black);
+                    lock (pixelsToSet)
+                        pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(x, y), MinimapColors.ColorCodes[newBlock.Id]));
                 }
             }
-            Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
-            foreach (Player player in tempPlayers.Values)
-            {
-                if (player.BlockX >= 0 && player.BlockX < width)
-                    if (player.BlockY >= 0 && player.BlockY < height)
-                        bitmap.SetPixel(player.BlockX, player.BlockY, Color.White);
-            }
-            bot.MainForm.UpdateMinimap(bitmap);
+        }
+
+        public void Update(IBot bot)
+        {
         }
     }
 }

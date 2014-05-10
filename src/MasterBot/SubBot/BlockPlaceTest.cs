@@ -58,5 +58,10 @@ namespace MasterBot.SubBot
         public void Update(IBot bot)
         {
         }
+
+        public void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
+        {
+            
+        }
     }
 }

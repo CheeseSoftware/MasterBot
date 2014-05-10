@@ -20,7 +20,10 @@ namespace MasterBot.SubBot
         {
             if (!subBots.ContainsKey(name))
             {
-                subBots.Add(name, subBot);
+                lock (subBots)
+                {
+                    subBots.Add(name, subBot);
+                }
             }
         }
 
@@ -28,7 +31,10 @@ namespace MasterBot.SubBot
         {
             if (subBots.ContainsKey(name))
             {
-                subBots.Remove(name);
+                lock (subBots)
+                {
+                    subBots.Remove(name);
+                }
             }
         }
 
@@ -48,43 +54,68 @@ namespace MasterBot.SubBot
 
         public void onConnect(IBot bot)
         {
-            foreach (ISubBot subBot in subBots.Values)
+            lock (subBots)
             {
-                subBot.onConnect(bot);
+                foreach (ISubBot subBot in subBots.Values)
+                {
+                    subBot.onConnect(bot);
+                }
             }
         }
 
         public void onDisconnect(IBot bot, string reason)
         {
-            foreach (ISubBot subBot in subBots.Values)
+            lock (subBots)
             {
-                subBot.onDisconnect(bot, reason);
+                foreach (ISubBot subBot in subBots.Values)
+                {
+                    subBot.onDisconnect(bot, reason);
+                }
             }
         }
 
         public void onMessage(IBot bot, PlayerIOClient.Message m)
         {
-            foreach(ISubBot subBot in subBots.Values)
+            lock (subBots)
             {
-                subBot.onMessage(bot, m);
+                foreach (ISubBot subBot in subBots.Values)
+                {
+                    subBot.onMessage(bot, m);
+                }
             }
         }
 
         public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
         {
-            foreach (ISubBot subBot in subBots.Values)
+            lock (subBots)
             {
-                subBot.onCommand(bot, cmd, args, cmdSource);
+                foreach (ISubBot subBot in subBots.Values)
+                {
+                    subBot.onCommand(bot, cmd, args, cmdSource);
+                }
             }
         }
 
         public void Update(IBot bot)
         {
-            foreach (ISubBot subBot in subBots.Values)
+            lock (subBots)
             {
-                subBot.Update(bot);
+                foreach (ISubBot subBot in subBots.Values)
+                {
+                    subBot.Update(bot);
+                }
             }
         }
 
+        public void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        {
+            lock (subBots)
+            {
+                foreach (ISubBot subBot in subBots.Values)
+                {
+                    subBot.onBlockChange(bot, x, y, newBlock, oldBlock);
+                }
+            }
+        }
     }
 }

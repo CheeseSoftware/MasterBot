@@ -130,6 +130,8 @@ namespace MasterBot.Movement
         public int smiley;
         public bool hasChat;
         public bool isFriend;
+        private double oldX = -1;
+        private double oldY = -1;
 
         int cx = 0;
         int cy = 0;
@@ -152,6 +154,9 @@ namespace MasterBot.Movement
         public double Y { get { return y; } set { y = value; } }
         public int BlockX { get { return blockX; } set { x = value * 16; } }
         public int BlockY { get { return blockY; } set { y = value * 16; } }
+        public int OldBlockX { get { return (int)Math.Round(((this.oldX) / 16.0)); } }
+        public int OldBlockY { get { return (int)Math.Round(((this.oldY) / 16.0)); } }
+        public bool Moved { get { return BlockX != OldBlockX || BlockY != OldBlockY; } }
 
         public PhysicsPlayer(IRoom room, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
             : base(null, 16)
@@ -255,7 +260,7 @@ namespace MasterBot.Movement
             List<int> _loc_8 = new List<int>();
             //int _loc_10 = 0;
             int _loc_11 = 0;
-            if (param1.x < 0 || param1.y < 0 || param1.x >= room.Width * 16 - 8|| param1.y >= room.Height * 16 - 8)
+            if (param1.x < 0 || param1.y < 0 || param1.x >= room.Width * 16 - 8 || param1.y >= room.Height * 16 - 8)
             {
                 //Console.WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
                 return 1;
@@ -280,7 +285,7 @@ namespace MasterBot.Movement
             {
                 for (int yy = -2; yy < 1; yy++)
                 {
-                    if (_loc_3 + xx > 0 && _loc_3 + xx <room.Width && _loc_4 + yy > 0 && _loc_4 + yy <= room.Height)
+                    if (_loc_3 + xx > 0 && _loc_3 + xx < room.Width && _loc_4 + yy > 0 && _loc_4 + yy <= room.Height)
                     {
                         for (int xTest = 0; xTest < 16; xTest++)
                         {
@@ -785,6 +790,9 @@ namespace MasterBot.Movement
 
         override public void tick()
         {
+            oldX = this.x;
+            oldY = this.y;
+
             this.animoffset = this.animoffset + 0.2;
             if (this.ismod && !this.isgod)
             {

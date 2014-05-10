@@ -27,6 +27,7 @@ namespace MasterBot.Room
         bool HideBlue { get; }
         bool HideTimeDoor { get; }
         Dictionary<int, Player> Players { get; }
+        BlockMap BlockMap { get; }
 
         IBlock getBlock(int layer, int x, int y);
         Stack<IBlock> getOldBlocks(int layer, int x, int y);
