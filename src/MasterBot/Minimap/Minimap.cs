@@ -72,9 +72,16 @@ namespace MasterBot.Minimap
             updateThread.Start();
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public void Die()
         {
             updateThread.Abort();
+            bitmap = new Bitmap(width, height);
+            bot.MainForm.UpdateMinimap(bitmap);
+        }
+
+        public void onDisconnect(IBot bot, string reason)
+        {
+            Die();
         }
 
         public void onMessage(IBot bot, PlayerIOClient.Message m)
@@ -89,10 +96,19 @@ namespace MasterBot.Minimap
         {
             if (newBlock.Id != oldBlock.Id)
             {
-                if ((newBlock.Layer == 0 || (newBlock.Layer == 1 && bot.Room.getBlock(0, x, y).Id == 0)) && MinimapColors.ColorCodes.ContainsKey(newBlock.Id))
+                if(newBlock.Id == 0 && newBlock.Layer == 0)
+                {
+                    pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(x, y), bot.Room.getBlock(1, x, y).Color));
+                }
+                else if ((newBlock.Layer == 0 || (newBlock.Layer == 1 && bot.Room.getBlock(0, x, y).Id == 0)) && MinimapColors.ColorCodes.ContainsKey(newBlock.Id))
                 {
                     lock (pixelsToSet)
-                        pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(x, y), MinimapColors.ColorCodes[newBlock.Id]));
+                    {
+                        if (newBlock.Layer == 0 && newBlock.Color == Color.Transparent)
+                            pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(x, y), bot.Room.getBlock(1, x, y).Color));
+                        else
+                            pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(x, y), newBlock.Color));
+                    }
                 }
             }
         }

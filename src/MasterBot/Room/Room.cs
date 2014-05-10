@@ -66,7 +66,7 @@ namespace MasterBot.Room
             int x;
             int y;
             int blockId;
-            int playerId;
+            int playerId = -1;
             IBlock result = null;
 
             if (m.Type == "b")
@@ -85,7 +85,7 @@ namespace MasterBot.Room
                 x = m.GetInt(0);
                 y = m.GetInt(1);
                 blockId = m.GetInt(2);
-                if (m.Type != "pt" && m.Type != "bs")
+                if (m.Type != "pt" && m.Type != "bs" && m.Count >= 5)
                     playerId = m.GetInt(4);
                 switch (m.Type)
                 {
@@ -144,6 +144,7 @@ namespace MasterBot.Room
             }
             if (result != null && blockMap != null)
             {
+                result.Placer = (players.ContainsKey(playerId) ? players[playerId] : null);
                 bot.SubBotHandler.onBlockChange(bot, x, y, result, blockMap.getBlock(layer, x, y));
                 blockMap.setBlock(x, y, result);
                 BlockWithPos b = new BlockWithPos(x, y, result);
@@ -156,10 +157,16 @@ namespace MasterBot.Room
 
         private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
         {
-            if (minimap == null)
+            if (minimap != null)
             {
+                minimap.Die();
                 minimap = new Minimap.Minimap(bot, width, height, players);
+                Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
+                foreach (Player player in tempPlayers.Values)
+                    minimap.DrawPlayer(player);
             }
+            else
+                minimap = new Minimap.Minimap(bot, width, height, players);
             if (blockMap == null)
                 blockMap = new BlockMap(bot, width, height);
             else
@@ -259,7 +266,7 @@ namespace MasterBot.Room
                                     break;
                                 }
                         }
-                       bot.SubBotHandler.onBlockChange(bot, xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
+                        bot.SubBotHandler.onBlockChange(bot, xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
                     }
                     i += toAdd;
                     i += 3;
@@ -331,17 +338,10 @@ namespace MasterBot.Room
         public void setBlock(int x, int y, IBlock block)
         {
             blocksToSend.Enqueue(new BlockWithPos(x, y, block));
-            //block.Send(bot, x, y);
-            //blocksSent.Add(new BlockWithPos(x, y, block));
-            //blockMap.setBlock(x, y, block);
         }
 
         public void onConnect(IBot bot)
         {
-            if (minimap != null)
-                minimap.onConnect(bot);
-            //playerTickThread = new Thread(UpdatePhysics);
-            //playerTickThread.Start();
             playerTickTimer.Start();
         }
 
@@ -494,7 +494,7 @@ namespace MasterBot.Room
                 case "show":
                     {
                         string type = m.GetString(0);
-                        switch(type)
+                        switch (type)
                         {
                             case "red":
                                 this.hideRed = false;
@@ -580,10 +580,22 @@ namespace MasterBot.Room
                 case "autotext":
                     break;
                 case "clear":
-                    blockMap.Clear();
-                    blockMap.DrawBorder();
-                    blocksToSend.Clear();
-                    blocksSent.Clear();
+                    {
+                        blockMap.Clear();
+                        if (minimap != null)
+                        {
+                            minimap.Die();
+                            minimap = new Minimap.Minimap(bot, width, height, players);
+                            Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
+                            foreach (Player player in tempPlayers.Values)
+                                minimap.DrawPlayer(player);
+                        }
+                        else
+                            minimap = new Minimap.Minimap(bot, width, height, players);
+                        DrawBorder();
+                        blocksToSend.Clear();
+                        blocksSent.Clear();
+                    }
                     break;
                 case "tele":
                     {
@@ -614,6 +626,21 @@ namespace MasterBot.Room
         public void Update(IBot bot)
         {
 
+        }
+
+        public void DrawBorder()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (x == 0 || y == 0 || x == width - 1 || y == width - 1)
+                    {
+                        blockMap.setBlock(x, y, new NormalBlock(9, 0));
+                        bot.SubBotHandler.onBlockChange(bot, x, y, new NormalBlock(9, 0), new NormalBlock(0, 0));
+                    }
+                }
+            }
         }
 
         public string Owner

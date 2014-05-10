@@ -12,6 +12,7 @@ namespace MasterBot.Room.Block
         protected int id;
         protected int layer;
         protected DateTime datePlaced = DateTime.MinValue;
+        protected Player placer = null;
 
         public NormalBlock(int id, int layer)
         {
@@ -54,6 +55,18 @@ namespace MasterBot.Room.Block
         public double TimeSincePlaced
         {
             get { return datePlaced == null ? Double.MaxValue : (DateTime.Now - datePlaced).TotalMilliseconds; }
+        }
+
+        public Player Placer
+        {
+            get
+            {
+                return placer;
+            }
+            set
+            {
+                placer = value;
+            }
         }
 
         public virtual void Send(IBot bot, int x, int y)

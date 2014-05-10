@@ -15,6 +15,7 @@ namespace MasterBot.Room.Block
         DateTime DatePlaced { get; }
         double TimeSincePlaced { get; }
         Color Color { get; }
+        Player Placer { get; set; }
 
         void Send(IBot bot, int x, int y);
     }

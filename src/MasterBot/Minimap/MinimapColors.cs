@@ -23,8 +23,17 @@ namespace MasterBot.Minimap
         private static int cakeBMD = 0;
         private static int bonusCoinBMD = 0;
         private static int mudbubbleBMD = 0;
+        private static int hasardBMD = 0;
+        private static int fireHazardBMD = 0;
+        private static int mudBMD = 0;
+        private static int glowylinebluestraightBMD = 0;
+        private static int glowylineblueslopeBMD = 0;
+        private static int glowylinegreenslopeBMD = 0;
+        private static int glowylinegreenstraightBMD = 0;
+        private static int glowylineyellowstraightBMD = 0;
+        private static int glowylineyellowslopeBMD = 0;
         private static Dictionary<int, Color> colorCodes = new Dictionary<int, Color>();
-        
+
         public static Dictionary<int, Color> ColorCodes { get { return colorCodes; } }
 
         public static Color UIntToColor(uint color)
@@ -71,7 +80,7 @@ namespace MasterBot.Minimap
             return Color.FromArgb(r, g, b);
         }
 
-        private static void createBrick(int id, int layer, int bmd, string bla3, int blocktype, bool bla5, bool bla6, int bla7 = 0, uint colorid = 0)
+        private static void createBrick(int id, int layer, int bmd, string bla3, int blocktype, bool bla5, bool bla6, int xOffset = 0, uint colorid = 0)
         {
             if (colorid != 0 && id != 0)
             {
@@ -79,18 +88,30 @@ namespace MasterBot.Minimap
             }
             else if (layer == ItemLayer.BACKGROUND)
             {
-                Bitmap bitmap1 = new Bitmap("image.png");
-                Rectangle size = new Rectangle(16 * bla7, 0, 16, 16);
+                Bitmap bitmap1 = new Bitmap("image 994.png");
+                Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
                 Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
                 colorCodes.Add(id, getDominantColor(bitmap2));
             }
             else if (layer == ItemLayer.FORGROUND)
             {
-                Bitmap bitmap1 = new Bitmap("image1.png");
-                Rectangle size = new Rectangle(16 * bla7, 0, 16, 16);
+                Bitmap bitmap1 = new Bitmap("image 979.png");
+                Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
                 Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
                 colorCodes.Add(id, getDominantColor(bitmap2));
             }
+            else if (layer == ItemLayer.DECORATION || layer == ItemLayer.ABOVE)
+            {
+                if (!colorCodes.ContainsKey(id))
+                    ColorCodes.Add(id, Color.Transparent);
+            }
+            /*else if (layer == ItemLayer.DECORATION && id != 1000)
+            {
+                Bitmap bitmap1 = new Bitmap("image 1000.png");
+                Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
+                Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
+                colorCodes.Add(id, getDominantColor(bitmap2));
+            }*/
         }
 
         public static void CreateColorCodes()
@@ -209,11 +230,17 @@ namespace MasterBot.Minimap
             //var _loc_22:* = new ItemBrickPackage("tools", "Tool Blocks");
             createBrick(255, ItemLayer.DECORATION, decorationsBMD, "brickspawn", ItemTab.ACTION, true, true, 255 - 128);
             createBrick(ItemId.BRICK_COMPLETE, ItemLayer.ABOVE, completeBMD, "brickcomplete", ItemTab.ACTION, true, false, 0, 0);
+            //var _loc_23:* = new ItemBrickPackage("hazards", "Hazard Blocks")
+            createBrick(361, ItemLayer.DECORATION, hasardBMD, "brickspike", ItemTab.ACTION, true, false, 1, 0);
+            createBrick(368, ItemLayer.ABOVE, fireHazardBMD, "brickfire", ItemTab.ACTION, true, false, 3, 0);
             //var _loc_23:* = new ItemBrickPackage("Ladders", "Ladder Blocks");
-            createBrick(ItemId.CHAIN, ItemLayer.DECORATION, forgroundBricksBMD, "brickcastle", ItemTab.ACTION, false, true, 135, 0);
-            createBrick(ItemId.NINJA_LADDER, ItemLayer.DECORATION, forgroundBricksBMD, "brickninja", ItemTab.ACTION, false, false, 98, 0);
-            createBrick(ItemId.WINE_V, ItemLayer.DECORATION, forgroundBricksBMD, "brickjungle", ItemTab.ACTION, false, true, 174, 0);
-            createBrick(ItemId.WINE_H, ItemLayer.DECORATION, forgroundBricksBMD, "brickjungle", ItemTab.ACTION, false, true, 175, 0);
+            createBrick(118, ItemLayer.DECORATION, forgroundBricksBMD, "brickcastle", ItemTab.ACTION, false, true, 135, 0);
+            createBrick(120, ItemLayer.DECORATION, forgroundBricksBMD, "brickninja", ItemTab.ACTION, false, false, 98, 0);
+            createBrick(98, ItemLayer.DECORATION, forgroundBricksBMD, "brickjungle", ItemTab.ACTION, false, true, 174, 0);
+            createBrick(99, ItemLayer.DECORATION, forgroundBricksBMD, "brickjungle", ItemTab.ACTION, false, true, 175, 0);
+            //var _loc_25:* = new ItemBrickPackage("liquids", "Liquid Blocks");
+            createBrick(119, ItemLayer.ABOVE, waterBMD, "brickwater", ItemTab.ACTION, false, false, 0, 0);
+            createBrick(369, ItemLayer.ABOVE, mudBMD, "brickswamp", ItemTab.ACTION, false, false, 0, 0);
             //var _loc_24:* = new ItemBrickPackage("portal", "Portal Block");
             createBrick(242, ItemLayer.DECORATION, decorationsBMD, "", ItemTab.ACTION, true, true, 242 - 128);
             //var _loc_25:* = new ItemBrickPackage("diamond", "Diamond Block");
@@ -649,6 +676,33 @@ namespace MasterBot.Minimap
             createBrick(371, ItemLayer.ABOVE, decorationsBMD, "brickswamp", ItemTab.DECORATIVE, false, false, 236, 0);
             createBrick(372, ItemLayer.ABOVE, decorationsBMD, "brickswamp", ItemTab.DECORATIVE, false, false, 237, 0);
             createBrick(373, ItemLayer.DECORATION, decorationsBMD, "brickswamp", ItemTab.DECORATIVE, false, false, 238, 0);
+            //var _loc_76:* = new ItemBrickPackage("scifi 2013", "Sci-fi 2013 Blocks");
+            createBrick(375, ItemLayer.DECORATION, glowylineblueslopeBMD, "brickscifi2013", ItemTab.DECORATIVE, false, true, 1, 4289259775);
+            createBrick(376, ItemLayer.DECORATION, glowylinebluestraightBMD, "brickscifi2013", ItemTab.DECORATIVE, false, true, 1, 4289259775);
+            createBrick(379, ItemLayer.DECORATION, glowylinegreenslopeBMD, "brickscifi2013", ItemTab.DECORATIVE, false, true, 1, 4289789814);
+            createBrick(380, ItemLayer.DECORATION, glowylinegreenstraightBMD, "brickscifi2013", ItemTab.DECORATIVE, false, true, 1, 4289789814);
+            createBrick(377, ItemLayer.DECORATION, glowylineyellowslopeBMD, "brickscifi2013", ItemTab.DECORATIVE, false, true, 1, 4294891351);
+            createBrick(378, ItemLayer.DECORATION, glowylineyellowstraightBMD, "brickscifi2013", ItemTab.DECORATIVE, false, true, 1, 4294891351);
+            createBrick(637, ItemLayer.BACKGROUND, backgroundBricksBMD, "brickscifi2013", ItemTab.BACKGROUND, false, true, 131, 4285758849);
+            //var _loc_77:* = new ItemBrickPackage("sparta", "Sparta Blocks");
+            createBrick(382, ItemLayer.DECORATION, decorationsBMD, "bricksparta", ItemTab.DECORATIVE, false, true, 239);
+            createBrick(383, ItemLayer.DECORATION, decorationsBMD, "bricksparta", ItemTab.DECORATIVE, false, true, 240);
+            createBrick(384, ItemLayer.DECORATION, decorationsBMD, "bricksparta", ItemTab.DECORATIVE, false, true, 241);
+            createBrick(208, ItemLayer.FORGROUND, forgroundBricksBMD, "bricksparta", ItemTab.BLOCK, false, true, 180, 4291678675);
+            createBrick(209, ItemLayer.FORGROUND, forgroundBricksBMD, "bricksparta", ItemTab.BLOCK, false, true, 181, 4290895033);
+            createBrick(210, ItemLayer.FORGROUND, forgroundBricksBMD, "bricksparta", ItemTab.BLOCK, false, true, 182, 4293248719);
+            createBrick(211, ItemLayer.DECORATION, forgroundBricksBMD, "bricksparta", ItemTab.BLOCK, false, true, 183, 4290889673);
+            createBrick(638, ItemLayer.BACKGROUND, backgroundBricksBMD, "bricksparta", ItemTab.BACKGROUND, false, false, 132, 4286020477);
+            createBrick(639, ItemLayer.BACKGROUND, backgroundBricksBMD, "bricksparta", ItemTab.BACKGROUND, false, false, 133, 4285563247);
+            createBrick(640, ItemLayer.BACKGROUND, backgroundBricksBMD, "bricksparta", ItemTab.BACKGROUND, false, false, 134, 4286805627);
+            //var _loc_78:* = new ItemBrickPackage("sign", "BC Text Sign");
+            createBrick(385, ItemLayer.DECORATION, decorationsBMD, "buildersclub", ItemTab.ACTION, true, true, 242);
+            //var _loc_79:* = new ItemBrickPackage("farm", "Farm blocks");
+            createBrick(386, ItemLayer.ABOVE, decorationsBMD, "brickfarm", ItemTab.DECORATIVE, false, true, 243);
+            createBrick(387, ItemLayer.ABOVE, decorationsBMD, "brickfarm", ItemTab.DECORATIVE, false, true, 244);
+            createBrick(388, ItemLayer.ABOVE, decorationsBMD, "brickfarm", ItemTab.DECORATIVE, false, true, 245);
+            createBrick(389, ItemLayer.ABOVE, decorationsBMD, "brickfarm", ItemTab.DECORATIVE, false, true, 246);
+            createBrick(212, ItemLayer.DECORATION, forgroundBricksBMD, "brickfarm", ItemTab.BLOCK, false, true, 184, 4291608181);
         }
     }
 }

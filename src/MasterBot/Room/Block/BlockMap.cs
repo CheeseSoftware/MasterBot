@@ -44,21 +44,6 @@ namespace MasterBot.Room.Block
             }
         }
 
-        public void DrawBorder()
-        {
-            for (int x = 0; x < width + 1; x++)
-            {
-                for (int y = 0; y < height + 1; y++)
-                {
-                    if (x == 0 || y == 0 || x == width - 1 || y == width - 1)
-                    {
-                        backgroundMap[x, y].Push(new NormalBlock(9, 0));
-                        foregroundMap[x, y].Push(new NormalBlock(9, 0));
-                    }
-                }
-            }
-        }
-
         public void setSize(int width, int height)
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];
@@ -101,14 +86,14 @@ namespace MasterBot.Room.Block
 
         public IBlock getBlock(int x, int y)
         {
-            if (isWithinMatrix(x, y) && foregroundMap[x, y].Count > 0)
+            if (isWithinMatrix(x, y) && foregroundMap[x, y] != null && foregroundMap[x, y].Count > 0)
                 return foregroundMap[x, y].Peek();
             return new NormalBlock(0, 0); ;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
-            if (isWithinMatrix(x, y) && backgroundMap[x, y].Count > 0)
+            if (isWithinMatrix(x, y) && backgroundMap[x, y] != null && backgroundMap[x, y].Count > 0)
                 return backgroundMap[x, y].Peek();
             return new NormalBlock(0, 1); ;
         }
@@ -120,10 +105,13 @@ namespace MasterBot.Room.Block
 
         public Color getColor(int x, int y)
         {
-            if (getBlock(x, y).Id != 0)
+            if (getBlock(x, y).Id != 0 && getBlock(x, y).Color != Color.Transparent)
                 return getBlock(x, y).Color;
-            else
+            else if (getBackgroundBlock(x, y).Color != Color.Transparent)
                 return getBackgroundBlock(x, y).Color;
+            else
+                return Color.Black;
+
         }
     }
 }

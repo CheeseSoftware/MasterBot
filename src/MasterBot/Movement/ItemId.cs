@@ -36,10 +36,10 @@
         public const int ZOMBIE_DOOR = 207;
         public const int GLOWYLINE_BLUE_SLOPE = 375;
         public const int GLOWY_LINE_BLUE_STRAIGHT = 376;
-        public const int GLOWY_LINE_YELLOW_SLOPE = 377;
-        public const int GLOWY_LINE_YELLOW_STRAIGHT = 378;
         public const int GLOWY_LINE_GREEN_SLOPE = 379;
         public const int GLOWY_LINE_GREEN_STRAIGHT = 380;
+        public const int GLOWY_LINE_YELLOW_SLOPE = 377;
+        public const int GLOWY_LINE_YELLOW_STRAIGHT = 378;
         public const int PORTAL_INVISIBLE = 381;
         public const int TEXT_SIGN = 385;
 
