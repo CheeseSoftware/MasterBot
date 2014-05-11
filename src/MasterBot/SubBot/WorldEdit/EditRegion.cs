@@ -25,6 +25,10 @@ namespace MasterBot.SubBot.WorldEdit
 
         public Point SecondCorner { get { return new Point(x2, y2); } set { x2 = value.X; y2 = value.Y; } }
 
+        public int Width { get { return Math.Abs(x2 - x1); } }
+
+        public int Height { get { return Math.Abs(y2 - y1); } }
+
         public EditRegion()
         {
 

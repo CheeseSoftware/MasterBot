@@ -151,11 +151,11 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 if (region.FirstCornerSet)
                                 {
-                                    BlockMap selection = new BlockMap(bot, bot.Room.Width, bot.Room.Height);
+                                    BlockMap selection = new BlockMap(bot, region.Width, region.Height);
                                     foreach (Point pos in region)
                                     {
-                                        selection.setBlock(pos.X, pos.Y, bot.Room.getBlock(1, pos.X, pos.Y));
-                                        selection.setBlock(pos.X, pos.Y, bot.Room.getBlock(0, pos.X, pos.Y));
+                                        selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(1, pos.X, pos.Y));
+                                        selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(0, pos.X, pos.Y));
                                     }
                                     player.SetMetadata("selection", selection);
                                 }
