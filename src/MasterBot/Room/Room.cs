@@ -665,8 +665,7 @@ namespace MasterBot.Room
                         {
                             minimap.Die();
                             minimap = new Minimap.Minimap(bot, width, height);
-                            Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
-                            foreach (Player player in tempPlayers.Values)
+                            foreach (Player player in players.Values)
                                 minimap.DrawPlayer(player);
                         }
                         else

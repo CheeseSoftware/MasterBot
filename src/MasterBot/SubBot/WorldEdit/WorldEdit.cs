@@ -16,7 +16,7 @@ namespace MasterBot.SubBot.WorldEdit
 
         }
 
-        private void DrawLine(IBot bot, int x1, int y1, int x2, int y2, IBlock block)
+        public void DrawLine(IBot bot, int x1, int y1, int x2, int y2, IBlock block)
         {
             int iTag = 0;
             int dx, dy;
@@ -75,6 +75,18 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
+        public void DrawCircle(IBot bot, int x, int y, int radius, IBlock block)
+        {
+            for (int xx = -radius; xx <= radius; xx++)
+            {
+                for (int yy = -radius; yy <= radius; yy++)
+                {
+                    if (xx * xx + yy * yy <= radius * radius)
+                        bot.Room.setBlock(xx + x, yy + y, block);
+                }
+            }
+        }
+
         public void onConnect(IBot bot)
         {
         }
@@ -92,106 +104,125 @@ namespace MasterBot.SubBot.WorldEdit
             if (cmdSource is Player)
             {
                 Player player = (Player)cmdSource;
+                if (player.GetMetadata("editregion") == null)
+                    player.SetMetadata("editregion", new EditRegion());
                 EditRegion region = (EditRegion)player.GetMetadata("editregion");
-                if (region != null)
+                switch (cmd)
                 {
-                    switch (cmd)
-                    {
-                        case "set":
+                    case "set":
+                        {
+                            if (region.Set)
                             {
-                                if (region.Set)
+                                if (args.Length >= 1)
                                 {
-                                    if (args.Length >= 1)
+                                    int id = -1;
+                                    int.TryParse(args[0], out id);
+                                    if (id != -1)
                                     {
-                                        int id = -1;
-                                        int.TryParse(args[0], out id);
-                                        if (id != -1)
-                                        {
-                                            int layer = id >= 500 ? 1 : 0;
-                                            foreach (Point pos in region)
-                                            {
-                                                if (bot.Room.getBlock(layer, pos.X, pos.Y).Id != id)
-                                                    bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(id, layer));
-                                            }
-                                        }
-                                        else
-                                            bot.Connection.Send("say", player.name + ": Invalid ID.");
-                                    }
-                                    else
-                                        bot.Connection.Send("say", player.name + ": Usage: !set <id>");
-                                }
-                                else
-                                    player.Send(bot, "You have to set a region.");
-                                break;
-                            }
-                        case "replace":
-                            {
-                                if (region.Set)
-                                {
-                                    if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]))
-                                    {
-                                        int blockToReplace = int.Parse(args[0]);
-                                        int blockToReplaceWith = int.Parse(args[1]);
+                                        int layer = id >= 500 ? 1 : 0;
                                         foreach (Point pos in region)
                                         {
-                                            if (bot.Room.getBlock(blockToReplace >= 500 ? 1 : 0, pos.X, pos.Y).Id == blockToReplace)
-                                            {
-                                                bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(blockToReplaceWith, blockToReplaceWith >= 500 ? 1 : 0));
-                                            }
+                                            if (bot.Room.getBlock(layer, pos.X, pos.Y).Id != id)
+                                                bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(id, layer));
                                         }
                                     }
                                     else
-                                        bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
+                                        bot.Connection.Send("say", player.name + ": Invalid ID.");
                                 }
                                 else
-                                    player.Send(bot, "You have to set a region.");
-                                break;
+                                    bot.Connection.Send("say", player.name + ": Usage: !set <id>");
                             }
-                        case "copy":
+                            else
+                                player.Send(bot, "You have to set a region.");
+                            break;
+                        }
+                    case "replace":
+                        {
+                            if (region.Set)
                             {
-                                if (region.FirstCornerSet)
+                                if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]))
                                 {
-                                    BlockMap selection = new BlockMap(bot, region.Width, region.Height);
+                                    int blockToReplace = int.Parse(args[0]);
+                                    int blockToReplaceWith = int.Parse(args[1]);
                                     foreach (Point pos in region)
                                     {
-                                        selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(1, pos.X, pos.Y));
-                                        selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(0, pos.X, pos.Y));
-                                    }
-                                    player.SetMetadata("selection", selection);
-                                }
-                                else
-                                    player.Send(bot, "You have to place a region block.");
-                                break;
-                            }
-                        case "paste":
-                            {
-                                if (region.FirstCornerSet)
-                                {
-                                    BlockMap selection = (BlockMap)player.GetMetadata("selection");
-                                    if (selection != null)
-                                    {
-                                        for (int x = 0; x < selection.Width; x++)
+                                        if (bot.Room.getBlock(blockToReplace >= 500 ? 1 : 0, pos.X, pos.Y).Id == blockToReplace)
                                         {
-                                            for (int y = 0; y < selection.Height; y++)
-                                            {
-                                                int blax = x + region.FirstCorner.X;
-                                                int blay = y + region.FirstCorner.Y;
-                                                bot.Room.setBlock(blax, blay, selection.getBackgroundBlock(x, y));
-                                                bot.Room.setBlock(blax, blay, selection.getBlock(x, y));
-                                            }
+                                            bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(blockToReplaceWith, blockToReplaceWith >= 500 ? 1 : 0));
                                         }
                                     }
-                                    else
-                                        player.Send(bot, "You have to copy first.");
                                 }
                                 else
-                                    player.Send(bot, "You have to place a region block.");
-                                break;
+                                    bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
                             }
-                    }
+                            else
+                                player.Send(bot, "You have to set a region.");
+                            break;
+                        }
+                    case "copy":
+                        {
+                            if (region.FirstCornerSet)
+                            {
+                                BlockMap selection = new BlockMap(bot, region.Width, region.Height);
+                                foreach (Point pos in region)
+                                {
+                                    selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(1, pos.X, pos.Y));
+                                    selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(0, pos.X, pos.Y));
+                                }
+                                player.SetMetadata("selection", selection);
+                            }
+                            else
+                                player.Send(bot, "You have to place a region block.");
+                            break;
+                        }
+                    case "paste":
+                        {
+                            if (region.FirstCornerSet)
+                            {
+                                BlockMap selection = (BlockMap)player.GetMetadata("selection");
+                                if (selection != null)
+                                {
+                                    for (int x = 0; x < selection.Width; x++)
+                                    {
+                                        for (int y = 0; y < selection.Height; y++)
+                                        {
+                                            int blax = x + region.FirstCorner.X;
+                                            int blay = y + region.FirstCorner.Y;
+                                            bot.Room.setBlock(blax, blay, selection.getBackgroundBlock(x, y));
+                                            bot.Room.setBlock(blax, blay, selection.getBlock(x, y));
+                                        }
+                                    }
+                                }
+                                else
+                                    player.Send(bot, "You have to copy first.");
+                            }
+                            else
+                                player.Send(bot, "You have to place a region block.");
+                            break;
+                        }
+                    case "circle":
+                        {
+                            if (region.FirstCornerSet)
+                            {
+                                int radius;
+                                int block;
+                                if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
+                                {
+                                    DrawCircle(bot, region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                }
+                                else
+                                    player.Send(bot, "Usage: !circle <radius> <block>");
+                            }
+                            else
+                                player.Send(bot, "You have to place a region block.");
+                            break;
+                        }
+                    default:
+                        {
+                            return;
+                        }
                 }
-                else
-                    bot.Connection.Send("say", player.name + ": You have to place atleast one region block.");
+                region.Reset();
             }
         }
 

@@ -34,6 +34,14 @@ namespace MasterBot.SubBot.WorldEdit
 
         }
 
+        public void Reset()
+        {
+            x1 = -1;
+            y1 = -1;
+            x2 = -1;
+            y2 = -1;
+        }
+
         public IEnumerator GetEnumerator()
         {
             int tempx1 = x1;

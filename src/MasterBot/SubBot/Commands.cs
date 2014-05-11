@@ -71,11 +71,11 @@ namespace MasterBot
                                             blocksToFill.Add(current);
                                             blocksToCheck.Enqueue(current);
                                             total++;
-                                            if (total > 10000)
+                                            /*if (total > 10000)
                                             {
                                                 bot.Connection.Send("say", "Don't try to fill the whole world, fool!");
                                                 return;
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
