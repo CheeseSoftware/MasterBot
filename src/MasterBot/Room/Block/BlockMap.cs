@@ -16,7 +16,7 @@ namespace MasterBot.Room.Block
         private int width;
         private int height;
 
-        public BlockMap(IBot bot, int width, int height)
+        public BlockMap(IBot bot, int width = 0, int height = 0)
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
@@ -54,7 +54,7 @@ namespace MasterBot.Room.Block
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (isWithinMatrix(x, y))
+            if (block != null && isWithinMatrix(x, y))
             {
                 if (block.Layer == 0)
                     foregroundMap[x, y].Push(block);

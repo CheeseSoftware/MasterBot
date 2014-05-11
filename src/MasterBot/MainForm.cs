@@ -21,6 +21,21 @@ namespace MasterBot
         {
             this.bot = bot;
             InitializeComponent();
+            System.Timers.Timer roomUpdateTimer = new System.Timers.Timer();
+            roomUpdateTimer.Interval = 50;
+            roomUpdateTimer.Elapsed += delegate
+            {
+                try
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        blocksSentNumericUpDown.Value = bot.Room.BlocksSentSize;
+                        blocksToSendNumericUpDown.Value = bot.Room.BlocksToSendSize;
+                    }));
+                }
+                catch { }
+            };
+            roomUpdateTimer.Start();
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
@@ -148,6 +163,11 @@ namespace MasterBot
         private void MainForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonSendCode_Click(object sender, EventArgs e)
+        {
+            bot.Connection.Send("access", textBoxCode.Text);
         }
 
     }

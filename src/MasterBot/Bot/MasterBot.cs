@@ -9,6 +9,7 @@ using MasterBot.Room;
 using PlayerIOClient;
 using MasterBot.Movement;
 using MasterBot.Minimap;
+using MasterBot.SubBot.WorldEdit;
 
 namespace MasterBot
 {
@@ -30,6 +31,8 @@ namespace MasterBot
             subBotHandler = new SubBotHandler();
             subBotHandler.AddSubBot("Room", (ISubBot)(room = new Room.Room(this)));
             subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest());
+            subBotHandler.AddSubBot("Commands", new Commands());
+            subBotHandler.AddSubBot("WorldEdit", new WorldEdit());
             mainForm = new MainForm(this);
             mainForm.FormClosing += delegate 
             { 

@@ -25,22 +25,13 @@ namespace MasterBot.Room.Block
 
         public override bool Equals(object obj)
         {
-            if(obj != null && obj is BlockWithPos)
+            if (obj != null && obj is BlockWithPos)
             {
                 BlockWithPos other = (BlockWithPos)obj;
                 if (other.block.Equals(block) && other.X == x && other.Y == y)
                     return true;
             }
             return false;
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 5;
-            hash = (hash * 3) + x.GetHashCode();
-            hash = (hash * 3) + y.GetHashCode();
-            hash = (hash * 3) + block.GetHashCode();
-            return hash;
         }
     }
 }

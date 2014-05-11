@@ -17,19 +17,17 @@ namespace MasterBot.Minimap
         private IBot bot;
         private int width;
         private int height;
-        private Dictionary<int, Player> players = new Dictionary<int, Player>();
         private Bitmap bitmap;
         private Thread updateThread;
         private Queue<KeyValuePair<Point, Color>> pixelsToSet = new Queue<KeyValuePair<Point, Color>>();
         private Stopwatch minimapUpdateStopwatch = new Stopwatch();
         private int minimapUpdateDelay = 20;
 
-        public Minimap(IBot bot, int width, int height, Dictionary<int, Player> players)
+        public Minimap(IBot bot, int width, int height)
         {
             this.bot = bot;
             this.width = width;
             this.height = height;
-            this.players = players;
             this.bitmap = new Bitmap(width, height);
             updateThread = new Thread(UpdateMinimap);
             updateThread.Start();
@@ -53,6 +51,7 @@ namespace MasterBot.Minimap
                     bot.MainForm.UpdateMinimap(bitmap);
                     minimapUpdateStopwatch.Restart();
                 }
+                Thread.Sleep(5);
             }
         }
 

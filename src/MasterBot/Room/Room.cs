@@ -7,14 +7,15 @@ using MasterBot.SubBot;
 using MasterBot.Room.Block;
 using MasterBot.Movement;
 using System.Timers;
+using System.Threading;
 
 namespace MasterBot.Room
 {
     public class Room : IRoom, ISubBot
     {
         private IBot bot;
-        private BlockMap blockMap = null;
-        private Dictionary<int, Player> players = new Dictionary<int, Player>();
+        private BlockMap blockMap;
+        private SafeDictionary<int, Player> players = new SafeDictionary<int, Player>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
         //private Thread playerTickThread;
@@ -37,12 +38,16 @@ namespace MasterBot.Room
         private bool hideBlue = false;
         private bool hideTimeDoor = false;
 
-        private HashSet<BlockWithPos> blocksSent = new HashSet<BlockWithPos>();
+        private List<BlockWithPos> blocksSent = new List<BlockWithPos>();
         private Queue<BlockWithPos> blocksToSend = new Queue<BlockWithPos>();
+
+        private Thread blockRepairThread;
+        private Thread checkSentBlocksThread;
 
         public Room(IBot bot)
         {
             this.bot = bot;
+            this.blockMap = new BlockMap(bot);
             //playerTickThread = new Thread(UpdatePhysics);
             playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
             playerTickTimer.MicroTimerElapsed += UpdatePhysics;
@@ -51,8 +56,8 @@ namespace MasterBot.Room
 
         private void UpdatePhysics(object sender, EventArgs e)
         {
-            Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
-            foreach (Player player in tempPlayers.Values)
+            //Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
+            foreach (Player player in players.Values)
             {
                 if (player.Moved && minimap != null)
                     minimap.DrawPlayer(player);
@@ -145,10 +150,13 @@ namespace MasterBot.Room
             if (result != null && blockMap != null)
             {
                 result.Placer = (players.ContainsKey(playerId) ? players[playerId] : null);
+                result.OnReceive(bot, x, y);
                 bot.SubBotHandler.onBlockChange(bot, x, y, result, blockMap.getBlock(layer, x, y));
                 blockMap.setBlock(x, y, result);
                 BlockWithPos b = new BlockWithPos(x, y, result);
-                if (blocksSent.Contains(b))
+                lock (blocksSent)
+                { }
+                while (blocksSent.Contains(b))
                 {
                     blocksSent.Remove(b);
                 }
@@ -160,20 +168,14 @@ namespace MasterBot.Room
             if (minimap != null)
             {
                 minimap.Die();
-                minimap = new Minimap.Minimap(bot, width, height, players);
-                Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
-                foreach (Player player in tempPlayers.Values)
+                minimap = new Minimap.Minimap(bot, width, height);
+                foreach (Player player in players.Values)
                     minimap.DrawPlayer(player);
             }
             else
-                minimap = new Minimap.Minimap(bot, width, height, players);
-            if (blockMap == null)
-                blockMap = new BlockMap(bot, width, height);
-            else
-            {
-                blockMap.setSize(width, height);
-                blockMap.Clear();
-            }
+                minimap = new Minimap.Minimap(bot, width, height);
+            blockMap.setSize(width, height);
+            blockMap.Clear();
             //world start at 17 "ws"
             uint i = ws;
             for (; (int)(i - 2) <= ws || !(m[i - 2] is string); i++)
@@ -192,6 +194,8 @@ namespace MasterBot.Room
                         int xIndex = xArray[x] * 256 + xArray[x + 1];
                         int yIndex = yArray[x] * 256 + yArray[x + 1];
 
+                        IBlock result = null;
+
                         switch (blockId)
                         {
                             case 242: //portal
@@ -200,72 +204,74 @@ namespace MasterBot.Room
                                     int rotation = m.GetInt(i + 2);
                                     int id = m.GetInt(i + 3);
                                     int destination = m.GetInt(i + 4);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockPortal(rotation, id, destination));
+                                    result = new BlockPortal(rotation, id, destination);
                                     toAdd = 3;
                                     break;
                                 }
                             case 43: //coin door
                                 {
                                     int coins = m.GetInt(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockCoinDoor(coins));
+                                    result = new BlockCoinDoor(coins);
                                     toAdd = 1;
                                     break;
                                 }
                             case 165: //coin gate
                                 {
                                     int coins = m.GetInt(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockCoinGate(coins));
+                                    result = new BlockCoinGate(coins);
                                     toAdd = 1;
                                     break;
                                 }
                             case 361: //spikes
                                 {
                                     int rotation = m.GetInt(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockSpikes(rotation));
+                                    result = new BlockSpikes(rotation);
                                     toAdd = 1;
                                     break;
                                 }
                             case 77: //piano
                                 {
                                     int note = m.GetInt(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockPiano(note));
+                                    result = new BlockPiano(note);
                                     toAdd = 1;
                                     break;
                                 }
                             case 83: //drums
                                 {
                                     int note = m.GetInt(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockDrums(note));
+                                    result = new BlockDrums(note);
                                     toAdd = 1;
                                     break;
                                 }
                             case 1000: //text
                                 {
                                     string text = m.GetString(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockText(text));
+                                    result = new BlockText(text);
                                     toAdd = 1;
                                     break;
                                 }
                             case 385: //sign
                                 {
                                     string text = m.GetString(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockSign(text));
+                                    result = new BlockSign(text);
                                     toAdd = 1;
                                     break;
                                 }
                             case 374: //world portal
                                 {
                                     string destination = m.GetString(i + 2);
-                                    blockMap.setBlock(xIndex, yIndex, new BlockWorldPortal(destination));
+                                    result = new BlockWorldPortal(destination);
                                     toAdd = 1;
                                     break;
                                 }
                             default:
                                 {
-                                    blockMap.setBlock(xIndex, yIndex, new NormalBlock(blockId, layer));
+                                    result = new NormalBlock(blockId, layer);
                                     break;
                                 }
                         }
+                        result.OnReceive(bot, xIndex, yIndex);
+                        blockMap.setBlock(xIndex, yIndex, result);
                         bot.SubBotHandler.onBlockChange(bot, xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
                     }
                     i += toAdd;
@@ -283,7 +289,7 @@ namespace MasterBot.Room
             plays = m.GetInt(2);
             woots = m.GetInt(3);
             totalWoots = m.GetInt(4);
-            worldKey = m.GetString(5);
+            worldKey = rot13(m.GetString(5));
 
             //irrelevant information
             /*int myId = m.GetInt(6);
@@ -308,21 +314,80 @@ namespace MasterBot.Room
 
         private void BlockRepairLoop()
         {
-            while (blocksToSend.Count > 0)
+            while (true)
             {
-                BlockWithPos block = blocksToSend.Dequeue();
-                block.Block.Send(bot, block.X, block.Y);
-                System.Threading.Thread.Sleep(5);
+                while (blocksToSend.Count > 0)
+                {
+                    lock (blocksToSend)
+                    {
+                        BlockWithPos block = blocksToSend.Dequeue();
+                        if (blockMap.getBlock(block.X, block.Y) != block.Block)
+                        {
+                            block.Block.Send(bot, block.X, block.Y);
+                            lock (blocksSent)
+                                blocksSent.Add(block);
+                        }
+                    }
+                    System.Threading.Thread.Sleep(11);
+                }
+                System.Threading.Thread.Sleep(1);
             }
         }
 
         private void CheckSentBlocks()
         {
-            foreach (BlockWithPos block in blocksSent)
+            List<BlockWithPos> tempBlocksSent;
+            while (true)
             {
-                if (block.Block.TimeSincePlaced > 1000)
-                    blocksToSend.Enqueue(block);
+                lock (blocksSent)
+                    tempBlocksSent = new List<BlockWithPos>(blocksSent);
+                foreach (BlockWithPos block in tempBlocksSent.ToList())
+                {
+                    if (block != null && block.Block != null && !block.Block.Placed && !blocksToSend.Contains(block))
+                    {
+                        lock (blocksToSend)
+                        {
+                            if (block.Block.TimeSinceSent > 500)
+                                blocksToSend.Enqueue(block);
+                        }
+                    }
+                }
+                System.Threading.Thread.Sleep(1);
             }
+        }
+
+        private string rot13(string arg1)
+        {
+            int num = 0;
+            string str = "";
+            for (int i = 0; i < arg1.Length; i++)
+            {
+                num = arg1[i];
+                if ((num >= 0x61) && (num <= 0x7a))
+                {
+                    if (num > 0x6d)
+                    {
+                        num -= 13;
+                    }
+                    else
+                    {
+                        num += 13;
+                    }
+                }
+                else if ((num >= 0x41) && (num <= 90))
+                {
+                    if (num > 0x4d)
+                    {
+                        num -= 13;
+                    }
+                    else
+                    {
+                        num += 13;
+                    }
+                }
+                str = str + ((char)num);
+            }
+            return str;
         }
 
         public Stack<IBlock> getOldBlocks(int layer, int x, int y)
@@ -337,17 +402,28 @@ namespace MasterBot.Room
 
         public void setBlock(int x, int y, IBlock block)
         {
-            blocksToSend.Enqueue(new BlockWithPos(x, y, block));
+            if (block != null)
+            {
+                blocksToSend.Enqueue(new BlockWithPos(x, y, block));
+            }
         }
 
         public void onConnect(IBot bot)
         {
             playerTickTimer.Start();
+            blockRepairThread = new Thread(BlockRepairLoop);
+            checkSentBlocksThread = new Thread(CheckSentBlocks);
+            blockRepairThread.Start();
+            checkSentBlocksThread.Start();
         }
 
         public void onDisconnect(IBot bot, string reason)
         {
             playerTickTimer.Stop();
+            if (blockRepairThread != null)
+                blockRepairThread.Abort();
+            if (checkSentBlocksThread != null)
+                checkSentBlocksThread.Abort();
             if (minimap != null)
                 minimap.onDisconnect(bot, reason);
             if (blockMap != null)
@@ -368,8 +444,10 @@ namespace MasterBot.Room
                     }
                 case "reset":
                     {
-                        blocksToSend.Clear();
-                        blocksSent.Clear();
+                        lock (blocksToSend)
+                            blocksToSend.Clear();
+                        lock (blocksSent)
+                            blocksSent.Clear();
                         LoadWorld(m, 0, width, height);
                         break;
                     }
@@ -585,13 +663,13 @@ namespace MasterBot.Room
                         if (minimap != null)
                         {
                             minimap.Die();
-                            minimap = new Minimap.Minimap(bot, width, height, players);
+                            minimap = new Minimap.Minimap(bot, width, height);
                             Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
                             foreach (Player player in tempPlayers.Values)
                                 minimap.DrawPlayer(player);
                         }
                         else
-                            minimap = new Minimap.Minimap(bot, width, height, players);
+                            minimap = new Minimap.Minimap(bot, width, height);
                         DrawBorder();
                         blocksToSend.Clear();
                         blocksSent.Clear();
@@ -728,7 +806,7 @@ namespace MasterBot.Room
             get { return hideTimeDoor; }
         }
 
-        public Dictionary<int, Player> Players
+        public SafeDictionary<int, Player> Players
         {
             get { return players; }
         }
@@ -742,6 +820,17 @@ namespace MasterBot.Room
         public BlockMap BlockMap
         {
             get { return blockMap; }
+        }
+
+
+        public int BlocksToSendSize
+        {
+            get { return blocksToSend.Count; }
+        }
+
+        public int BlocksSentSize
+        {
+            get { return blocksSent.Count; }
         }
     }
 }

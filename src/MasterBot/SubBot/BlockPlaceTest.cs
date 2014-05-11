@@ -48,7 +48,7 @@ namespace MasterBot.SubBot
         {
             if(newBlock.Placer != null && blockPlayers.Contains(newBlock.Placer.Id))
             {
-                bot.Connection.Send("say", "That block is: " + oldBlock.Id + ", placed by " + (oldBlock.Placer != null ? oldBlock.Placer.name : "undefined"));
+                bot.Connection.Send("say", "That block is: " + oldBlock.Id + ", placed by " + (oldBlock.Placer != null ? oldBlock.Placer.name : "undefined " + "X:" + x + " Y:" + y));
                 blockPlayers.Remove(newBlock.Placer.Id);
             }
         }

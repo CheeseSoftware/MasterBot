@@ -11,7 +11,10 @@ namespace MasterBot.Room.Block
     {
         protected int id;
         protected int layer;
+        protected bool placed = false;
+        protected bool sent = false;
         protected DateTime datePlaced = DateTime.MinValue;
+        protected DateTime dateSent = DateTime.MinValue;
         protected Player placer = null;
 
         public NormalBlock(int id, int layer)
@@ -50,11 +53,12 @@ namespace MasterBot.Room.Block
         public DateTime DatePlaced
         {
             get { return datePlaced; }
+            set { datePlaced = value; }
         }
 
         public double TimeSincePlaced
         {
-            get { return datePlaced == null ? Double.MaxValue : (DateTime.Now - datePlaced).TotalMilliseconds; }
+            get { return !placed ? 0 : (DateTime.Now - datePlaced).TotalMilliseconds; }
         }
 
         public Player Placer
@@ -71,13 +75,29 @@ namespace MasterBot.Room.Block
 
         public virtual void Send(IBot bot, int x, int y)
         {
-            bot.Connection.Send("b", bot.Room.WorldKey, Layer, x, y, Id);
+            dateSent = DateTime.Now;
+            bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id);
+        }
+
+        public virtual void OnReceive(IBot bot, int x, int y)
+        {
             datePlaced = DateTime.Now;
+            placed = true;
+        }
+
+        public bool Placed
+        {
+            get { return placed; }
+        }
+
+        public double TimeSinceSent
+        {
+            get { return dateSent == DateTime.MinValue ? 0 : (DateTime.Now - dateSent).TotalMilliseconds; }
         }
 
         public override bool Equals(object obj)
         {
-            if(obj != null && obj is IBlock)
+            if (obj != null && obj is IBlock)
             {
                 IBlock other = (IBlock)obj;
                 if (other.Id == id && other.Layer == layer)
@@ -86,12 +106,5 @@ namespace MasterBot.Room.Block
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            int hash = 5;
-            hash = (hash * 3) + id.GetHashCode();
-            hash = (hash * 3) + layer.GetHashCode();
-            return hash;
-        }
     }
 }

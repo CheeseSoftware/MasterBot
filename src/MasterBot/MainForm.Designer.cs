@@ -48,7 +48,16 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tabPageRoom = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.blocksSentNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.blocksToSendNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.RtbConsole = new Gui.RickTextConsole();
+            this.groupBoxCode = new System.Windows.Forms.GroupBox();
+            this.labelCode = new System.Windows.Forms.Label();
+            this.textBoxCode = new System.Windows.Forms.TextBox();
+            this.buttonSendCode = new System.Windows.Forms.Button();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
@@ -59,12 +68,17 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tabPageRoom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).BeginInit();
+            this.groupBoxCode.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
             // 
             this.tabControlMainTabs.Controls.Add(this.tabPageLoginConnect);
             this.tabControlMainTabs.Controls.Add(this.tabPageMinimap);
+            this.tabControlMainTabs.Controls.Add(this.tabPageRoom);
             this.tabControlMainTabs.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMainTabs.Location = new System.Drawing.Point(3, 3);
@@ -75,6 +89,7 @@
             // 
             // tabPageLoginConnect
             // 
+            this.tabPageLoginConnect.Controls.Add(this.groupBoxCode);
             this.tabPageLoginConnect.Controls.Add(this.button1);
             this.tabPageLoginConnect.Controls.Add(this.groupBoxConnect);
             this.tabPageLoginConnect.Controls.Add(this.groupBoxLogin);
@@ -173,7 +188,7 @@
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(167, 20);
             this.textBoxEmail.TabIndex = 1;
-            this.textBoxEmail.Text = "guhammar@gmail.com";
+            this.textBoxEmail.Text = "gustav9797@hotmail.se";
             // 
             // textBoxPassword
             // 
@@ -182,7 +197,7 @@
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(167, 20);
             this.textBoxPassword.TabIndex = 2;
-            this.textBoxPassword.Text = "technic";
+            this.textBoxPassword.Text = "kasekakorna";
             // 
             // buttonLogin
             // 
@@ -276,6 +291,61 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(220, 452);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
+            // tabPageRoom
+            // 
+            this.tabPageRoom.Controls.Add(this.blocksToSendNumericUpDown);
+            this.tabPageRoom.Controls.Add(this.blocksSentNumericUpDown);
+            this.tabPageRoom.Controls.Add(this.label2);
+            this.tabPageRoom.Controls.Add(this.label1);
+            this.tabPageRoom.Location = new System.Drawing.Point(4, 22);
+            this.tabPageRoom.Name = "tabPageRoom";
+            this.tabPageRoom.Size = new System.Drawing.Size(476, 430);
+            this.tabPageRoom.TabIndex = 2;
+            this.tabPageRoom.Text = "Room";
+            this.tabPageRoom.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(5, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(65, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Blocks sent:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Blocks to send:";
+            // 
+            // blocksSentNumericUpDown
+            // 
+            this.blocksSentNumericUpDown.Location = new System.Drawing.Point(98, 7);
+            this.blocksSentNumericUpDown.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.blocksSentNumericUpDown.Name = "blocksSentNumericUpDown";
+            this.blocksSentNumericUpDown.Size = new System.Drawing.Size(84, 20);
+            this.blocksSentNumericUpDown.TabIndex = 2;
+            // 
+            // blocksToSendNumericUpDown
+            // 
+            this.blocksToSendNumericUpDown.Location = new System.Drawing.Point(98, 34);
+            this.blocksToSendNumericUpDown.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.blocksToSendNumericUpDown.Name = "blocksToSendNumericUpDown";
+            this.blocksToSendNumericUpDown.Size = new System.Drawing.Size(84, 20);
+            this.blocksToSendNumericUpDown.TabIndex = 3;
+            // 
             // RtbConsole
             // 
             this.RtbConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -291,6 +361,44 @@
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
             this.RtbConsole.TextChanged += new System.EventHandler(this.RtbConsole_TextChanged);
+            // 
+            // groupBoxCode
+            // 
+            this.groupBoxCode.Controls.Add(this.buttonSendCode);
+            this.groupBoxCode.Controls.Add(this.textBoxCode);
+            this.groupBoxCode.Controls.Add(this.labelCode);
+            this.groupBoxCode.Location = new System.Drawing.Point(8, 190);
+            this.groupBoxCode.Name = "groupBoxCode";
+            this.groupBoxCode.Size = new System.Drawing.Size(243, 72);
+            this.groupBoxCode.TabIndex = 7;
+            this.groupBoxCode.TabStop = false;
+            this.groupBoxCode.Text = "Code";
+            // 
+            // labelCode
+            // 
+            this.labelCode.AutoSize = true;
+            this.labelCode.Location = new System.Drawing.Point(6, 16);
+            this.labelCode.Name = "labelCode";
+            this.labelCode.Size = new System.Drawing.Size(35, 13);
+            this.labelCode.TabIndex = 0;
+            this.labelCode.Text = "Code:";
+            // 
+            // textBoxCode
+            // 
+            this.textBoxCode.Location = new System.Drawing.Point(47, 13);
+            this.textBoxCode.Name = "textBoxCode";
+            this.textBoxCode.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCode.TabIndex = 1;
+            // 
+            // buttonSendCode
+            // 
+            this.buttonSendCode.Location = new System.Drawing.Point(162, 11);
+            this.buttonSendCode.Name = "buttonSendCode";
+            this.buttonSendCode.Size = new System.Drawing.Size(75, 23);
+            this.buttonSendCode.TabIndex = 2;
+            this.buttonSendCode.Text = "Send";
+            this.buttonSendCode.UseVisualStyleBackColor = true;
+            this.buttonSendCode.Click += new System.EventHandler(this.buttonSendCode_Click);
             // 
             // MainForm
             // 
@@ -314,6 +422,12 @@
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.tabPageRoom.ResumeLayout(false);
+            this.tabPageRoom.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).EndInit();
+            this.groupBoxCode.ResumeLayout(false);
+            this.groupBoxCode.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -341,6 +455,15 @@
         private System.Windows.Forms.PictureBox pictureBoxMinimap;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TabPage tabPageRoom;
+        private System.Windows.Forms.NumericUpDown blocksToSendNumericUpDown;
+        private System.Windows.Forms.NumericUpDown blocksSentNumericUpDown;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBoxCode;
+        private System.Windows.Forms.Button buttonSendCode;
+        private System.Windows.Forms.TextBox textBoxCode;
+        private System.Windows.Forms.Label labelCode;
     }
 }
 
