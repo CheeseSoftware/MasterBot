@@ -151,8 +151,9 @@ namespace MasterBot.Room
             {
                 result.Placer = (players.ContainsKey(playerId) ? players[playerId] : null);
                 result.OnReceive(bot, x, y);
-                bot.SubBotHandler.onBlockChange(bot, x, y, result, blockMap.getBlock(layer, x, y));
+                IBlock oldBlock = blockMap.getBlock(layer, x, y);
                 blockMap.setBlock(x, y, result);
+                bot.SubBotHandler.onBlockChange(bot, x, y, result, oldBlock);
                 BlockWithPos b = new BlockWithPos(x, y, result);
                 lock (blocksSent)
                 { }
@@ -402,7 +403,7 @@ namespace MasterBot.Room
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (block != null)
+            if (block != null && block.Id != getBlock(block.Layer, x, y).Id)
             {
                 blocksToSend.Enqueue(new BlockWithPos(x, y, block));
             }

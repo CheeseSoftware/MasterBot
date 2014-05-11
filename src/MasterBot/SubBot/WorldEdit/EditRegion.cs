@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot.WorldEdit
 {
-    class EditRegion
+    class EditRegion : IEnumerable
     {
         int x1 = -1;
         int y1 = -1;
@@ -27,6 +28,35 @@ namespace MasterBot.SubBot.WorldEdit
         public EditRegion()
         {
 
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            int tempx1 = x1;
+            int tempx2 = x2;
+            int tempy1 = y1;
+            int tempy2 = y2;
+
+            if (tempx1 > x2)
+            {
+                int buffer = tempx1;
+                tempx1 = tempx2;
+                tempx2 = buffer;
+            }
+            if (tempy1 > tempy2)
+            {
+                int buffer = tempy1;
+                tempy1 = tempy2;
+                tempy1 = buffer;
+            }
+
+            for (int x = tempx1; x <= tempx2; x++)
+            {
+                for (int y = tempy1; y <= tempy2; y++)
+                {
+                    yield return new Point(x, y);
+                }
+            }
         }
     }
 }

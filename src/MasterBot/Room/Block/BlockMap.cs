@@ -16,6 +16,9 @@ namespace MasterBot.Room.Block
         private int width;
         private int height;
 
+        public int Width { get { return width; } }
+        public int Height { get { return height; } }
+
         public BlockMap(IBot bot, int width = 0, int height = 0)
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];

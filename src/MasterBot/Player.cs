@@ -21,6 +21,11 @@ namespace MasterBot
             this.id = id;
         }
 
+        public void Send(IBot bot, string message)
+        {
+            bot.Connection.Send("say", name + ": " + message);
+        }
+
         public void SetMetadata(string key, object value)
         {
             if (metadata.ContainsKey(key))
