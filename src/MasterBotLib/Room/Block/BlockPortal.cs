@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockPortal : NormalBlock
+    public class BlockPortal : NormalBlock
     {
         public int rotation;
         public int myId;

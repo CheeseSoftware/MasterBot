@@ -8,10 +8,10 @@ namespace MasterBot.Room
 {
     public interface IBlockDrawerPool
     {
-        BlockDrawer CreateBlockDrawer(byte priority = 0);
+        IBlockDrawer CreateBlockDrawer(byte priority = 0);
 
-        void StartBlockDrawer(BlockDrawer blockDrawer);
-        void StopBlockDrawer(BlockDrawer blockDrawer);
+        void StartBlockDrawer(IBlockDrawer blockDrawer);
+        void StopBlockDrawer(IBlockDrawer blockDrawer);
         void OnBlockPlace(BlockWithPos blockWithPos);
         void Start();
         void Stop();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    class BoxCodes : ASubBot
+    /*class BoxCodes : ASubBot
     {
         public BoxCodes(IBot bot)
             : base(bot)
@@ -63,5 +63,5 @@ namespace MasterBot.SubBot
         {
             get { throw new NotImplementedException(); }
         }
-    }
+    }*/
 }

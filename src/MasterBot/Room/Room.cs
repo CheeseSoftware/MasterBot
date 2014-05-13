@@ -14,12 +14,12 @@ namespace MasterBot.Room
     public class Room : ASubBot, IRoom
     {
         private BlockMap blockMap;
-        private SafeDictionary<int, Player> players = new SafeDictionary<int, Player>();
+        private SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
-        BlockDrawerPool blockDrawerPool;
-        BlockDrawer blockDrawer;
-        public BlockDrawer BlockDrawer { get { return blockDrawer; } }//TODO: fix temporary public >.<
+        IBlockDrawerPool blockDrawerPool;
+        IBlockDrawer blockDrawer;
+        public IBlockDrawer BlockDrawer { get { return blockDrawer; } }//TODO: fix temporary public >.<
         //private Thread playerTickThread;
 
         #region EE_Variables
@@ -490,7 +490,7 @@ namespace MasterBot.Room
                         if (!players.ContainsKey(id))
                         {
                             Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
-                            player.isclubmember = m.GetBoolean(12);
+                            player.IsClubMember = m.GetBoolean(12);
                             players.Add(id, player);
                         }
                         break;
@@ -509,16 +509,16 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
-                            players[id].x = m.GetDouble(1);
-                            players[id].y = m.GetDouble(2);
-                            players[id].speedX = m.GetDouble(3);
-                            players[id].speedY = m.GetDouble(4);
-                            players[id].modifierX = m.GetInt(5);
-                            players[id].modifierY = m.GetInt(6);
-                            players[id].horizontal = m.GetInt(7);
-                            players[id].vertical = m.GetInt(8);
-                            players[id].coins = m.GetInt(9);
-                            players[id].purple = m.GetBoolean(10);
+                            players[id].X = m.GetDouble(1);
+                            players[id].Y = m.GetDouble(2);
+                            players[id].SpeedX = m.GetDouble(3);
+                            players[id].SpeedY = m.GetDouble(4);
+                            players[id].ModifierX = m.GetInt(5);
+                            players[id].ModifierY = m.GetInt(6);
+                            players[id].Horizontal = m.GetInt(7);
+                            players[id].Vertical = m.GetInt(8);
+                            players[id].Coins = m.GetInt(9);
+                            players[id].Purple = m.GetBoolean(10);
                             players[id].Levitation = m.GetBoolean(11);
                         }
                         break;
@@ -528,7 +528,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
-                            players[id].coins = m.GetInt(1);
+                            players[id].Coins = m.GetInt(1);
                         }
                         break;
                     }
@@ -537,7 +537,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
-                            players[id].hascrown = true;
+                            players[id].HasCrown = true;
                         }
                         break;
                     }
@@ -546,7 +546,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
-                            players[id].hascrownsilver = true;
+                            players[id].HasCrownSilver = true;
                         }
                         break;
                     }
@@ -555,7 +555,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
-                            players[id].smiley = m.GetInt(1);
+                            players[id].Smiley = m.GetInt(1);
                         }
                         break;
                     }
@@ -563,14 +563,14 @@ namespace MasterBot.Room
                     {
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
-                            players[id].isgod = m.GetBoolean(1);
+                            players[id].IsGod = m.GetBoolean(1);
                         break;
                     }
                 case "mod":
                     {
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
-                            players[id].ismod = m.GetBoolean(1);
+                            players[id].IsMod = m.GetBoolean(1);
 
                         break;
                     }
@@ -653,7 +653,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
-                            players[id].level = m.GetInt(1);
+                            players[id].Level = m.GetInt(1);
                         }
                     }
                     break;
@@ -663,7 +663,7 @@ namespace MasterBot.Room
                         string text = m.GetString(1);
                         if (players.ContainsKey(id))
                         {
-                            Player player = players[id];
+                            IPlayer player = players[id];
                             if (text.Length > 0 && text[0].Equals('!'))
                             {
                                 string textCommandCharRemoved = text.Remove(0, 1);
@@ -717,8 +717,8 @@ namespace MasterBot.Room
                             int y = m.GetInt(3);
                             if (players.ContainsKey(playerId))
                             {
-                                players[playerId].x = x;
-                                players[playerId].y = y;
+                                players[playerId].X = x;
+                                players[playerId].Y = y;
                             }
                         }
                         break;
@@ -844,7 +844,7 @@ namespace MasterBot.Room
             get { return hideTimeDoor; }
         }
 
-        public SafeDictionary<int, Player> Players
+        public IDictionary<int, IPlayer> Players
         {
             get { return players; }
         }
@@ -875,7 +875,7 @@ namespace MasterBot.Room
             get { return "Room"; }
         }
 
-        public BlockDrawerPool BlockDrawerPool
+        public IBlockDrawerPool BlockDrawerPool
         {
             get { return this.blockDrawerPool; }
         }

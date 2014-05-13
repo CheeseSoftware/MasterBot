@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace MasterBot
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IMainForm
     {
         private bool loggingIn = false;
         private bool connecting = false;

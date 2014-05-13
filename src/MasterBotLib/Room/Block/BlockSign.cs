@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockSign : NormalBlock
+    public class BlockSign : NormalBlock
     {
         public string text;
 

@@ -20,7 +20,7 @@ namespace MasterBot
         private SubBotHandler subBotHandler;
         private Client client;
         private Connection connection;
-        private Room.IRoom room;
+        private IRoom room;
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
@@ -105,12 +105,12 @@ namespace MasterBot
             subBotHandler.onDisconnect(reason);
         }
 
-        public SubBotHandler SubBotHandler
+        public ISubBotHandler SubBotHandler
         {
             get { return subBotHandler; }
         }
 
-        public MainForm MainForm
+        public IMainForm MainForm
         {
             get { return mainForm; }
         }

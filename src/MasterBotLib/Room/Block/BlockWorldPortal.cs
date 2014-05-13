@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockWorldPortal : NormalBlock
+    public class BlockWorldPortal : NormalBlock
     {
         public string destination;
 

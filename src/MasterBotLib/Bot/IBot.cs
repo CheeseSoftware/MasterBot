@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PlayerIOClient;
 using MasterBot.SubBot;
+using MasterBot.Room;
 
 namespace MasterBot
 {
@@ -12,11 +13,11 @@ namespace MasterBot
     {
         bool LoggedIn { get; }
         bool Connected { get; }
-        SubBotHandler SubBotHandler { get; }
-        MainForm MainForm { get; }
+        ISubBotHandler SubBotHandler { get; }
+        IMainForm MainForm { get; }
         Client Client { get; }
         Connection Connection { get; }
-        Room.IRoom Room { get; }
+        IRoom Room { get; }
 
         void Login(string game, string email, string password);
         bool Connect(string roomId);

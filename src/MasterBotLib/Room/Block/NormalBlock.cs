@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class NormalBlock : IBlock
+    public class NormalBlock : IBlock
     {
         protected int id;
         protected int layer;
@@ -15,7 +15,7 @@ namespace MasterBot.Room.Block
         protected bool sent = false;
         protected DateTime datePlaced = DateTime.MinValue;
         protected DateTime dateSent = DateTime.MinValue;
-        protected Player placer = null;
+        protected IPlayer placer = null;
         protected int timesSent = 0;
 
         public NormalBlock(int id, int layer)
@@ -68,7 +68,7 @@ namespace MasterBot.Room.Block
             get { return !placed ? 0 : (DateTime.Now - datePlaced).TotalMilliseconds; }
         }
 
-        public Player Placer
+        public IPlayer Placer
         {
             get
             {

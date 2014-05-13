@@ -12,7 +12,7 @@ namespace MasterBot.SubBot.WorldEdit
     class WorldEdit : ASubBot
     {
         
-        BlockDrawer blockDrawer;
+        IBlockDrawer blockDrawer;
         public WorldEdit(IBot bot)
             : base(bot)
         {
@@ -169,10 +169,10 @@ namespace MasterBot.SubBot.WorldEdit
                                         SetRegion(bot, region, new NormalBlock(id, layer));
                                     }
                                     else
-                                        bot.Connection.Send("say", player.name + ": Invalid ID.");
+                                        bot.Connection.Send("say", player.Name + ": Invalid ID.");
                                 }
                                 else
-                                    bot.Connection.Send("say", player.name + ": Usage: !set <id>");
+                                    bot.Connection.Send("say", player.Name + ": Usage: !set <id>");
                             }
                             else
                                 player.Send("You have to set a region.");
@@ -190,7 +190,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                                 }
                                 else
-                                    bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
+                                    bot.Connection.Send("say", player.Name + ": Usage: !replace <from> <to>");
                             }
                             else
                                 player.Send("You have to set a region.");
@@ -209,7 +209,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 SetRegion(bot, closeRegion, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                             }
                             else
-                                bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
+                                bot.Connection.Send("say", player.Name + ": Usage: !replace <from> <to>");
                             break;
                         }
                     case "copy":
@@ -284,7 +284,7 @@ namespace MasterBot.SubBot.WorldEdit
             {
                 if (newBlock.Placer != null)
                 {
-                    Player player = newBlock.Placer;
+                    IPlayer player = newBlock.Placer;
                     if (player.GetMetadata("editregion") == null)
                         player.SetMetadata("editregion", new EditRegion());
                     EditRegion region = (EditRegion)player.GetMetadata("editregion");
@@ -304,7 +304,7 @@ namespace MasterBot.SubBot.WorldEdit
                         blockDrawer.PlaceBlock(new BlockWithPos(region.FirstCorner.X, region.FirstCorner.Y, oldBlock));
                         output = "First corner set";
                     }
-                    bot.Connection.Send("say", player.name + ": " + output + " " + new Random().Next(10));
+                    bot.Connection.Send("say", player.Name + ": " + output + " " + new Random().Next(10));
                 }
             }
         }

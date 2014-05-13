@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockCoinDoor : NormalBlock
+    public class BlockCoinGate : NormalBlock
     {
         public int coins;
 
-        public BlockCoinDoor(int coins)
-            : base(43, 0)
+        public BlockCoinGate(int coins)
+            : base(165, 0)
         {
             this.coins = coins;
         }

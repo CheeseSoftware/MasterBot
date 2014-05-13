@@ -16,7 +16,7 @@ namespace MasterBot.Room.Block
         double TimeSincePlaced { get; }
         double TimeSinceSent { get; }
         Color Color { get; }
-        Player Placer { get; set; }
+        IPlayer Placer { get; set; }
         bool Placed { get; }
         int TimesSent { get; }
 

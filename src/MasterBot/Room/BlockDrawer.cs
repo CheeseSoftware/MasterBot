@@ -7,7 +7,7 @@ using MasterBot.Room.Block;
 
 namespace MasterBot.Room
 {
-    public class BlockDrawer
+    public class BlockDrawer : IBlockDrawer
     {
         IBlockDrawerPool blockDrawerPool;
         IBot bot;

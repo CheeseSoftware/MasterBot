@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockPiano : NormalBlock
+    public class BlockSpikes : NormalBlock
     {
-        public int note;
+        public int rotation;
 
-        public BlockPiano(int note)
-            : base(77, 0)
+        public BlockSpikes(int rotation)
+            : base(361, 0)
         {
-            this.note = note;
+            this.rotation = rotation;
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    class BlockPlaceTest : ASubBot
+    public class BlockPlaceTest : ASubBot
     {
         List<int> blockPlayers = new List<int>();
 
@@ -53,7 +53,7 @@ namespace MasterBot.SubBot
         {
             if (newBlock.Placer != null && blockPlayers.Contains(newBlock.Placer.Id))
             {
-                bot.Connection.Send("say", "That block is: " + oldBlock.Id + ", placed by " + (oldBlock.Placer != null ? oldBlock.Placer.name : "undefined " + "X:" + x + " Y:" + y));
+                bot.Connection.Send("say", "That block is: " + oldBlock.Id + ", placed by " + (oldBlock.Placer != null ? oldBlock.Placer.Name : "undefined " + "X:" + x + " Y:" + y));
                 blockPlayers.Remove(newBlock.Placer.Id);
             }
         }

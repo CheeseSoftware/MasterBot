@@ -27,11 +27,11 @@ namespace MasterBot.Room
         bool HideGreen { get; }
         bool HideBlue { get; }
         bool HideTimeDoor { get; }
-        SafeDictionary<int, Player> Players { get; }
+        IDictionary<int, IPlayer> Players { get; }
         BlockMap BlockMap { get; }
         int BlocksToSendSize { get; }
         int BlocksSentSize { get; }
-        BlockDrawerPool BlockDrawerPool { get; }
+        IBlockDrawerPool BlockDrawerPool { get; }
         #endregion
 
         IBlock getBlock(int layer, int x, int y);

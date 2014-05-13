@@ -12,7 +12,7 @@ namespace MasterBot.Room
     {
         IBot bot;
         IRoom room;
-        SafeList<BlockDrawer> queuedBlockdrawers = new SafeList<BlockDrawer>();
+        SafeList<IBlockDrawer> queuedBlockdrawers = new SafeList<IBlockDrawer>();
         Thread drawerThread;
 
         // Blocks that are not placed yet...
@@ -35,7 +35,7 @@ namespace MasterBot.Room
 
                             lock (queuedBlockdrawers)
                             {
-                                BlockDrawer blockDrawer;
+                                IBlockDrawer blockDrawer;
                                 i = (i+1)%queuedBlockdrawers.Count;
                                 blockDrawer = queuedBlockdrawers[i];
 
@@ -53,13 +53,12 @@ namespace MasterBot.Room
 
 
         }
-
-        public BlockDrawer CreateBlockDrawer(byte priority)
+        public IBlockDrawer CreateBlockDrawer(byte priority)
         {
             return new BlockDrawer(this, bot, priority);
         }
 
-        public void StartBlockDrawer(BlockDrawer blockDrawer)
+        public void StartBlockDrawer(IBlockDrawer blockDrawer)
         {
             for (int i = 0; i <= blockDrawer.Priority; i++)
             {
@@ -68,7 +67,7 @@ namespace MasterBot.Room
             }
         }
 
-        public void StopBlockDrawer(BlockDrawer blockDrawer)
+        public void StopBlockDrawer(IBlockDrawer blockDrawer)
         {
             for (int i = queuedBlockdrawers.Count - 1; i >= 0; i--)
             {
@@ -132,5 +131,9 @@ namespace MasterBot.Room
                     return null; 
             }
         }
+
+
+
+
     }
 }

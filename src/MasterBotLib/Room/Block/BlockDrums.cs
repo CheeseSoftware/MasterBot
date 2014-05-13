@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockDrums : NormalBlock
+    public class BlockDrums : NormalBlock
     {
         public int note;
 

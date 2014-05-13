@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PlayerIOClient">
+      <HintPath>D:\Seist-Skylight-9edd1f2\Skylight\bin\Debug\PlayerIOClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -41,12 +44,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bot\IBot.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="ICmdSource.cs" />
+    <Compile Include="IMainForm.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="IRichTextConsole.cs" />
+    <Compile Include="Minimap\ItemLayer.cs" />
+    <Compile Include="Minimap\MinimapColors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Room\Block\BlockCoinDoor.cs" />
+    <Compile Include="Room\Block\BlockCoinGate.cs" />
+    <Compile Include="Room\Block\BlockDrums.cs" />
+    <Compile Include="Room\Block\BlockMap.cs" />
+    <Compile Include="Room\Block\BlockPiano.cs" />
+    <Compile Include="Room\Block\BlockPortal.cs" />
+    <Compile Include="Room\Block\BlockPos.cs" />
+    <Compile Include="Room\Block\BlockSign.cs" />
+    <Compile Include="Room\Block\BlockSpikes.cs" />
+    <Compile Include="Room\Block\BlockText.cs" />
+    <Compile Include="Room\Block\BlockWithPos.cs" />
+    <Compile Include="Room\Block\BlockWorldPortal.cs" />
+    <Compile Include="Room\Block\IBlock.cs" />
+    <Compile Include="Room\Block\NormalBlock.cs" />
+    <Compile Include="Room\IBlockDrawer.cs" />
+    <Compile Include="Room\IBlockDrawerPool.cs" />
+    <Compile Include="Room\IRoom.cs" />
+    <Compile Include="SafeDictionary.cs" />
+    <Compile Include="SafeList.cs" />
+    <Compile Include="SubBot\ASubBot.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SubBot\ISubBot.cs" />
+    <Compile Include="SubBot\ISubBotHandler.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
