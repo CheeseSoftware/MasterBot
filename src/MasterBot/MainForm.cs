@@ -181,14 +181,5 @@ namespace MasterBot
 
         public TabControl BotTabPage { get { return this.tabControlSubBots; } }
 
-        private void tableLayoutPanelSubBotTabs_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

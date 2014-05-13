@@ -366,7 +366,6 @@
             this.tableLayoutPanelSubBotTabs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelSubBotTabs.Size = new System.Drawing.Size(476, 430);
             this.tableLayoutPanelSubBotTabs.TabIndex = 1;
-            this.tableLayoutPanelSubBotTabs.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanelSubBotTabs_Paint);
             // 
             // tabControlSubBots
             // 
@@ -448,7 +447,6 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(476, 35);
             this.tableLayoutPanel3.TabIndex = 1;
-            this.tableLayoutPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel3_Paint);
             // 
             // listBoxSubBots
             // 
