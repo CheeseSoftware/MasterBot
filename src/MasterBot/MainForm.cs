@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MasterBot.SubBot;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -40,7 +41,7 @@ namespace MasterBot
             };
             roomUpdateTimer.Start();
         }
-
+        #region Connect stuff
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             if (!loggingIn)
@@ -70,24 +71,6 @@ namespace MasterBot
                     bot.Disconnect("Exited");
                     buttonConnect.Text = "Connect";
                 }
-            }
-        }
-
-        public void UpdateMinimap(Bitmap bitmap)
-        {
-            if (bitmap != null)
-            {
-                try
-                {
-                    Bitmap temp = new Bitmap(bitmap);
-                    this.Invoke(new Action(() =>
-                    {
-                        pictureBoxMinimap.Size = temp.Size;
-                        pictureBoxMinimap.Image = temp;
-                    }));
-                }
-                catch { }
-
             }
         }
 
@@ -142,35 +125,54 @@ namespace MasterBot
             }
             connecting = false;
         }
+        #endregion
+
+        public void UpdateSubbotsDatasource(Dictionary<string, ASubBot> source)
+        {
+            this.Invoke(new Action(() =>
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = source.Keys;
+                this.checkedListBoxSubBots.DataSource = bs;
+            }));
+        }
 
         public void Console(string text, params Color[] color)
         {
             RtbConsole.WriteLine(text, color);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void UpdateMinimap(Bitmap bitmap)
         {
-            RtbConsole.WriteLine("%c%Chello! %CHello!", Color.Black, Color.Red, Color.Green);
+            if (bitmap != null)
+            {
+                try
+                {
+                    Bitmap temp = new Bitmap(bitmap);
+                    this.Invoke(new Action(() =>
+                    {
+                        pictureBoxMinimap.Size = temp.Size;
+                        pictureBoxMinimap.Image = temp;
+                    }));
+                }
+                catch { }
+
+            }
         }
 
         private void RtbConsoleInput_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter && RtbConsole.Text.Length > 0)
             {
                 RtbConsole.WriteLine("%B> %b" + RtbConsoleInput.Text.Replace("%", "%%"));
-                //bot.SubBotHandler.onCommand(bot, )
+                string[] input = RtbConsoleInput.Text.Split(' ');
+                string cmd = input[0];
+                string[] args = new string[0];
+                if (input.Length >= 2)
+                    Array.Copy(input, 1, args, 0, input.Length - 1);
+                bot.SubBotHandler.onCommand(cmd, args, (ICmdSource)(new ConsoleCmdSource(bot)));
                 RtbConsoleInput.Clear();
             }
-        }
-
-        private void RtbConsole_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void buttonSendCode_Click(object sender, EventArgs e)
@@ -178,8 +180,22 @@ namespace MasterBot
             bot.Connection.Send("access", textBoxCode.Text);
         }
 
-
         public TabControl BotTabPage { get { return this.tabControlSubBots; } }
+
+        private void checkedListBoxSubBots_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue != e.CurrentValue)
+            {
+                if (!(checkedListBoxSubBots.SelectedItem is string))
+                    return;
+                string name = (string)checkedListBoxSubBots.SelectedItem;
+                ASubBot subBot = bot.SubBotHandler.GetSubBot(name);
+                if (subBot != null)
+                    subBot.Enabled = (e.NewValue == CheckState.Checked) ? true : false;
+                else
+                    Console("ERROR! subbots checkedlistbox has bugged out.");
+            }
+        }
 
     }
 }

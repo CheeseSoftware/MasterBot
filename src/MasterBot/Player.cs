@@ -15,13 +15,18 @@ namespace MasterBot
 
         public int Id { get { return id; } }
 
-        public Player(IRoom room, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
-            : base(room, id, name, smiley, xPos, yPos, isGod, isMod, hasChat, coins, purple, isFriend, level)
+        public Player(IBot bot, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
+            : base(bot, id, name, smiley, xPos, yPos, isGod, isMod, hasChat, coins, purple, isFriend, level)
         {
             this.id = id;
         }
 
-        public void Send(IBot bot, string message)
+        public void Reply(string message)
+        {
+            Send(message);
+        }
+
+        public void Send(string message)
         {
             bot.Connection.Send("say", name + ": " + message);
         }

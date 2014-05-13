@@ -45,7 +45,7 @@ namespace MasterBot.SubBot
                 if (cmdSource is Player)
                     blockPlayers.Add(((Player)cmdSource).Id);
                 else
-                    bot.Connection.Send("say", "You are not a player.");
+                    cmdSource.Reply("You are not a player.");
             }
         }
 

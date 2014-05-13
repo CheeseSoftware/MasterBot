@@ -175,7 +175,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     bot.Connection.Send("say", player.name + ": Usage: !set <id>");
                             }
                             else
-                                player.Send(bot, "You have to set a region.");
+                                player.Send("You have to set a region.");
                             break;
                         }
                     case "replace":
@@ -193,7 +193,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
                             }
                             else
-                                player.Send(bot, "You have to set a region.");
+                                player.Send("You have to set a region.");
                             break;
                         }
                     case "replacenear":
@@ -225,7 +225,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 player.SetMetadata("selection", selection);
                             }
                             else
-                                player.Send(bot, "You have to place a region block.");
+                                player.Send("You have to place a region block.");
                             break;
                         }
                     case "paste":
@@ -247,10 +247,10 @@ namespace MasterBot.SubBot.WorldEdit
                                     }
                                 }
                                 else
-                                    player.Send(bot, "You have to copy first.");
+                                    player.Send("You have to copy first.");
                             }
                             else
-                                player.Send(bot, "You have to place a region block.");
+                                player.Send("You have to place a region block.");
                             break;
                         }
                     case "circle":
@@ -264,10 +264,10 @@ namespace MasterBot.SubBot.WorldEdit
                                     DrawCircle(region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
                                 }
                                 else
-                                    player.Send(bot, "Usage: !circle <radius> <block>");
+                                    player.Send("Usage: !circle <radius> <block>");
                             }
                             else
-                                player.Send(bot, "You have to place a region block.");
+                                player.Send("You have to place a region block.");
                             break;
                         }
                     default:
