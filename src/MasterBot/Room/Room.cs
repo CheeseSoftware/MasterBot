@@ -18,8 +18,10 @@ namespace MasterBot.Room
         private SafeDictionary<int, Player> players = new SafeDictionary<int, Player>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
+        BlockDrawerPool blockDrawerPool;
         //private Thread playerTickThread;
 
+        #region EE_Variables
         private string owner = "";
         private string title = "";
         private int plays = 0;
@@ -37,6 +39,7 @@ namespace MasterBot.Room
         private bool hideGreen = false;
         private bool hideBlue = false;
         private bool hideTimeDoor = false;
+        #endregion
 
         private List<BlockWithPos> blocksSent = new List<BlockWithPos>();
         private Queue<BlockWithPos> blocksToSend = new Queue<BlockWithPos>();
@@ -48,6 +51,7 @@ namespace MasterBot.Room
         {
             this.bot = bot;
             this.blockMap = new BlockMap(bot);
+            this.blockDrawerPool = new BlockDrawerPool(bot, this);
             //playerTickThread = new Thread(UpdatePhysics);
             playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
             playerTickTimer.MicroTimerElapsed += UpdatePhysics;
