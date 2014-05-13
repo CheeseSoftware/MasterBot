@@ -14,7 +14,7 @@ namespace MasterBot
 {
     public partial class MainForm : Form
     {
-        private Dictionary<string, KeyValuePair<string, List<string>>> accounts = new Dictionary<string, KeyValuePair<string, List<string>>>();
+        private Dictionary<string, KeyValuePair<string, Queue<string>>> accounts = new Dictionary<string, KeyValuePair<string, Queue<string>>>();
         private bool loggingIn = false;
         private bool connecting = false;
         private System.Timers.Timer connectTimeoutTimer = new System.Timers.Timer();
@@ -57,7 +57,7 @@ namespace MasterBot
                 accounts.Clear();
             string email = "";
             string password = "";
-            List<string> roomIds = new List<string>();
+            Queue<string> roomIds = new Queue<string>();
 
             try
             {
@@ -74,7 +74,7 @@ namespace MasterBot
                     {
                         if (email != "")
                         {
-                            accounts.Add(email, new KeyValuePair<string, List<string>>(password, roomIds));
+                            accounts.Add(email, new KeyValuePair<string, Queue<string>>(password, new Queue<string>(roomIds)));
                             email = "";
                             password = "";
                             roomIds.Clear();
@@ -85,11 +85,11 @@ namespace MasterBot
                     else if (line.StartsWith("\t") && !line.StartsWith("\t\t"))
                         password = lineParsed;
                     else if (line.StartsWith("\t\t") && !line.StartsWith("\t\t\t"))
-                        roomIds.Add(lineParsed);
+                        roomIds.Enqueue(lineParsed);
                 }
                 if (email != "")
                 {
-                    accounts.Add(email, new KeyValuePair<string, List<string>>(password, roomIds));
+                    accounts.Add(email, new KeyValuePair<string, Queue<string>>(password, roomIds));
                     email = "";
                     password = "";
                     roomIds.Clear();
@@ -267,8 +267,12 @@ namespace MasterBot
             if(accounts.ContainsKey(selected))
             {
                 textBoxPassword.Text = accounts[selected].Key;
-                foreach (string roomId in accounts[selected].Value)
-                    comboBoxRoomId.Items.Add(roomId);
+                if (accounts[selected].Value.Count > 0)
+                {
+                    foreach (string roomId in accounts[selected].Value)
+                        comboBoxRoomId.Items.Add(roomId);
+                    comboBoxRoomId.Text = accounts[selected].Value.Dequeue();
+                }
             }
         }
 
