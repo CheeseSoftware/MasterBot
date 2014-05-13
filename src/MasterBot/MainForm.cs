@@ -15,6 +15,7 @@ namespace MasterBot
     {
         private bool loggingIn = false;
         private bool connecting = false;
+        private System.Timers.Timer connectTimeoutTimer = new System.Timers.Timer();
 
         public IBot bot;
 
@@ -63,6 +64,9 @@ namespace MasterBot
                     {
                         connecting = true;
                         buttonConnect.Enabled = false;
+                        connectTimeoutTimer.Interval = 5000;
+                        connectTimeoutTimer.Elapsed += delegate { this.Invoke(new Action(()=> { onConnectFinished(false); })); };
+                        connectTimeoutTimer.Start();
                         buttonConnect.Text = "Connecting..";
                     }
                 }
@@ -101,6 +105,7 @@ namespace MasterBot
 
         public void onConnectFinished(bool success)
         {
+            connectTimeoutTimer.Stop();
             buttonConnect.Enabled = true;
             if (success)
             {

@@ -23,35 +23,35 @@ namespace MasterBot.Room
             this.bot = bot;
             this.room = room;
 
-            drawerThread = new Thread(() =>
+            drawerThread = new Thread(Draw);
+        }
+
+        private void Draw()
+        {
+            int i = 0;
+
+            while (bot.Connected)
+            {
+                while (bot.Connected && bot.Room.HasCode)
                 {
-                    int i = 0;
+                    bool success;
 
-                    while (bot.Connected)
+                    lock (queuedBlockdrawers)
                     {
-                        while (bot.Connected && bot.Room.HasCode)
-                        {
-                            bool success;
+                        BlockDrawer blockDrawer;
+                        i = (i + 1) % queuedBlockdrawers.Count;
+                        blockDrawer = queuedBlockdrawers[i];
 
-                            lock (queuedBlockdrawers)
-                            {
-                                BlockDrawer blockDrawer;
-                                i = (i+1)%queuedBlockdrawers.Count;
-                                blockDrawer = queuedBlockdrawers[i];
-
-                                success = blockDrawer.DrawBlock();
-                            }
-
-                            if (success)
-                            {
-                                Thread.Sleep(10);
-                            }
-                        }
-                        Thread.Sleep(100);
+                        success = blockDrawer.DrawBlock();
                     }
-                });
 
-
+                    if (success)
+                    {
+                        Thread.Sleep(10);
+                    }
+                }
+                Thread.Sleep(100);
+            }
         }
 
         public BlockDrawer CreateBlockDrawer(byte priority)
@@ -92,12 +92,13 @@ namespace MasterBot.Room
 
         public void Start()
         {
+            drawerThread = new Thread(Draw);
             drawerThread.Start();
         }
 
         public void Stop()
         {
-            if (drawerThread.ThreadState == ThreadState.Running)
+            if (drawerThread != null)
                 drawerThread.Abort();
 
             lock (waitingBlocks)
