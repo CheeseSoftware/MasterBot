@@ -32,7 +32,7 @@ namespace MasterBot.SubBot
                 tabControl.Invoke(new Action(() => { tabControl.TabPages.Remove(subBot); }));
         }
 
-        public void AddSubBot(ASubBot subBot)
+        public void AddSubBot(ASubBot subBot, bool enabledByDefault = true)
         {
             if (!subBots.ContainsKey(subBot.Name))
             {
@@ -40,6 +40,8 @@ namespace MasterBot.SubBot
                 {
                     subBots.Add(subBot.Name, subBot);
                     AddTab(subBot);
+                    if (enabledByDefault)
+                        subBot.Enabled = true;
                     bot.MainForm.UpdateSubbotsDatasource(subBots);
                     bot.MainForm.Console("Subbot " + subBot.Name + " added.");
                 }
