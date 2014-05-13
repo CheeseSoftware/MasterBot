@@ -59,7 +59,7 @@ namespace MasterBot.Room
         {
             for (int i = 0; i <= blockDrawer.Priority; i++)
             {
-                int j = queuedBlockdrawers.Count * i / blockDrawer.Priority;
+                int j = queuedBlockdrawers.Count * i / (blockDrawer.Priority+1);
                 queuedBlockdrawers.Insert(j, blockDrawer);
             }
         }

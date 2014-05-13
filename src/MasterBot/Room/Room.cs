@@ -847,5 +847,11 @@ namespace MasterBot.Room
         {
             get { return true; }
         }
+
+        public BlockDrawerPool BlockDrawerPool
+        {
+            get { return this.blockDrawerPool; }
+        }
+
     }
 }

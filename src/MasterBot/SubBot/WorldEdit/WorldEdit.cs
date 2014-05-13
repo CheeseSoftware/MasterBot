@@ -1,4 +1,5 @@
-﻿using MasterBot.Room.Block;
+﻿using MasterBot.Room;
+using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,10 +11,12 @@ namespace MasterBot.SubBot.WorldEdit
 {
     class WorldEdit : ASubBot
     {
+        BlockDrawer blockDrawer;
 
-        public WorldEdit()
+        public WorldEdit(IBot bot)
         {
-
+            blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(0);
+            blockDrawer.Start();
         }
 
         public void DrawLine(IBot bot, int x1, int y1, int x2, int y2, IBlock block)
@@ -25,7 +28,7 @@ namespace MasterBot.SubBot.WorldEdit
             int d;
             int curx, cury;
 
-            bot.Room.setBlock(x1, y1, block);
+            blockDrawer.PlaceBlock(new BlockWithPos(x1, y1, block));//blockDrawer.PlaceBlock(new BlockWithPos(x1, y1, block));
 
             if (x1 == x2 && y1 == y2)
             {
@@ -68,9 +71,9 @@ namespace MasterBot.SubBot.WorldEdit
                     d += inc2;
                 }
                 if (iTag == 1)
-                    bot.Room.setBlock(cury, curx, block);
+                    blockDrawer.PlaceBlock(new BlockWithPos(cury, curx, block));
                 else
-                    bot.Room.setBlock(curx, cury, block);
+                    blockDrawer.PlaceBlock(new BlockWithPos(curx, cury, block));
                 curx += tx;
             }
         }
@@ -82,7 +85,7 @@ namespace MasterBot.SubBot.WorldEdit
                 for (int yy = -radius; yy <= radius; yy++)
                 {
                     if (xx * xx + yy * yy <= radius * radius)
-                        bot.Room.setBlock(xx + x, yy + y, block);
+                        blockDrawer.PlaceBlock(new BlockWithPos(xx + x, yy + y, block));
                 }
             }
         }
@@ -123,7 +126,7 @@ namespace MasterBot.SubBot.WorldEdit
                                         foreach (Point pos in region)
                                         {
                                             if (bot.Room.getBlock(layer, pos.X, pos.Y).Id != id)
-                                                bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(id, layer));
+                                                blockDrawer.PlaceBlock(new BlockWithPos(pos.X, pos.Y, new NormalBlock(id, layer)));
                                         }
                                     }
                                     else
@@ -148,7 +151,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     {
                                         if (bot.Room.getBlock(blockToReplace >= 500 ? 1 : 0, pos.X, pos.Y).Id == blockToReplace)
                                         {
-                                            bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(blockToReplaceWith, blockToReplaceWith >= 500 ? 1 : 0));
+                                            blockDrawer.PlaceBlock(new BlockWithPos(pos.X, pos.Y, new NormalBlock(blockToReplaceWith, blockToReplaceWith >= 500 ? 1 : 0)));
                                         }
                                     }
                                 }
@@ -188,8 +191,8 @@ namespace MasterBot.SubBot.WorldEdit
                                         {
                                             int blax = x + region.FirstCorner.X;
                                             int blay = y + region.FirstCorner.Y;
-                                            bot.Room.setBlock(blax, blay, selection.getBackgroundBlock(x, y));
-                                            bot.Room.setBlock(blax, blay, selection.getBlock(x, y));
+                                            blockDrawer.PlaceBlock(new BlockWithPos(blax, blay, selection.getBackgroundBlock(x, y)));
+                                            blockDrawer.PlaceBlock(new BlockWithPos(blax, blay, selection.getBlock(x, y)));
                                         }
                                     }
                                 }
@@ -241,7 +244,7 @@ namespace MasterBot.SubBot.WorldEdit
                     if (region.FirstCornerSet && !region.Set)
                     {
                         region.SecondCorner = new Point(x, y);
-                        bot.Room.setBlock(region.SecondCorner.X, region.SecondCorner.Y, oldBlock);
+                        blockDrawer.PlaceBlock(new BlockWithPos(region.SecondCorner.X, region.SecondCorner.Y, oldBlock));
                         output = "Second corner set";
                     }
                     else
@@ -249,7 +252,7 @@ namespace MasterBot.SubBot.WorldEdit
                         if (region.Set)
                             region.SecondCorner = new Point(-1, -1);
                         region.FirstCorner = new Point(x, y);
-                        bot.Room.setBlock(region.FirstCorner.X, region.FirstCorner.Y, oldBlock);
+                        blockDrawer.PlaceBlock(new BlockWithPos(region.FirstCorner.X, region.FirstCorner.Y, oldBlock));
                         output = "First corner set";
                     }
                     bot.Connection.Send("say", player.name + ": " + output + " " + new Random().Next(10));

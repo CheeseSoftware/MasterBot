@@ -31,6 +31,7 @@ namespace MasterBot.Room
         BlockMap BlockMap { get; }
         int BlocksToSendSize { get; }
         int BlocksSentSize { get; }
+        BlockDrawerPool BlockDrawerPool { get; }
         #endregion
 
         IBlock getBlock(int layer, int x, int y);

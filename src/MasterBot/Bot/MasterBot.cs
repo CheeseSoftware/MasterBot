@@ -38,7 +38,7 @@ namespace MasterBot
             subBotHandler.AddSubBot("Room", (ASubBot)(room = new Room.Room(this)));
             subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest());
             subBotHandler.AddSubBot("Commands", new Commands());
-            subBotHandler.AddSubBot("WorldEdit", new WorldEdit());
+            subBotHandler.AddSubBot("WorldEdit", new WorldEdit(this));
 
             updateTimer.Interval = 50;
             updateTimer.Tick += updateTimer_Tick;
