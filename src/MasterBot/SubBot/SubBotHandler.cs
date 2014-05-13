@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MasterBot.SubBot
 {
     public class SubBotHandler : ISubBot, ISubBotHandler
     {
-        Dictionary<string, ISubBot> subBots = new Dictionary<string, ISubBot>();
+        Dictionary<string, ASubBot> subBots = new Dictionary<string, ASubBot>();
+        TabControl tabControl;
 
-        public SubBotHandler()
+        public SubBotHandler(TabControl tabControl)
         {
 
         }
 
-        public void AddSubBot(string name, ISubBot subBot)
+        public void AddSubBot(string name, ASubBot subBot)
         {
             if (!subBots.ContainsKey(name))
             {
@@ -38,7 +40,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public ISubBot GetSubBot(string name)
+        public ASubBot GetSubBot(string name)
         {
             if (subBots.ContainsKey(name))
             {
@@ -47,7 +49,7 @@ namespace MasterBot.SubBot
             return null;
         }
 
-        public Dictionary<string, ISubBot> SubBots
+        public Dictionary<string, ASubBot> SubBots
         {
             get { return subBots; }
         }
@@ -56,7 +58,7 @@ namespace MasterBot.SubBot
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
                     subBot.onConnect(bot);
                 }
@@ -67,7 +69,7 @@ namespace MasterBot.SubBot
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
                     subBot.onDisconnect(bot, reason);
                 }
@@ -78,7 +80,7 @@ namespace MasterBot.SubBot
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
                     subBot.onMessage(bot, m);
                 }
@@ -89,7 +91,7 @@ namespace MasterBot.SubBot
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
                     subBot.onCommand(bot, cmd, args, cmdSource);
                 }
@@ -100,7 +102,7 @@ namespace MasterBot.SubBot
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
                     subBot.Update(bot);
                 }
@@ -111,7 +113,7 @@ namespace MasterBot.SubBot
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
                     subBot.onBlockChange(bot, x, y, newBlock, oldBlock);
                 }

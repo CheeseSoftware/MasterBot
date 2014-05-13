@@ -170,5 +170,7 @@ namespace MasterBot
             bot.Connection.Send("access", textBoxCode.Text);
         }
 
+
+        public TabControl BotTabPage { get { return this.tabControlMainTabs; } }
     }
 }

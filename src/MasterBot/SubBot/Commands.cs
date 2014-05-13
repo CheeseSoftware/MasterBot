@@ -10,7 +10,7 @@ using MasterBot.Room.Block;
 
 namespace MasterBot
 {
-    public class Commands : ISubBot
+    public class Commands : ASubBot
     {
         private List<string> disabledPlayers = new List<string>();
         private List<string> protectedPlayers = new List<string>();
@@ -20,7 +20,7 @@ namespace MasterBot
         {
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource sender)
+        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource sender)
         {
             if (sender is Player)
             {
@@ -95,23 +95,23 @@ namespace MasterBot
         }
 
 
-        public void onConnect(IBot bot)
+        public override void onConnect(IBot bot)
         {
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onDisconnect(IBot bot, string reason)
         {
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(IBot bot, PlayerIOClient.Message m)
         {
         }
 
-        public void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
         {
         }
 
-        public void Update(IBot bot)
+        public override void Update(IBot bot)
         {
         }
     }

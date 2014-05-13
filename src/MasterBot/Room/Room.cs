@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace MasterBot.Room
 {
-    public class Room : IRoom, ISubBot
+    public class Room : ASubBot, IRoom
     {
         private IBot bot;
         private BlockMap blockMap;
@@ -409,7 +409,7 @@ namespace MasterBot.Room
             }
         }
 
-        public void onConnect(IBot bot)
+        public override void onConnect(IBot bot)
         {
             playerTickTimer.Start();
             blockRepairThread = new Thread(BlockRepairLoop);
@@ -418,7 +418,7 @@ namespace MasterBot.Room
             checkSentBlocksThread.Start();
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onDisconnect(IBot bot, string reason)
         {
             playerTickTimer.Stop();
             if (blockRepairThread != null)
@@ -433,7 +433,7 @@ namespace MasterBot.Room
                 players.Clear();
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(IBot bot, PlayerIOClient.Message m)
         {
             switch (m.Type)
             {
@@ -696,12 +696,12 @@ namespace MasterBot.Room
             }
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
         {
 
         }
 
-        public void Update(IBot bot)
+        public override void Update(IBot bot)
         {
 
         }
@@ -811,7 +811,7 @@ namespace MasterBot.Room
             get { return players; }
         }
 
-        public void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
+        public override void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
         {
             if (minimap != null)
                 minimap.onBlockChange(bot, x, y, newBlock, oldBlock);

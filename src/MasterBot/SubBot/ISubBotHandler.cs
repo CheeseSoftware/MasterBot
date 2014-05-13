@@ -8,9 +8,9 @@ namespace MasterBot.SubBot
 {
     public interface ISubBotHandler
     {
-        void AddSubBot(string name, ISubBot subBot);
+        void AddSubBot(string name, ASubBot subBot);
         void RemoveSubBot(string name);
-        ISubBot GetSubBot(string name);
-        Dictionary<string, ISubBot> SubBots { get; }
+        ASubBot GetSubBot(string name);
+        Dictionary<string, ASubBot> SubBots { get; }
     }
 }

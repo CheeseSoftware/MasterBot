@@ -27,17 +27,18 @@ namespace MasterBot
 
         public MasterBot()
         {
+            mainForm = new MainForm(this);
+            mainForm.FormClosing += delegate
+            {
+                Disconnect("Form Closing");
+            };
+
             MinimapColors.CreateColorCodes();
-            subBotHandler = new SubBotHandler();
-            subBotHandler.AddSubBot("Room", (ISubBot)(room = new Room.Room(this)));
+            subBotHandler = new SubBotHandler(mainForm.BotTabPage);
+            subBotHandler.AddSubBot("Room", (ASubBot)(room = new Room.Room(this)));
             subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest());
             subBotHandler.AddSubBot("Commands", new Commands());
             subBotHandler.AddSubBot("WorldEdit", new WorldEdit());
-            mainForm = new MainForm(this);
-            mainForm.FormClosing += delegate 
-            { 
-                Disconnect("Form Closing");
-            };
 
             updateTimer.Interval = 50;
             updateTimer.Tick += updateTimer_Tick;

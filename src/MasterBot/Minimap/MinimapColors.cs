@@ -88,17 +88,30 @@ namespace MasterBot.Minimap
             }
             else if (layer == ItemLayer.BACKGROUND)
             {
-                Bitmap bitmap1 = new Bitmap("image 994.png");
-                Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
-                Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
-                colorCodes.Add(id, getDominantColor(bitmap2));
+                try
+                {
+                    Bitmap bitmap1 = new Bitmap("image 994.png");
+                    Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
+                    Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
+                    colorCodes.Add(id, getDominantColor(bitmap2));
+                }
+                catch (Exception)
+                {
+                }
             }
             else if (layer == ItemLayer.FORGROUND)
             {
-                Bitmap bitmap1 = new Bitmap("image 979.png");
-                Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
-                Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
-                colorCodes.Add(id, getDominantColor(bitmap2));
+                try
+                {
+                    Bitmap bitmap1 = new Bitmap("image 979.png");
+                    Rectangle size = new Rectangle(16 * xOffset, 0, 16, 16);
+                    Bitmap bitmap2 = bitmap1.Clone(size, new PixelFormat());
+                    colorCodes.Add(id, getDominantColor(bitmap2));
+                }
+                catch (Exception)
+                {
+                    
+                }
             }
             else if (layer == ItemLayer.DECORATION || layer == ItemLayer.ABOVE)
             {

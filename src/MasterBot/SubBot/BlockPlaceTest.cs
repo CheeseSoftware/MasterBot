@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    class BlockPlaceTest : ISubBot
+    class BlockPlaceTest : ASubBot
     {
         List<int> blockPlayers = new List<int>();
 
@@ -16,20 +16,20 @@ namespace MasterBot.SubBot
 
         }
 
-        public void onConnect(IBot bot)
+        public override void onConnect(IBot bot)
         {
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onDisconnect(IBot bot, string reason)
         {
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(IBot bot, PlayerIOClient.Message m)
         {
 
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
         {
             if(cmd == "test")
             {
@@ -40,11 +40,11 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void Update(IBot bot)
+        public override void Update(IBot bot)
         {
         }
 
-        public void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
+        public override void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
         {
             if(newBlock.Placer != null && blockPlayers.Contains(newBlock.Placer.Id))
             {
