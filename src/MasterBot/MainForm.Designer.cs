@@ -30,11 +30,12 @@
         {
             this.tabControlMainTabs = new System.Windows.Forms.TabControl();
             this.tabPageLoginConnect = new System.Windows.Forms.TabPage();
+            this.groupBoxSubBots = new System.Windows.Forms.GroupBox();
+            this.checkedListBoxSubBots = new System.Windows.Forms.CheckedListBox();
             this.groupBoxCode = new System.Windows.Forms.GroupBox();
             this.buttonSendCode = new System.Windows.Forms.Button();
             this.textBoxCode = new System.Windows.Forms.TextBox();
             this.labelCode = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBoxConnect = new System.Windows.Forms.GroupBox();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.textBoxRoomId = new System.Windows.Forms.TextBox();
@@ -55,6 +56,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPageSubBots = new System.Windows.Forms.TabPage();
             this.tabControlSubBots = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.RtbConsoleInput = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -62,6 +65,7 @@
             this.RtbConsole = new Gui.RickTextConsole();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
+            this.groupBoxSubBots.SuspendLayout();
             this.groupBoxCode.SuspendLayout();
             this.groupBoxConnect.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
@@ -72,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).BeginInit();
             this.tabPageSubBots.SuspendLayout();
+            this.tabControlSubBots.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -84,26 +89,47 @@
             this.tabControlMainTabs.Controls.Add(this.tabPageRoom);
             this.tabControlMainTabs.Controls.Add(this.tabPageSubBots);
             this.tabControlMainTabs.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tabControlMainTabs.Location = new System.Drawing.Point(123, 3);
+            this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlMainTabs.Location = new System.Drawing.Point(3, 3);
             this.tabControlMainTabs.Name = "tabControlMainTabs";
             this.tabControlMainTabs.SelectedIndex = 0;
-            this.tabControlMainTabs.Size = new System.Drawing.Size(364, 456);
+            this.tabControlMainTabs.Size = new System.Drawing.Size(484, 456);
             this.tabControlMainTabs.TabIndex = 0;
             // 
             // tabPageLoginConnect
             // 
+            this.tabPageLoginConnect.Controls.Add(this.groupBoxSubBots);
             this.tabPageLoginConnect.Controls.Add(this.groupBoxCode);
-            this.tabPageLoginConnect.Controls.Add(this.button1);
             this.tabPageLoginConnect.Controls.Add(this.groupBoxConnect);
             this.tabPageLoginConnect.Controls.Add(this.groupBoxLogin);
             this.tabPageLoginConnect.Location = new System.Drawing.Point(4, 22);
             this.tabPageLoginConnect.Name = "tabPageLoginConnect";
             this.tabPageLoginConnect.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLoginConnect.Size = new System.Drawing.Size(356, 430);
+            this.tabPageLoginConnect.Size = new System.Drawing.Size(476, 430);
             this.tabPageLoginConnect.TabIndex = 0;
             this.tabPageLoginConnect.Text = "LoginConnect";
             this.tabPageLoginConnect.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxSubBots
+            // 
+            this.groupBoxSubBots.Controls.Add(this.checkedListBoxSubBots);
+            this.groupBoxSubBots.Location = new System.Drawing.Point(257, 8);
+            this.groupBoxSubBots.Name = "groupBoxSubBots";
+            this.groupBoxSubBots.Size = new System.Drawing.Size(200, 411);
+            this.groupBoxSubBots.TabIndex = 9;
+            this.groupBoxSubBots.TabStop = false;
+            this.groupBoxSubBots.Text = "Subbots";
+            // 
+            // checkedListBoxSubBots
+            // 
+            this.checkedListBoxSubBots.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxSubBots.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkedListBoxSubBots.FormattingEnabled = true;
+            this.checkedListBoxSubBots.Location = new System.Drawing.Point(3, 16);
+            this.checkedListBoxSubBots.Name = "checkedListBoxSubBots";
+            this.checkedListBoxSubBots.Size = new System.Drawing.Size(194, 392);
+            this.checkedListBoxSubBots.TabIndex = 0;
+            this.checkedListBoxSubBots.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSubBots_ItemCheck);
             // 
             // groupBoxCode
             // 
@@ -142,16 +168,6 @@
             this.labelCode.Size = new System.Drawing.Size(35, 13);
             this.labelCode.TabIndex = 0;
             this.labelCode.Text = "Code:";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(395, 402);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "console test";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // groupBoxConnect
             // 
@@ -257,7 +273,7 @@
             this.tabPageMinimap.Location = new System.Drawing.Point(4, 22);
             this.tabPageMinimap.Name = "tabPageMinimap";
             this.tabPageMinimap.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMinimap.Size = new System.Drawing.Size(356, 430);
+            this.tabPageMinimap.Size = new System.Drawing.Size(476, 430);
             this.tabPageMinimap.TabIndex = 1;
             this.tabPageMinimap.Text = "Minimap";
             this.tabPageMinimap.UseVisualStyleBackColor = true;
@@ -269,7 +285,7 @@
             this.flowLayoutPanelMinimap.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelMinimap.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanelMinimap.Name = "flowLayoutPanelMinimap";
-            this.flowLayoutPanelMinimap.Size = new System.Drawing.Size(350, 424);
+            this.flowLayoutPanelMinimap.Size = new System.Drawing.Size(470, 424);
             this.flowLayoutPanelMinimap.TabIndex = 0;
             // 
             // pictureBoxMinimap
@@ -288,7 +304,7 @@
             this.tabPageRoom.Controls.Add(this.label1);
             this.tabPageRoom.Location = new System.Drawing.Point(4, 22);
             this.tabPageRoom.Name = "tabPageRoom";
-            this.tabPageRoom.Size = new System.Drawing.Size(356, 430);
+            this.tabPageRoom.Size = new System.Drawing.Size(476, 430);
             this.tabPageRoom.TabIndex = 2;
             this.tabPageRoom.Text = "Room";
             this.tabPageRoom.UseVisualStyleBackColor = true;
@@ -340,20 +356,41 @@
             this.tabPageSubBots.Controls.Add(this.tabControlSubBots);
             this.tabPageSubBots.Location = new System.Drawing.Point(4, 22);
             this.tabPageSubBots.Name = "tabPageSubBots";
-            this.tabPageSubBots.Size = new System.Drawing.Size(356, 430);
+            this.tabPageSubBots.Size = new System.Drawing.Size(476, 430);
             this.tabPageSubBots.TabIndex = 3;
             this.tabPageSubBots.Text = "Subbots";
             this.tabPageSubBots.UseVisualStyleBackColor = true;
             // 
             // tabControlSubBots
             // 
+            this.tabControlSubBots.Controls.Add(this.tabPage1);
+            this.tabControlSubBots.Controls.Add(this.tabPage2);
             this.tabControlSubBots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlSubBots.Location = new System.Drawing.Point(0, 0);
-            this.tabControlSubBots.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.tabControlSubBots.Name = "tabControlSubBots";
             this.tabControlSubBots.SelectedIndex = 0;
-            this.tabControlSubBots.Size = new System.Drawing.Size(356, 430);
+            this.tabControlSubBots.Size = new System.Drawing.Size(476, 430);
             this.tabControlSubBots.TabIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(468, 404);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(468, 404);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // RtbConsoleInput
             // 
@@ -422,7 +459,6 @@
             this.RtbConsole.Size = new System.Drawing.Size(224, 439);
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
-            this.RtbConsole.TextChanged += new System.EventHandler(this.RtbConsole_TextChanged);
             // 
             // MainForm
             // 
@@ -432,9 +468,9 @@
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "MainForm";
             this.Text = "MasterBot";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControlMainTabs.ResumeLayout(false);
             this.tabPageLoginConnect.ResumeLayout(false);
+            this.groupBoxSubBots.ResumeLayout(false);
             this.groupBoxCode.ResumeLayout(false);
             this.groupBoxCode.PerformLayout();
             this.groupBoxConnect.ResumeLayout(false);
@@ -449,6 +485,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).EndInit();
             this.tabPageSubBots.ResumeLayout(false);
+            this.tabControlSubBots.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -471,7 +508,6 @@
         private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.TextBox textBoxRoomId;
         private System.Windows.Forms.Label labelRoomId;
-        private System.Windows.Forms.Button button1;
         private Gui.RickTextConsole RtbConsole;
         private System.Windows.Forms.TextBox RtbConsoleInput;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
@@ -490,7 +526,11 @@
         private System.Windows.Forms.TextBox textBoxCode;
         private System.Windows.Forms.Label labelCode;
         private System.Windows.Forms.TabPage tabPageSubBots;
+        private System.Windows.Forms.GroupBox groupBoxSubBots;
         private System.Windows.Forms.TabControl tabControlSubBots;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.CheckedListBox checkedListBoxSubBots;
     }
 }
 
