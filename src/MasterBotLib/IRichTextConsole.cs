@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace MasterBot
 {
-    interface IRichTextConsole
+    public interface IRichTextConsole
     {
         RichTextBox RickTextBox { get; }
 

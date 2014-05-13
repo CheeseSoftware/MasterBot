@@ -78,8 +78,6 @@
     <Compile Include="Room\Block\BlockWorldPortal.cs" />
     <Compile Include="Room\Block\NormalBlock.cs" />
     <Compile Include="Room\Block\IBlock.cs" />
-    <Compile Include="ICmdSource.cs" />
-    <Compile Include="IRichTextConsole.cs" />
     <Compile Include="Gui\RickTextConsole.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -146,6 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MasterBotLib\MasterBotLib.csproj">
+      <Project>{4b4a35f9-1a51-4c7b-8777-67c58130b76c}</Project>
+      <Name>MasterBotLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

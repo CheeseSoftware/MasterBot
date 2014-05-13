@@ -6,7 +6,25 @@ using System.Threading.Tasks;
 
 namespace MasterBot
 {
-    class IPlayer
+    /*interface IPlayer
     {
-    }
+        #region Player
+        int Id { get; }
+
+        void Send(IBot bot, string message);
+
+        void SetMetadata(string key, object value);
+
+        bool HasMetadata(string key);
+
+        void RemoveMetadata(string key);
+
+        object GetMetadata(string key);
+        #endregion
+        #region PhysicPlayer
+
+        #endregion
+
+
+    }*/
 }
