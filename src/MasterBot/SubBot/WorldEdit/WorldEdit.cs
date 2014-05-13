@@ -87,7 +87,6 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
-<<<<<<< HEAD
         public void SetSize(IBot bot, int x, int y, int width, int height, IBlock replaceWith, IBlock replace = null)
         {
             Set(bot, x, y, x + width, y + height, replaceWith, replace);
@@ -120,8 +119,7 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
-        public void onConnect(IBot bot)
-=======
+
         public override void onEnable()
         {
         }
@@ -131,7 +129,6 @@ namespace MasterBot.SubBot.WorldEdit
         }
 
         public override void onConnect()
->>>>>>> bc3da20c7913b5b88b1771ccedd24abe48237dfa
         {
         }
 
