@@ -17,8 +17,12 @@ namespace MasterBot.Room
         private SafeDictionary<int, Player> players = new SafeDictionary<int, Player>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
+        BlockDrawerPool blockDrawerPool;
+        BlockDrawer blockDrawer;
+        public BlockDrawer BlockDrawer { get { return blockDrawer; } }//TODO: fix temporary public >.<
         //private Thread playerTickThread;
 
+        #region EE_Variables
         private string owner = "";
         private string title = "";
         private int plays = 0;
@@ -36,6 +40,7 @@ namespace MasterBot.Room
         private bool hideGreen = false;
         private bool hideBlue = false;
         private bool hideTimeDoor = false;
+        #endregion
 
         private List<BlockWithPos> blocksSent = new List<BlockWithPos>();
         private Queue<BlockWithPos> blocksToSend = new Queue<BlockWithPos>();
@@ -48,6 +53,9 @@ namespace MasterBot.Room
         {
             this.bot = bot;
             this.blockMap = new BlockMap(bot);
+            this.blockDrawerPool = new BlockDrawerPool(bot, this);
+            this.blockDrawer = blockDrawerPool.CreateBlockDrawer(15);
+            this.blockDrawer.Start();
             //playerTickThread = new Thread(UpdatePhysics);
             playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
             playerTickTimer.MicroTimerElapsed += UpdatePhysics;
@@ -405,7 +413,7 @@ namespace MasterBot.Room
         {
             if (block != null && block.Id != getBlock(block.Layer, x, y).Id)
             {
-                blocksToSend.Enqueue(new BlockWithPos(x, y, block));
+                blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));//blocksToSend.Enqueue(new BlockWithPos(x, y, block));
             }
         }
 

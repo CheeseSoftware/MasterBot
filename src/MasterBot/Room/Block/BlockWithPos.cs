@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockWithPos
+    public class BlockWithPos
     {
         private int x;
         private int y;

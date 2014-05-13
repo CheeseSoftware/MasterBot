@@ -9,6 +9,7 @@ namespace MasterBot.Room
 {
     public interface IRoom
     {
+        #region properties
         string Owner { get; }
         string Title { get; }
         int Plays { get; }
@@ -30,6 +31,7 @@ namespace MasterBot.Room
         BlockMap BlockMap { get; }
         int BlocksToSendSize { get; }
         int BlocksSentSize { get; }
+        #endregion
 
         IBlock getBlock(int layer, int x, int y);
         Stack<IBlock> getOldBlocks(int layer, int x, int y);
