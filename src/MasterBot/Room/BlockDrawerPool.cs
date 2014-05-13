@@ -23,12 +23,22 @@ namespace MasterBot.Room
             this.bot = bot;
             this.room = room;
 
-            drawerThread = new Thread(() =>
-                {
-                    int i = 0;
+            drawerThread = new Thread(Draw);
+        }
 
-                    while (bot.Connected)
+        private void Draw()
+        {
+            int i = 0;
+
+            while (bot.Connected)
+            {
+                while (bot.Connected && bot.Room.HasCode)
+                {
+                    bool success;
+
+                    lock (queuedBlockdrawers)
                     {
+<<<<<<< HEAD
                         while (bot.Connected && bot.Room.HasCode)
                         {
                             bool success;
@@ -50,8 +60,22 @@ namespace MasterBot.Room
                         Thread.Sleep(100);
                     }
                 });
+=======
+                        BlockDrawer blockDrawer;
+                        i = (i + 1) % queuedBlockdrawers.Count;
+                        blockDrawer = queuedBlockdrawers[i];
+>>>>>>> 0db9cd2a679fbe2de4b0bb11968b9c19d63a9485
 
+                        success = blockDrawer.DrawBlock();
+                    }
 
+                    if (success)
+                    {
+                        Thread.Sleep(10);
+                    }
+                }
+                Thread.Sleep(100);
+            }
         }
         public IBlockDrawer CreateBlockDrawer(byte priority)
         {
@@ -91,12 +115,13 @@ namespace MasterBot.Room
 
         public void Start()
         {
+            drawerThread = new Thread(Draw);
             drawerThread.Start();
         }
 
         public void Stop()
         {
-            if (drawerThread.ThreadState == ThreadState.Running)
+            if (drawerThread != null)
                 drawerThread.Abort();
 
             lock (waitingBlocks)

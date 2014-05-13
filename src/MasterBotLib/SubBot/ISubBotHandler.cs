@@ -8,7 +8,7 @@ namespace MasterBot.SubBot
 {
     public interface ISubBotHandler : ISubBot
     {
-        void AddSubBot(ASubBot subBot);
+        void AddSubBot(ASubBot subBot, bool enabledByDefault = true);
         void RemoveSubBot(string name);
         ASubBot GetSubBot(string name);
         Dictionary<string, ASubBot> SubBots { get; }

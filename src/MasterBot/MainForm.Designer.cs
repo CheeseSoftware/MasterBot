@@ -38,13 +38,10 @@
             this.labelCode = new System.Windows.Forms.Label();
             this.groupBoxConnect = new System.Windows.Forms.GroupBox();
             this.buttonConnect = new System.Windows.Forms.Button();
-            this.textBoxRoomId = new System.Windows.Forms.TextBox();
             this.labelRoomId = new System.Windows.Forms.Label();
             this.groupBoxLogin = new System.Windows.Forms.GroupBox();
             this.labelPassword = new System.Windows.Forms.Label();
             this.labelEmail = new System.Windows.Forms.Label();
-            this.textBoxEmail = new System.Windows.Forms.TextBox();
-            this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.tabPageMinimap = new System.Windows.Forms.TabPage();
             this.flowLayoutPanelMinimap = new System.Windows.Forms.FlowLayoutPanel();
@@ -61,6 +58,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.RtbConsole = new Gui.RickTextConsole();
+            this.comboBoxEmail = new System.Windows.Forms.ComboBox();
+            this.comboBoxRoomId = new System.Windows.Forms.ComboBox();
+            this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
             this.groupBoxSubBots.SuspendLayout();
@@ -168,8 +168,8 @@
             // 
             // groupBoxConnect
             // 
+            this.groupBoxConnect.Controls.Add(this.comboBoxRoomId);
             this.groupBoxConnect.Controls.Add(this.buttonConnect);
-            this.groupBoxConnect.Controls.Add(this.textBoxRoomId);
             this.groupBoxConnect.Controls.Add(this.labelRoomId);
             this.groupBoxConnect.Location = new System.Drawing.Point(8, 114);
             this.groupBoxConnect.Name = "groupBoxConnect";
@@ -188,14 +188,6 @@
             this.buttonConnect.UseVisualStyleBackColor = true;
             this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 
-            // textBoxRoomId
-            // 
-            this.textBoxRoomId.Location = new System.Drawing.Point(70, 13);
-            this.textBoxRoomId.Name = "textBoxRoomId";
-            this.textBoxRoomId.Size = new System.Drawing.Size(167, 20);
-            this.textBoxRoomId.TabIndex = 1;
-            this.textBoxRoomId.Text = "PWO0ktzRcQbkI";
-            // 
             // labelRoomId
             // 
             this.labelRoomId.AutoSize = true;
@@ -207,10 +199,10 @@
             // 
             // groupBoxLogin
             // 
+            this.groupBoxLogin.Controls.Add(this.textBoxPassword);
+            this.groupBoxLogin.Controls.Add(this.comboBoxEmail);
             this.groupBoxLogin.Controls.Add(this.labelPassword);
             this.groupBoxLogin.Controls.Add(this.labelEmail);
-            this.groupBoxLogin.Controls.Add(this.textBoxEmail);
-            this.groupBoxLogin.Controls.Add(this.textBoxPassword);
             this.groupBoxLogin.Controls.Add(this.buttonLogin);
             this.groupBoxLogin.Location = new System.Drawing.Point(8, 6);
             this.groupBoxLogin.Name = "groupBoxLogin";
@@ -236,23 +228,6 @@
             this.labelEmail.Size = new System.Drawing.Size(35, 13);
             this.labelEmail.TabIndex = 3;
             this.labelEmail.Text = "Email:";
-            // 
-            // textBoxEmail
-            // 
-            this.textBoxEmail.Location = new System.Drawing.Point(70, 19);
-            this.textBoxEmail.Name = "textBoxEmail";
-            this.textBoxEmail.Size = new System.Drawing.Size(167, 20);
-            this.textBoxEmail.TabIndex = 1;
-            this.textBoxEmail.Text = "gustav9797@hotmail.se";
-            // 
-            // textBoxPassword
-            // 
-            this.textBoxPassword.Location = new System.Drawing.Point(70, 45);
-            this.textBoxPassword.Name = "textBoxPassword";
-            this.textBoxPassword.PasswordChar = '*';
-            this.textBoxPassword.Size = new System.Drawing.Size(167, 20);
-            this.textBoxPassword.TabIndex = 2;
-            this.textBoxPassword.Text = "kasekakorna";
             // 
             // buttonLogin
             // 
@@ -435,6 +410,30 @@
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
             // 
+            // comboBoxEmail
+            // 
+            this.comboBoxEmail.FormattingEnabled = true;
+            this.comboBoxEmail.Location = new System.Drawing.Point(68, 19);
+            this.comboBoxEmail.Name = "comboBoxEmail";
+            this.comboBoxEmail.Size = new System.Drawing.Size(169, 21);
+            this.comboBoxEmail.TabIndex = 5;
+            this.comboBoxEmail.SelectionChangeCommitted += new System.EventHandler(this.comboBoxEmail_SelectionChangeCommitted);
+            // 
+            // comboBoxRoomId
+            // 
+            this.comboBoxRoomId.FormattingEnabled = true;
+            this.comboBoxRoomId.Location = new System.Drawing.Point(68, 13);
+            this.comboBoxRoomId.Name = "comboBoxRoomId";
+            this.comboBoxRoomId.Size = new System.Drawing.Size(169, 21);
+            this.comboBoxRoomId.TabIndex = 7;
+            // 
+            // textBoxPassword
+            // 
+            this.textBoxPassword.Location = new System.Drawing.Point(68, 45);
+            this.textBoxPassword.Name = "textBoxPassword";
+            this.textBoxPassword.Size = new System.Drawing.Size(169, 20);
+            this.textBoxPassword.TabIndex = 6;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -472,15 +471,12 @@
 
         private System.Windows.Forms.TabControl tabControlMainTabs;
         private System.Windows.Forms.TabPage tabPageLoginConnect;
-        private System.Windows.Forms.TextBox textBoxEmail;
         private System.Windows.Forms.Button buttonLogin;
-        private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.GroupBox groupBoxLogin;
         private System.Windows.Forms.Label labelPassword;
         private System.Windows.Forms.Label labelEmail;
         private System.Windows.Forms.GroupBox groupBoxConnect;
         private System.Windows.Forms.Button buttonConnect;
-        private System.Windows.Forms.TextBox textBoxRoomId;
         private System.Windows.Forms.Label labelRoomId;
         private Gui.RickTextConsole RtbConsole;
         private System.Windows.Forms.TextBox RtbConsoleInput;
@@ -503,6 +499,9 @@
         private System.Windows.Forms.GroupBox groupBoxSubBots;
         private System.Windows.Forms.TabControl tabControlSubBots;
         private System.Windows.Forms.CheckedListBox checkedListBoxSubBots;
+        private System.Windows.Forms.ComboBox comboBoxRoomId;
+        private System.Windows.Forms.TextBox textBoxPassword;
+        private System.Windows.Forms.ComboBox comboBoxEmail;
     }
 }
 

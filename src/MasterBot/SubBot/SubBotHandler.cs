@@ -17,7 +17,6 @@ namespace MasterBot.SubBot
             : base(bot)
         {
             this.tabControl = tabControl;
-            bot.MainForm.UpdateSubbotsDatasource(subBots);
         }
 
         private void AddTab(ASubBot subBot)
@@ -32,7 +31,7 @@ namespace MasterBot.SubBot
                 tabControl.Invoke(new Action(() => { tabControl.TabPages.Remove(subBot); }));
         }
 
-        public void AddSubBot(ASubBot subBot)
+        public void AddSubBot(ASubBot subBot, bool enabledByDefault = true)
         {
             if (!subBots.ContainsKey(subBot.Name))
             {
@@ -40,6 +39,8 @@ namespace MasterBot.SubBot
                 {
                     subBots.Add(subBot.Name, subBot);
                     AddTab(subBot);
+                    if (enabledByDefault)
+                        subBot.Enabled = true;
                     bot.MainForm.UpdateSubbotsDatasource(subBots);
                     bot.MainForm.Console("Subbot " + subBot.Name + " added.");
                 }
@@ -89,7 +90,8 @@ namespace MasterBot.SubBot
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onConnect();
+                    if (subBot.Enabled)
+                        subBot.onConnect();
                 }
             }
         }
@@ -100,7 +102,8 @@ namespace MasterBot.SubBot
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onDisconnect(reason);
+                    if (subBot.Enabled)
+                        subBot.onDisconnect(reason);
                 }
             }
         }
@@ -111,7 +114,8 @@ namespace MasterBot.SubBot
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onMessage(m);
+                    if (subBot.Enabled)
+                        subBot.onMessage(m);
                 }
             }
         }
@@ -122,7 +126,8 @@ namespace MasterBot.SubBot
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onCommand(cmd, args, cmdSource);
+                    if (subBot.Enabled)
+                        subBot.onCommand(cmd, args, cmdSource);
                 }
             }
         }
@@ -133,20 +138,14 @@ namespace MasterBot.SubBot
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onBlockChange(x, y, newBlock, oldBlock);
+                    if (subBot.Enabled)
+                        subBot.onBlockChange(x, y, newBlock, oldBlock);
                 }
             }
         }
 
         public override void onTick()
         {
-            lock (subBots)
-            {
-                foreach (ASubBot subBot in subBots.Values)
-                {
-                    subBot.onTick();
-                }
-            }
         }
 
         public override bool HasTab

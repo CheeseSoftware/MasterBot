@@ -94,7 +94,9 @@
     <Compile Include="Bot\MasterBot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubBot\WorldEdit\ABrush.cs" />
     <Compile Include="SubBot\WorldEdit\EditRegion.cs" />
+    <Compile Include="SubBot\WorldEdit\IBrush.cs" />
     <Compile Include="SubBot\WorldEdit\WorldEdit.cs">
       <SubType>Component</SubType>
     </Compile>
