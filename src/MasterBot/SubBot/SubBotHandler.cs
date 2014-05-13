@@ -8,15 +8,14 @@ using System.Windows.Forms;
 
 namespace MasterBot.SubBot
 {
-    public class SubBotHandler : ISubBotHandler
+    public class SubBotHandler : ASubBot, ISubBotHandler
     {
-        private IBot bot;
         private Dictionary<string, ASubBot> subBots = new Dictionary<string, ASubBot>();
         private TabControl tabControl;
 
         public SubBotHandler(IBot bot, TabControl tabControl)
+            : base(bot)
         {
-            this.bot = bot;
             this.tabControl = tabControl;
         }
 
@@ -68,7 +67,15 @@ namespace MasterBot.SubBot
             get { return subBots; }
         }
 
-        public void onConnect()
+        public override void onEnable()
+        {
+        }
+
+        public override void onDisable()
+        {
+        }
+
+        public override void onConnect()
         {
             lock (subBots)
             {
@@ -79,7 +86,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void onDisconnect(string reason)
+        public override void onDisconnect(string reason)
         {
             lock (subBots)
             {
@@ -90,7 +97,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(PlayerIOClient.Message m)
         {
             lock (subBots)
             {
@@ -101,7 +108,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void onCommand(string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
             lock (subBots)
             {
@@ -112,7 +119,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
         {
             lock (subBots)
             {
@@ -123,7 +130,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void onTick()
+        public override void onTick()
         {
             lock (subBots)
             {
@@ -132,6 +139,11 @@ namespace MasterBot.SubBot
                     subBot.onTick();
                 }
             }
+        }
+
+        public override bool HasTab
+        {
+            get { return true; }
         }
     }
 }

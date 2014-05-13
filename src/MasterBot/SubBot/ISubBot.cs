@@ -16,7 +16,7 @@ namespace MasterBot.SubBot
         void onMessage(PlayerIOClient.Message m);
         void onCommand(string cmd, string[] args, ICmdSource cmdSource);
         void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock);
-        void Update();
+        void onTick();
         
         bool HasTab { get; }
         bool Enabled { get; set; }
