@@ -87,6 +87,41 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
+<<<<<<< HEAD
+        public void SetSize(IBot bot, int x, int y, int width, int height, IBlock replaceWith, IBlock replace = null)
+        {
+            Set(bot, x, y, x + width, y + height, replaceWith, replace);
+        }
+
+        public void Set(IBot bot, int x1, int y1, int x2, int y2, IBlock replaceWith, IBlock replace = null)
+        {
+            EditRegion region = new EditRegion();
+            region.FirstCorner = new Point(x1, y1);
+            region.SecondCorner = new Point(x2, y2);
+            SetRegion(bot, region, replaceWith, replace);
+        }
+
+        public void SetRegion(IBot bot, EditRegion region, IBlock replaceWith, IBlock replace = null)
+        {
+            if (replace == null)
+            {
+                foreach (Point pos in region)
+                {
+                    bot.Room.setBlock(pos.X, pos.Y, replaceWith);
+                }
+            }
+            else
+            {
+                foreach (Point pos in region)
+                {
+                    if (bot.Room.getBlock(replaceWith.Layer, pos.X, pos.Y).Id == replace.Id)
+                        bot.Room.setBlock(pos.X, pos.Y, replaceWith);
+                }
+            }
+        }
+
+        public void onConnect(IBot bot)
+=======
         public override void onEnable()
         {
         }
@@ -96,6 +131,7 @@ namespace MasterBot.SubBot.WorldEdit
         }
 
         public override void onConnect()
+>>>>>>> bc3da20c7913b5b88b1771ccedd24abe48237dfa
         {
         }
 
@@ -128,11 +164,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     if (id != -1)
                                     {
                                         int layer = id >= 500 ? 1 : 0;
-                                        foreach (Point pos in region)
-                                        {
-                                            if (bot.Room.getBlock(layer, pos.X, pos.Y).Id != id)
-                                                bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(id, layer));
-                                        }
+                                        SetRegion(bot, region, new NormalBlock(id, layer));
                                     }
                                     else
                                         bot.Connection.Send("say", player.name + ": Invalid ID.");
@@ -152,19 +184,29 @@ namespace MasterBot.SubBot.WorldEdit
                                 {
                                     int blockToReplace = int.Parse(args[0]);
                                     int blockToReplaceWith = int.Parse(args[1]);
-                                    foreach (Point pos in region)
-                                    {
-                                        if (bot.Room.getBlock(blockToReplace >= 500 ? 1 : 0, pos.X, pos.Y).Id == blockToReplace)
-                                        {
-                                            bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(blockToReplaceWith, blockToReplaceWith >= 500 ? 1 : 0));
-                                        }
-                                    }
+                                    SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                                 }
                                 else
                                     bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
                             }
                             else
                                 player.Send(bot, "You have to set a region.");
+                            break;
+                        }
+                    case "replacenear":
+                        {
+                            if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]) && !string.IsNullOrEmpty(args[2]))
+                            {
+                                int range = int.Parse(args[0]);
+                                int blockToReplace = int.Parse(args[1]);
+                                int blockToReplaceWith = int.Parse(args[2]);
+                                EditRegion closeRegion = new EditRegion();
+                                closeRegion.FirstCorner = new Point(player.BlockX - range, player.BlockY - range);
+                                closeRegion.SecondCorner = new Point(player.BlockX + range, player.BlockY + range);
+                                SetRegion(bot, closeRegion, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
+                            }
+                            else
+                                bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");
                             break;
                         }
                     case "copy":
@@ -230,7 +272,6 @@ namespace MasterBot.SubBot.WorldEdit
                             return;
                         }
                 }
-                region.Reset();
             }
         }
 

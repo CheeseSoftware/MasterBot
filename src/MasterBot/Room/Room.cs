@@ -334,7 +334,18 @@ namespace MasterBot.Room
                         {
                             block.Block.Send(bot, block.X, block.Y);
                             lock (blocksSent)
-                                blocksSent.Add(block);
+                            {
+                                if (block.Block.TimesSent < 10)
+                                {
+                                    if (!blocksSent.Contains(block))
+                                        blocksSent.Add(block);
+                                }
+                                else
+                                {
+                                    while (blocksSent.Contains(block))
+                                        blocksSent.Remove(block);
+                                }
+                            }
                         }
                     }
                     System.Threading.Thread.Sleep(11);
@@ -411,7 +422,7 @@ namespace MasterBot.Room
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (block != null && block.Id != getBlock(block.Layer, x, y).Id)
+            if (block != null && block.Id != getBlock(block.Layer, x, y).Id && blockMap.isWithinMap(x, y))
             {
                 blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));//blocksToSend.Enqueue(new BlockWithPos(x, y, block));
             }

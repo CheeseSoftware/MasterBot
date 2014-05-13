@@ -28,13 +28,6 @@ namespace MasterBot.Room.Block
             Reset();
         }
 
-        private bool isWithinMatrix(int x, int y)
-        {
-            if (x >= 0 && y >= 0 && x <= width && y <= height)
-                return true;
-            return false;
-        }
-
         private void Reset()
         {
             for (int x = 0; x < width + 1; x++)
@@ -47,6 +40,13 @@ namespace MasterBot.Room.Block
             }
         }
 
+        public bool isWithinMap(int x, int y)
+        {
+            if (x >= 0 && y >= 0 && x <= width && y <= height)
+                return true;
+            return false;
+        }
+
         public void setSize(int width, int height)
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];
@@ -57,7 +57,7 @@ namespace MasterBot.Room.Block
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (block != null && isWithinMatrix(x, y))
+            if (block != null && isWithinMap(x, y))
             {
                 if (block.Layer == 0)
                     foregroundMap[x, y].Push(block);
@@ -68,7 +68,7 @@ namespace MasterBot.Room.Block
 
         public Stack<IBlock> getOldBlocks(int layer, int x, int y)
         {
-            if (isWithinMatrix(x, y))
+            if (isWithinMap(x, y))
             {
                 if (layer == 0)
                     return foregroundMap[x, y];
@@ -89,14 +89,14 @@ namespace MasterBot.Room.Block
 
         public IBlock getBlock(int x, int y)
         {
-            if (isWithinMatrix(x, y) && foregroundMap[x, y] != null && foregroundMap[x, y].Count > 0)
+            if (isWithinMap(x, y) && foregroundMap[x, y] != null && foregroundMap[x, y].Count > 0)
                 return foregroundMap[x, y].Peek();
             return new NormalBlock(0, 0); ;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
-            if (isWithinMatrix(x, y) && backgroundMap[x, y] != null && backgroundMap[x, y].Count > 0)
+            if (isWithinMap(x, y) && backgroundMap[x, y] != null && backgroundMap[x, y].Count > 0)
                 return backgroundMap[x, y].Peek();
             return new NormalBlock(0, 1); ;
         }

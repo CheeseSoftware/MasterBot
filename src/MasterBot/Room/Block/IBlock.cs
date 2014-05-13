@@ -18,6 +18,7 @@ namespace MasterBot.Room.Block
         Color Color { get; }
         Player Placer { get; set; }
         bool Placed { get; }
+        int TimesSent { get; }
 
         void Send(IBot bot, int x, int y);
         void OnReceive(IBot bot, int x, int y);
