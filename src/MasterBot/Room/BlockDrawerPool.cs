@@ -38,33 +38,9 @@ namespace MasterBot.Room
 
                     lock (queuedBlockdrawers)
                     {
-<<<<<<< HEAD
-                        while (bot.Connected && bot.Room.HasCode)
-                        {
-                            bool success;
-
-                            lock (queuedBlockdrawers)
-                            {
-                                IBlockDrawer blockDrawer;
-                                i = (i+1)%queuedBlockdrawers.Count;
-                                blockDrawer = queuedBlockdrawers[i];
-
-                                success = blockDrawer.DrawBlock();
-                            }
-
-                            if (success)
-                            {
-                                Thread.Sleep(10);
-                            }
-                        }
-                        Thread.Sleep(100);
-                    }
-                });
-=======
-                        BlockDrawer blockDrawer;
-                        i = (i + 1) % queuedBlockdrawers.Count;
+                        IBlockDrawer blockDrawer;
+                        i = (i+1)%queuedBlockdrawers.Count;
                         blockDrawer = queuedBlockdrawers[i];
->>>>>>> 0db9cd2a679fbe2de4b0bb11968b9c19d63a9485
 
                         success = blockDrawer.DrawBlock();
                     }
