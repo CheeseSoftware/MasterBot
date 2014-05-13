@@ -171,6 +171,6 @@ namespace MasterBot
         }
 
 
-        public TabControl BotTabPage { get { return this.tabControlMainTabs; } }
+        public TabControl BotTabPage { get { return this.tabControlSubBots; } }
     }
 }

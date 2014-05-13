@@ -15,7 +15,19 @@ namespace MasterBot.SubBot
 
         public SubBotHandler(TabControl tabControl)
         {
+            this.tabControl = tabControl;
+        }
 
+        private void AddTab(ASubBot subBot)
+        {
+            if (subBot.HasTab)
+                tabControl.Invoke(new Action(() => { tabControl.TabPages.Add(subBot); }));
+        }
+
+        private void RemoveTab(ASubBot subBot)
+        {
+            if (tabControl.TabPages.Contains(subBot))
+                tabControl.Invoke(new Action(() => { tabControl.TabPages.Remove(subBot); }));
         }
 
         public void AddSubBot(string name, ASubBot subBot)

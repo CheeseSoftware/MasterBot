@@ -52,5 +52,10 @@ namespace MasterBot.SubBot
                 blockPlayers.Remove(newBlock.Placer.Id);
             }
         }
+
+        public override bool HasTab
+        {
+            get { return false; }
+        }
     }
 }

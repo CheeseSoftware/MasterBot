@@ -260,5 +260,10 @@ namespace MasterBot.SubBot.WorldEdit
         public override void Update(IBot bot)
         {
         }
+
+        public override bool HasTab
+        {
+            get { return false; }
+        }
     }
 }

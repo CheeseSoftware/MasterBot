@@ -832,5 +832,10 @@ namespace MasterBot.Room
         {
             get { return blocksSent.Count; }
         }
+
+        public override bool HasTab
+        {
+            get { return true; }
+        }
     }
 }

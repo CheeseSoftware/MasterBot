@@ -114,5 +114,10 @@ namespace MasterBot
         public override void Update(IBot bot)
         {
         }
+
+        public override bool HasTab
+        {
+            get { return true; }
+        }
     }
 }

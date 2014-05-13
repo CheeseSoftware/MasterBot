@@ -16,5 +16,8 @@ namespace MasterBot.SubBot
         public abstract void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource);
         public abstract void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock);
         public abstract void Update(IBot bot);
+
+        public abstract bool HasTab { get; }
+
     }
 }
