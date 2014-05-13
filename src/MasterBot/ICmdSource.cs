@@ -8,5 +8,6 @@ namespace MasterBot
 {
     public interface ICmdSource
     {
+        void Reply(string message);
     }
 }

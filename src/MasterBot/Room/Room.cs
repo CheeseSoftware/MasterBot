@@ -486,7 +486,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (!players.ContainsKey(id))
                         {
-                            Player player = new Player(this, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
+                            Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
                             player.isclubmember = m.GetBoolean(12);
                             players.Add(id, player);
                         }

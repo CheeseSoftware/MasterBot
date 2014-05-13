@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System;
-using MasterBot.Room.Block;
 using MasterBot.Room;
+using MasterBot.Room.Block;
 namespace MasterBot.Movement
 {
     /*import Player.*;
@@ -125,7 +125,7 @@ namespace MasterBot.Movement
         private double _currentThrust;
         private static List<string> admins = new List<string> { "benjaminsen", "cyclone", "toby", "rpgmaster2000", "mrshoe", "mrvoid" };
         public static bool HasSolitude = false;
-        private IRoom room;
+        protected IBot bot;
 
         public int smiley;
         public bool hasChat;
@@ -158,10 +158,10 @@ namespace MasterBot.Movement
         public int OldBlockY { get { return (int)Math.Round(((this.oldY) / 16.0)); } }
         public bool Moved { get { return BlockX != OldBlockX || BlockY != OldBlockY; } }
 
-        public PhysicsPlayer(IRoom room, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
+        public PhysicsPlayer(IBot bot, int id, string name, int smiley, double xPos, double yPos, bool isGod, bool isMod, bool hasChat, int coins, bool purple, bool isFriend, int level)
             : base(null, 16)
         {
-            this.room = room;
+            this.bot = bot;
             this.smiley = smiley;
             this.isgod = isGod;
             this.ismod = isMod;
@@ -260,7 +260,7 @@ namespace MasterBot.Movement
             List<int> _loc_8 = new List<int>();
             //int _loc_10 = 0;
             int _loc_11 = 0;
-            if (param1.x < 0 || param1.y < 0 || param1.x >= room.Width * 16 - 8 || param1.y >= room.Height * 16 - 8)
+            if (param1.x < 0 || param1.y < 0 || param1.x >= bot.Room.Width * 16 - 8 || param1.y >= bot.Room.Height * 16 - 8)
             {
                 //Console.WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
                 return 1;
@@ -285,7 +285,7 @@ namespace MasterBot.Movement
             {
                 for (int yy = -2; yy < 1; yy++)
                 {
-                    if (_loc_3 + xx > 0 && _loc_3 + xx < room.Width && _loc_4 + yy > 0 && _loc_4 + yy <= room.Height)
+                    if (_loc_3 + xx > 0 && _loc_3 + xx < bot.Room.Width && _loc_4 + yy > 0 && _loc_4 + yy <= bot.Room.Height)
                     {
                         for (int xTest = 0; xTest < 16; xTest++)
                         {
@@ -294,7 +294,7 @@ namespace MasterBot.Movement
                                 if (hitTest((int)(xTest + _loc_2.x + xx * 16), (int)(yTest + _loc_2.y + yy * 16)))
                                 {
                                     double _loc_9 = _loc_4;
-                                    IBlock currentBlock = room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
+                                    IBlock currentBlock = bot.Room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
                                     _loc_11 = currentBlock.Id;
                                     if (ItemId.isSolid(_loc_11))
                                     {
@@ -302,7 +302,7 @@ namespace MasterBot.Movement
                                         {
                                             case 23:
                                                 {
-                                                    if (room.HideRed)
+                                                    if (bot.Room.HideRed)
                                                     {
                                                         continue;
                                                     }
@@ -310,7 +310,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 24:
                                                 {
-                                                    if (room.HideGreen)
+                                                    if (bot.Room.HideGreen)
                                                     {
                                                         continue;
                                                     }
@@ -318,7 +318,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 25:
                                                 {
-                                                    if (room.HideBlue)
+                                                    if (bot.Room.HideBlue)
                                                     {
                                                         continue;
                                                     }
@@ -326,7 +326,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 26:
                                                 {
-                                                    if (!room.HideRed)
+                                                    if (!bot.Room.HideRed)
                                                     {
                                                         continue;
                                                     }
@@ -334,7 +334,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 27:
                                                 {
-                                                    if (!room.HideGreen)
+                                                    if (!bot.Room.HideGreen)
                                                     {
                                                         continue;
                                                     }
@@ -342,7 +342,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 28:
                                                 {
-                                                    if (!room.HideBlue)
+                                                    if (!bot.Room.HideBlue)
                                                     {
                                                         continue;
                                                     }
@@ -350,7 +350,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 156:
                                                 {
-                                                    if (room.HideTimeDoor)
+                                                    if (bot.Room.HideTimeDoor)
                                                     {
                                                         continue;
                                                     }
@@ -358,7 +358,7 @@ namespace MasterBot.Movement
                                                 }
                                             case 157:
                                                 {
-                                                    if (!room.HideTimeDoor)
+                                                    if (!bot.Room.HideTimeDoor)
                                                     {
                                                         continue;
                                                     }
@@ -665,7 +665,7 @@ namespace MasterBot.Movement
             double _loc_9 = 0;
             int _loc_10 = 0;
             double _loc_11 = 0;
-            current = room.getBlock(0, cx, cy).Id;
+            current = bot.Room.getBlock(0, cx, cy).Id;
             if (!isgodmod && current == ItemId.WORLD_PORTAL)
             {
                 if (spacejustdown && !worldportalsend)
@@ -689,17 +689,17 @@ namespace MasterBot.Movement
                     lastPortal = new Point(cx << 4, cy << 4);
 
                     //current = Form1.blockMap[cx, cy].ID;
-                    IBlock currentBlock = room.getBlock(0, cx, cy);
+                    IBlock currentBlock = bot.Room.getBlock(0, cx, cy);
                     BlockPortal currentBlockPortal = (BlockPortal)currentBlock;
                     int currentTarget = currentBlockPortal.destinationId;
                     //Console.WriteLine("entered portal with id " + currentBlock.thisID + " and target id " + currentTarget + " and rotation " + currentBlock.rotation);
 
                     //targetPortalList = world.getPortals(world.getPortal(cx, cy).target);
-                    for (int x = 1; x < room.Width; x++)
+                    for (int x = 1; x < bot.Room.Width; x++)
                     {
-                        for (int y = 1; y < room.Height; y++)
+                        for (int y = 1; y < bot.Room.Height; y++)
                         {
-                            IBlock block = room.getBlock(0, x, y);
+                            IBlock block = bot.Room.getBlock(0, x, y);
                             if (block is BlockPortal && ((BlockPortal)block).myId == currentTarget)
                             {
                                 //Console.WriteLine("found portal target " + block.targetID);
@@ -713,10 +713,10 @@ namespace MasterBot.Movement
                         //Console.WriteLine("iter: " + loopIterator);
                         currentLoopPortal = targetPortalList[loopIterator];
                         //_loc_4 = world.getPortal(lastPortal.x >> 4, lastPortal.y >> 4).rotation;
-                        _loc_4 = ((BlockPortal)room.getBlock(0, lastPortal.X >> 4, lastPortal.Y >> 4)).rotation;
+                        _loc_4 = ((BlockPortal)bot.Room.getBlock(0, lastPortal.X >> 4, lastPortal.Y >> 4)).rotation;
                         //Console.WriteLine("1: " + _loc_4);
                         //_loc_5 = world.getPortal(currentLoopPortal.x >> 4, currentLoopPortal.y >> 4).rotation;
-                        _loc_5 = ((BlockPortal)room.getBlock(0, currentLoopPortal.X >> 4, currentLoopPortal.Y >> 4)).rotation;
+                        _loc_5 = ((BlockPortal)bot.Room.getBlock(0, currentLoopPortal.X >> 4, currentLoopPortal.Y >> 4)).rotation;
                         //Console.WriteLine("2: " + _loc_5);
                         if (_loc_4 < _loc_5)
                         {
@@ -829,7 +829,7 @@ namespace MasterBot.Movement
             {
                 delayed = this.queue.Dequeue();
             }
-            this.current = room.getBlock(0, cx, cy).Id;
+            this.current = bot.Room.getBlock(0, cx, cy).Id;
             this.queue.Enqueue(this.current);
             if (this.current == 4 || ItemId.isClimbable(this.current))
             {

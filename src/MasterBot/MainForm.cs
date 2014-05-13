@@ -155,10 +155,15 @@ namespace MasterBot
 
         private void RtbConsoleInput_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter && RtbConsole.Text.Length > 0)
             {
                 RtbConsole.WriteLine("%B> %b" + RtbConsoleInput.Text.Replace("%", "%%"));
-                //bot.SubBotHandler.onCommand(bot, )
+                string[] input = RtbConsoleInput.Text.Split(' ');
+                string cmd = input[0];
+                string[] args = new string[0];
+                if (input.Length >= 2)
+                    Array.Copy(input, 1, args, 0, input.Length - 1);
+                bot.SubBotHandler.onCommand(cmd, args, (ICmdSource)(new ConsoleCmdSource(bot)));
                 RtbConsoleInput.Clear();
             }
         }
