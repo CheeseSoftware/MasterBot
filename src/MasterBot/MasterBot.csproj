@@ -61,6 +61,8 @@
     <Compile Include="Movement\SynchronizedObject.cs" />
     <Compile Include="Movement\SynchronizedSprite.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Room\BlockDrawer.cs" />
+    <Compile Include="Room\BlockDrawerPool.cs" />
     <Compile Include="Room\Block\BlockCoinDoor.cs" />
     <Compile Include="Room\Block\BlockCoinGate.cs" />
     <Compile Include="Room\Block\BlockDrums.cs" />
@@ -80,10 +82,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Room\Block\BlockPortal.cs" />
+    <Compile Include="Room\IBlockDrawerPool.cs" />
     <Compile Include="Room\IRoom.cs" />
     <Compile Include="Room\Room.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SafeList.cs" />
     <Compile Include="SafeDictionary.cs" />
     <Compile Include="SubBot\ASubBot.cs">
       <SubType>Component</SubType>
