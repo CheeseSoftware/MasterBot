@@ -419,6 +419,7 @@ namespace MasterBot.Room
 
         public override void onConnect(IBot bot)
         {
+            blockDrawerPool.Start();
             playerTickTimer.Start();
             blockRepairThread = new Thread(BlockRepairLoop);
             checkSentBlocksThread = new Thread(CheckSentBlocks);
@@ -428,6 +429,7 @@ namespace MasterBot.Room
 
         public override void onDisconnect(IBot bot, string reason)
         {
+            blockDrawerPool.Stop();
             playerTickTimer.Stop();
             if (blockRepairThread != null)
                 blockRepairThread.Abort();

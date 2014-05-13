@@ -47,7 +47,7 @@ namespace MasterBot.Room
                     }
                 });
 
-            drawerThread.Start();
+
         }
 
         public BlockDrawer CreateBlockDrawer(byte priority)
@@ -71,6 +71,17 @@ namespace MasterBot.Room
                 if (queuedBlockdrawers[i] == blockDrawer)
                     queuedBlockdrawers.RemoveAt(i);
             }
+        }
+
+        public void Start()
+        {
+            drawerThread.Start();
+        }
+
+        public void Stop()
+        {
+            if (drawerThread.ThreadState == ThreadState.Running)
+                drawerThread.Abort();
         }
     }
 }
