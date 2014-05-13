@@ -8,13 +8,15 @@ using System.Windows.Forms;
 
 namespace MasterBot.SubBot
 {
-    public class SubBotHandler : ISubBot, ISubBotHandler
+    public class SubBotHandler : ISubBotHandler
     {
-        Dictionary<string, ASubBot> subBots = new Dictionary<string, ASubBot>();
-        TabControl tabControl;
+        private IBot bot;
+        private Dictionary<string, ASubBot> subBots = new Dictionary<string, ASubBot>();
+        private TabControl tabControl;
 
-        public SubBotHandler(TabControl tabControl)
+        public SubBotHandler(IBot bot, TabControl tabControl)
         {
+            this.bot = bot;
             this.tabControl = tabControl;
         }
 
@@ -66,68 +68,68 @@ namespace MasterBot.SubBot
             get { return subBots; }
         }
 
-        public void onConnect(IBot bot)
+        public void onConnect()
         {
             lock (subBots)
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onConnect(bot);
+                    subBot.onConnect();
                 }
             }
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public void onDisconnect(string reason)
         {
             lock (subBots)
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onDisconnect(bot, reason);
+                    subBot.onDisconnect(reason);
                 }
             }
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public void onMessage(PlayerIOClient.Message m)
         {
             lock (subBots)
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onMessage(bot, m);
+                    subBot.onMessage(m);
                 }
             }
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
             lock (subBots)
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onCommand(bot, cmd, args, cmdSource);
+                    subBot.onCommand(cmd, args, cmdSource);
                 }
             }
         }
 
-        public void Update(IBot bot)
+        public void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
         {
             lock (subBots)
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.Update(bot);
+                    subBot.onBlockChange(x, y, newBlock, oldBlock);
                 }
             }
         }
 
-        public void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public void onTick()
         {
             lock (subBots)
             {
                 foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onBlockChange(bot, x, y, newBlock, oldBlock);
+                    subBot.onTick();
                 }
             }
         }

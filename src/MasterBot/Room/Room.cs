@@ -13,7 +13,6 @@ namespace MasterBot.Room
 {
     public class Room : ASubBot, IRoom
     {
-        private IBot bot;
         private BlockMap blockMap;
         private SafeDictionary<int, Player> players = new SafeDictionary<int, Player>();
         private MicroTimer playerTickTimer = new MicroTimer();
@@ -45,6 +44,7 @@ namespace MasterBot.Room
         private Thread checkSentBlocksThread;
 
         public Room(IBot bot)
+            : base(bot)
         {
             this.bot = bot;
             this.blockMap = new BlockMap(bot);
@@ -153,7 +153,7 @@ namespace MasterBot.Room
                 result.OnReceive(bot, x, y);
                 IBlock oldBlock = blockMap.getBlock(layer, x, y);
                 blockMap.setBlock(x, y, result);
-                bot.SubBotHandler.onBlockChange(bot, x, y, result, oldBlock);
+                bot.SubBotHandler.onBlockChange(x, y, result, oldBlock);
                 BlockWithPos b = new BlockWithPos(x, y, result);
                 lock (blocksSent)
                 { }
@@ -273,7 +273,7 @@ namespace MasterBot.Room
                         }
                         result.OnReceive(bot, xIndex, yIndex);
                         blockMap.setBlock(xIndex, yIndex, result);
-                        bot.SubBotHandler.onBlockChange(bot, xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
+                        bot.SubBotHandler.onBlockChange(xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
                     }
                     i += toAdd;
                     i += 3;
@@ -409,7 +409,15 @@ namespace MasterBot.Room
             }
         }
 
-        public override void onConnect(IBot bot)
+        public override void onEnable()
+        {
+        }
+
+        public override void onDisable()
+        {
+        }
+
+        public override void onConnect()
         {
             playerTickTimer.Start();
             blockRepairThread = new Thread(BlockRepairLoop);
@@ -418,7 +426,7 @@ namespace MasterBot.Room
             checkSentBlocksThread.Start();
         }
 
-        public override void onDisconnect(IBot bot, string reason)
+        public override void onDisconnect(string reason)
         {
             playerTickTimer.Stop();
             if (blockRepairThread != null)
@@ -426,14 +434,14 @@ namespace MasterBot.Room
             if (checkSentBlocksThread != null)
                 checkSentBlocksThread.Abort();
             if (minimap != null)
-                minimap.onDisconnect(bot, reason);
+                minimap.onDisconnect(reason);
             if (blockMap != null)
                 blockMap.Clear();
             if (players != null)
                 players.Clear();
         }
 
-        public override void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(PlayerIOClient.Message m)
         {
             switch (m.Type)
             {
@@ -640,7 +648,7 @@ namespace MasterBot.Room
                                 string[] args = new string[textSplit.Length - 1];
                                 if (textSplit.Length > 0)
                                     Array.Copy(textSplit, 1, args, 0, textSplit.Length - 1);
-                                bot.SubBotHandler.onCommand(bot, cmd, args, player);
+                                bot.SubBotHandler.onCommand(cmd, args, player);
                             }
                         }
                     }
@@ -696,14 +704,20 @@ namespace MasterBot.Room
             }
         }
 
-        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
 
         }
 
-        public override void Update(IBot bot)
+        public override void onTick()
         {
 
+        }
+
+        public override void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock)
+        {
+            if (minimap != null)
+                minimap.onBlockChange(x, y, newBlock, oldBlock);
         }
 
         public void DrawBorder()
@@ -715,7 +729,7 @@ namespace MasterBot.Room
                     if (x == 0 || y == 0 || x == width - 1 || y == width - 1)
                     {
                         blockMap.setBlock(x, y, new NormalBlock(9, 0));
-                        bot.SubBotHandler.onBlockChange(bot, x, y, new NormalBlock(9, 0), new NormalBlock(0, 0));
+                        bot.SubBotHandler.onBlockChange(x, y, new NormalBlock(9, 0), new NormalBlock(0, 0));
                     }
                 }
             }
@@ -809,12 +823,6 @@ namespace MasterBot.Room
         public SafeDictionary<int, Player> Players
         {
             get { return players; }
-        }
-
-        public override void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
-        {
-            if (minimap != null)
-                minimap.onBlockChange(bot, x, y, newBlock, oldBlock);
         }
 
         public BlockMap BlockMap

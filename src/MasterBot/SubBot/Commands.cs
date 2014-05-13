@@ -16,11 +16,12 @@ namespace MasterBot
         private List<string> protectedPlayers = new List<string>();
         private List<string> getPlacerPlayers = new List<string>();
 
-        public Commands()
+        public Commands(IBot bot)
+            : base(bot)
         {
         }
 
-        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource sender)
+        public override void onCommand(string cmd, string[] args, ICmdSource sender)
         {
             if (sender is Player)
             {
@@ -94,24 +95,31 @@ namespace MasterBot
             }
         }
 
-
-        public override void onConnect(IBot bot)
+        public override void onEnable()
         {
         }
 
-        public override void onDisconnect(IBot bot, string reason)
+        public override void onDisable()
         {
         }
 
-        public override void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onConnect()
         {
         }
 
-        public override void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onDisconnect(string reason)
         {
         }
 
-        public override void Update(IBot bot)
+        public override void onMessage(PlayerIOClient.Message m)
+        {
+        }
+
+        public override void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        {
+        }
+
+        public override void onTick()
         {
         }
 

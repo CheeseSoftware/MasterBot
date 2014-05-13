@@ -10,14 +10,51 @@ namespace MasterBot.SubBot
 {
     public abstract class ASubBot : TabPage, ISubBot
     {
-        public abstract void onConnect(IBot bot);
-        public abstract void onDisconnect(IBot bot, string reason);
-        public abstract void onMessage(IBot bot, PlayerIOClient.Message m);
-        public abstract void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource);
-        public abstract void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock);
-        public abstract void Update(IBot bot);
+                protected IBot bot;
+        private bool enabled = false;
+        private System.Timers.Timer updateTimer;
+
+        public ASubBot(IBot bot)
+        {
+            this.bot = bot;
+            this.updateTimer = new System.Timers.Timer();
+            updateTimer.Elapsed += delegate { onTick(); };
+        }
+
+        public abstract void onEnable();
+        public abstract void onDisable();
+        public abstract void onConnect();
+        public abstract void onDisconnect(string reason);
+        public abstract void onMessage(PlayerIOClient.Message m);
+        public abstract void onCommand(string cmd, string[] args, ICmdSource cmdSource);
+        public abstract void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock);
+        public abstract void onTick();
 
         public abstract bool HasTab { get; }
+        public new bool Enabled { get { return enabled; } 
+            set 
+            { 
+                enabled = value;
+                if (value)
+                    onEnable();
+                else
+                {
+                    onDisable();
+                    DisableTick();
+                }
+            } 
+        }
+
+        protected void EnableTick(double interval)
+        {
+            updateTimer.Interval = interval;
+            updateTimer.Start();
+        }
+
+        protected void DisableTick()
+        {
+            updateTimer.Stop();
+        }
 
     }
 }

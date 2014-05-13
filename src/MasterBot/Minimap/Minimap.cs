@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace MasterBot.Minimap
 {
-    public class Minimap : ISubBot
+    public class Minimap : ASubBot
     {
         private IBot bot;
         private int width;
@@ -24,6 +24,7 @@ namespace MasterBot.Minimap
         private int minimapUpdateDelay = 20;
 
         public Minimap(IBot bot, int width, int height)
+            : base(bot)
         {
             this.bot = bot;
             this.width = width;
@@ -65,12 +66,6 @@ namespace MasterBot.Minimap
             }
         }
 
-        public void onConnect(IBot bot)
-        {
-            updateThread = new Thread(UpdateMinimap);
-            updateThread.Start();
-        }
-
         public void Die()
         {
             updateThread.Abort();
@@ -78,24 +73,38 @@ namespace MasterBot.Minimap
             bot.MainForm.UpdateMinimap(bitmap);
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onEnable()
+        {
+        }
+
+        public override void onDisable()
+        {
+        }
+
+        public override void onConnect()
+        {
+            updateThread = new Thread(UpdateMinimap);
+            updateThread.Start();
+        }
+
+        public override void onDisconnect(string reason)
         {
             Die();
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(PlayerIOClient.Message m)
         {
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
         }
 
-        public void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock)
+        public override void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock)
         {
             if (newBlock.Id != oldBlock.Id)
             {
-                if(newBlock.Id == 0 && newBlock.Layer == 0)
+                if (newBlock.Id == 0 && newBlock.Layer == 0)
                 {
                     pixelsToSet.Enqueue(new KeyValuePair<Point, Color>(new Point(x, y), bot.Room.getBlock(1, x, y).Color));
                 }
@@ -112,8 +121,13 @@ namespace MasterBot.Minimap
             }
         }
 
-        public void Update(IBot bot)
+        public override void onTick()
         {
+        }
+
+        public override bool HasTab
+        {
+            get { return true; }
         }
     }
 }

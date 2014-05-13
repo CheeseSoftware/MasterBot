@@ -10,13 +10,13 @@ namespace MasterBot.SubBot.WorldEdit
 {
     class WorldEdit : ASubBot
     {
-
-        public WorldEdit()
+        public WorldEdit(IBot bot)
+            : base(bot)
         {
 
         }
 
-        public void DrawLine(IBot bot, int x1, int y1, int x2, int y2, IBlock block)
+        public void DrawLine(int x1, int y1, int x2, int y2, IBlock block)
         {
             int iTag = 0;
             int dx, dy;
@@ -75,7 +75,7 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
-        public void DrawCircle(IBot bot, int x, int y, int radius, IBlock block)
+        public void DrawCircle(int x, int y, int radius, IBlock block)
         {
             for (int xx = -radius; xx <= radius; xx++)
             {
@@ -87,19 +87,27 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
-        public override void onConnect(IBot bot)
+        public override void onEnable()
         {
         }
 
-        public override void onDisconnect(IBot bot, string reason)
+        public override void onDisable()
         {
         }
 
-        public override void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onConnect()
         {
         }
 
-        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onDisconnect(string reason)
+        {
+        }
+
+        public override void onMessage(PlayerIOClient.Message m)
+        {
+        }
+
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
             if (cmdSource is Player)
             {
@@ -208,7 +216,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 int block;
                                 if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
                                 {
-                                    DrawCircle(bot, region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                    DrawCircle(region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
                                 }
                                 else
                                     player.Send(bot, "Usage: !circle <radius> <block>");
@@ -226,7 +234,7 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
-        public override void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
         {
             if (newBlock.Id == 32)
             {
@@ -257,7 +265,7 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
-        public override void Update(IBot bot)
+        public override void onTick()
         {
         }
 
