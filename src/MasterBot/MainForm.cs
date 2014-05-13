@@ -193,9 +193,11 @@ namespace MasterBot
         {
             this.Invoke(new Action(() =>
             {
-                BindingSource bs = new BindingSource();
-                bs.DataSource = source.Keys;
-                this.checkedListBoxSubBots.DataSource = bs;
+                checkedListBoxSubBots.Items.Clear();             
+                foreach(ASubBot subBot in source.Values)
+                {
+                    checkedListBoxSubBots.Items.Add(subBot.Name, subBot.Enabled);
+                }
             }));
         }
 
