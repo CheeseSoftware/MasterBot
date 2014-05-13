@@ -49,7 +49,7 @@ namespace MasterBot.SubBot.WorldEdit
             int tempy1 = y1;
             int tempy2 = y2;
 
-            if (tempx1 > x2)
+            if (tempx1 > tempx2)
             {
                 int buffer = tempx1;
                 tempx1 = tempx2;
@@ -59,7 +59,7 @@ namespace MasterBot.SubBot.WorldEdit
             {
                 int buffer = tempy1;
                 tempy1 = tempy2;
-                tempy1 = buffer;
+                tempy2 = buffer;
             }
 
             for (int x = tempx1; x <= tempx2; x++)

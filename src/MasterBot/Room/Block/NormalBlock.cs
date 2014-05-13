@@ -16,11 +16,18 @@ namespace MasterBot.Room.Block
         protected DateTime datePlaced = DateTime.MinValue;
         protected DateTime dateSent = DateTime.MinValue;
         protected Player placer = null;
+        protected int timesSent = 0;
 
         public NormalBlock(int id, int layer)
         {
             this.id = id;
             this.layer = layer;
+        }
+
+        public NormalBlock(int id)
+        {
+            this.id = id;
+            this.layer = id >= 500 ? 1 : 0;
         }
 
         public Color Color
@@ -77,6 +84,7 @@ namespace MasterBot.Room.Block
         {
             dateSent = DateTime.Now;
             bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id);
+            timesSent++;
         }
 
         public virtual void OnReceive(IBot bot, int x, int y)
@@ -106,5 +114,9 @@ namespace MasterBot.Room.Block
             return false;
         }
 
+        public int TimesSent
+        {
+            get { return timesSent; }
+        }
     }
 }
