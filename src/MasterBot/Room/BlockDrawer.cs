@@ -77,11 +77,11 @@ namespace MasterBot.Room
                     blockWithPos = blocksToDraw.Dequeue(); 
             }
 
-            if (blockWithPos != null)
+            if (blockWithPos == null)
             {
                 lock (blocksToRepair)
                 {
-                    if (blocksToDraw.Count > 0)
+                    if (blocksToRepair.Count > 0)
                         blockWithPos = blocksToRepair.Dequeue();  
                 }
             }

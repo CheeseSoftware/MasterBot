@@ -438,6 +438,7 @@ namespace MasterBot.Room
 
         public override void onConnect()
         {
+            blockDrawerPool.Start();
             playerTickTimer.Start();
             blockRepairThread = new Thread(BlockRepairLoop);
             checkSentBlocksThread = new Thread(CheckSentBlocks);
@@ -447,6 +448,7 @@ namespace MasterBot.Room
 
         public override void onDisconnect(string reason)
         {
+            blockDrawerPool.Stop();
             playerTickTimer.Stop();
             if (blockRepairThread != null)
                 blockRepairThread.Abort();
@@ -865,9 +867,17 @@ namespace MasterBot.Room
             get { return true; }
         }
 
+<<<<<<< HEAD
         public override string Name
         {
             get { return "Room"; }
         }
+=======
+        public BlockDrawerPool BlockDrawerPool
+        {
+            get { return this.blockDrawerPool; }
+        }
+
+>>>>>>> origin/Ost
     }
 }

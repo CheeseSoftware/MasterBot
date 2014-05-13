@@ -47,7 +47,7 @@ namespace MasterBot.Room
                     }
                 });
 
-            drawerThread.Start();
+
         }
 
         public BlockDrawer CreateBlockDrawer(byte priority)
@@ -59,7 +59,7 @@ namespace MasterBot.Room
         {
             for (int i = 0; i <= blockDrawer.Priority; i++)
             {
-                int j = queuedBlockdrawers.Count * i / blockDrawer.Priority;
+                int j = queuedBlockdrawers.Count * i / (blockDrawer.Priority+1);
                 queuedBlockdrawers.Insert(j, blockDrawer);
             }
         }
@@ -71,6 +71,17 @@ namespace MasterBot.Room
                 if (queuedBlockdrawers[i] == blockDrawer)
                     queuedBlockdrawers.RemoveAt(i);
             }
+        }
+
+        public void Start()
+        {
+            drawerThread.Start();
+        }
+
+        public void Stop()
+        {
+            if (drawerThread.ThreadState == ThreadState.Running)
+                drawerThread.Abort();
         }
     }
 }
