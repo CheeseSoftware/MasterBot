@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace MasterBot
 {
     public partial class MainForm : Form
     {
+        private Dictionary<string, KeyValuePair<string, List<string>>> accounts = new Dictionary<string, KeyValuePair<string, List<string>>>();
         private bool loggingIn = false;
         private bool connecting = false;
         private System.Timers.Timer connectTimeoutTimer = new System.Timers.Timer();
@@ -23,6 +25,7 @@ namespace MasterBot
         {
             this.bot = bot;
             InitializeComponent();
+            LoadLogin("login.txt");
             System.Timers.Timer roomUpdateTimer = new System.Timers.Timer();
             roomUpdateTimer.Interval = 50;
             roomUpdateTimer.Elapsed += delegate
@@ -42,13 +45,67 @@ namespace MasterBot
             };
             roomUpdateTimer.Start();
         }
+
+        private void LoadLogin(string file)
+        {
+            comboBoxEmail.Items.Clear();
+            comboBoxEmail.Text = "";
+            textBoxPassword.Text = "";
+            comboBoxRoomId.Items.Clear();
+            comboBoxRoomId.Text = "";
+            if (accounts.Count > 0)
+                accounts.Clear();
+            string email = "";
+            string password = "";
+            List<string> roomIds = new List<string>();
+
+            try
+            {
+                if (!File.Exists(file))
+                    File.Create(file);
+
+                StreamReader reader = new StreamReader(file);
+                string line = "";
+                string lineParsed = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lineParsed = line.Replace("\t", "");
+                    if (!line.StartsWith("\t"))
+                    {
+                        if (email != "")
+                        {
+                            accounts.Add(email, new KeyValuePair<string, List<string>>(password, roomIds));
+                            email = "";
+                            password = "";
+                            roomIds.Clear();
+                        }
+                        comboBoxEmail.Items.Add(lineParsed);
+                        email = lineParsed;
+                    }
+                    else if (line.StartsWith("\t") && !line.StartsWith("\t\t"))
+                        password = lineParsed;
+                    else if (line.StartsWith("\t\t") && !line.StartsWith("\t\t\t"))
+                        roomIds.Add(lineParsed);
+                }
+                if (email != "")
+                {
+                    accounts.Add(email, new KeyValuePair<string, List<string>>(password, roomIds));
+                    email = "";
+                    password = "";
+                    roomIds.Clear();
+                }
+
+            }
+            catch { Console("Could not load login data."); }
+        }
+
         #region Connect stuff
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             if (!loggingIn)
             {
                 loggingIn = true;
-                bot.Login("everybody-edits-su9rn58o40itdbnw69plyw", textBoxEmail.Text, textBoxPassword.Text);
+                bot.Login("everybody-edits-su9rn58o40itdbnw69plyw", comboBoxEmail.Text, textBoxPassword.Text);
                 buttonLogin.Enabled = false;
                 buttonLogin.Text = "Logging in..";
             }
@@ -60,12 +117,12 @@ namespace MasterBot
             {
                 if (!bot.Connected)
                 {
-                    if (bot.Connect(textBoxRoomId.Text))
+                    if (bot.Connect(comboBoxRoomId.Text))
                     {
                         connecting = true;
                         buttonConnect.Enabled = false;
                         connectTimeoutTimer.Interval = 5000;
-                        connectTimeoutTimer.Elapsed += delegate { this.Invoke(new Action(()=> { onConnectFinished(false); })); };
+                        connectTimeoutTimer.Elapsed += delegate { this.Invoke(new Action(() => { onConnectFinished(false); })); };
                         connectTimeoutTimer.Start();
                         buttonConnect.Text = "Connecting..";
                     }
@@ -199,6 +256,17 @@ namespace MasterBot
                     subBot.Enabled = (e.NewValue == CheckState.Checked) ? true : false;
                 else
                     Console("ERROR! subbots checkedlistbox has bugged out.");
+            }
+        }
+
+        private void comboBoxEmail_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            string selected = (string)comboBoxEmail.SelectedItem;
+            if(accounts.ContainsKey(selected))
+            {
+                textBoxPassword.Text = accounts[selected].Key;
+                foreach (string roomId in accounts[selected].Value)
+                    comboBoxRoomId.Items.Add(roomId);
             }
         }
 

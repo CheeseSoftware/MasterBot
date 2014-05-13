@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot.WorldEdit
 {
-    class ABrush : IBrush
+    public abstract class ABrush : IBrush
     {
         private int size;
         private IBlock block;
 
         public abstract void onUse(IBot bot, int x, int y);
+
 
         public int Size
         {
