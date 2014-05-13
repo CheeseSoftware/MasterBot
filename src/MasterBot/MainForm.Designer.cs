@@ -37,9 +37,12 @@
             this.textBoxCode = new System.Windows.Forms.TextBox();
             this.labelCode = new System.Windows.Forms.Label();
             this.groupBoxConnect = new System.Windows.Forms.GroupBox();
+            this.comboBoxRoomId = new System.Windows.Forms.ComboBox();
             this.buttonConnect = new System.Windows.Forms.Button();
             this.labelRoomId = new System.Windows.Forms.Label();
             this.groupBoxLogin = new System.Windows.Forms.GroupBox();
+            this.textBoxPassword = new System.Windows.Forms.TextBox();
+            this.comboBoxEmail = new System.Windows.Forms.ComboBox();
             this.labelPassword = new System.Windows.Forms.Label();
             this.labelEmail = new System.Windows.Forms.Label();
             this.buttonLogin = new System.Windows.Forms.Button();
@@ -58,9 +61,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.RtbConsole = new Gui.RickTextConsole();
-            this.comboBoxEmail = new System.Windows.Forms.ComboBox();
-            this.comboBoxRoomId = new System.Windows.Forms.ComboBox();
-            this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
             this.groupBoxSubBots.SuspendLayout();
@@ -178,6 +178,14 @@
             this.groupBoxConnect.TabStop = false;
             this.groupBoxConnect.Text = "Connect";
             // 
+            // comboBoxRoomId
+            // 
+            this.comboBoxRoomId.FormattingEnabled = true;
+            this.comboBoxRoomId.Location = new System.Drawing.Point(68, 13);
+            this.comboBoxRoomId.Name = "comboBoxRoomId";
+            this.comboBoxRoomId.Size = new System.Drawing.Size(169, 21);
+            this.comboBoxRoomId.TabIndex = 7;
+            // 
             // buttonConnect
             // 
             this.buttonConnect.Location = new System.Drawing.Point(162, 39);
@@ -210,6 +218,23 @@
             this.groupBoxLogin.TabIndex = 4;
             this.groupBoxLogin.TabStop = false;
             this.groupBoxLogin.Text = "Login";
+            // 
+            // textBoxPassword
+            // 
+            this.textBoxPassword.Location = new System.Drawing.Point(68, 45);
+            this.textBoxPassword.Name = "textBoxPassword";
+            this.textBoxPassword.PasswordChar = 'ऑ';
+            this.textBoxPassword.Size = new System.Drawing.Size(169, 20);
+            this.textBoxPassword.TabIndex = 6;
+            // 
+            // comboBoxEmail
+            // 
+            this.comboBoxEmail.FormattingEnabled = true;
+            this.comboBoxEmail.Location = new System.Drawing.Point(68, 19);
+            this.comboBoxEmail.Name = "comboBoxEmail";
+            this.comboBoxEmail.Size = new System.Drawing.Size(169, 21);
+            this.comboBoxEmail.TabIndex = 5;
+            this.comboBoxEmail.SelectionChangeCommitted += new System.EventHandler(this.comboBoxEmail_SelectionChangeCommitted);
             // 
             // labelPassword
             // 
@@ -409,30 +434,6 @@
             this.RtbConsole.Size = new System.Drawing.Size(224, 439);
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
-            // 
-            // comboBoxEmail
-            // 
-            this.comboBoxEmail.FormattingEnabled = true;
-            this.comboBoxEmail.Location = new System.Drawing.Point(68, 19);
-            this.comboBoxEmail.Name = "comboBoxEmail";
-            this.comboBoxEmail.Size = new System.Drawing.Size(169, 21);
-            this.comboBoxEmail.TabIndex = 5;
-            this.comboBoxEmail.SelectionChangeCommitted += new System.EventHandler(this.comboBoxEmail_SelectionChangeCommitted);
-            // 
-            // comboBoxRoomId
-            // 
-            this.comboBoxRoomId.FormattingEnabled = true;
-            this.comboBoxRoomId.Location = new System.Drawing.Point(68, 13);
-            this.comboBoxRoomId.Name = "comboBoxRoomId";
-            this.comboBoxRoomId.Size = new System.Drawing.Size(169, 21);
-            this.comboBoxRoomId.TabIndex = 7;
-            // 
-            // textBoxPassword
-            // 
-            this.textBoxPassword.Location = new System.Drawing.Point(68, 45);
-            this.textBoxPassword.Name = "textBoxPassword";
-            this.textBoxPassword.Size = new System.Drawing.Size(169, 20);
-            this.textBoxPassword.TabIndex = 6;
             // 
             // MainForm
             // 
