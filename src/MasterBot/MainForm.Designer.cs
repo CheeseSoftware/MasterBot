@@ -54,16 +54,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPageSubBots = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanelSubBotTabs = new System.Windows.Forms.TableLayoutPanel();
             this.tabControlSubBots = new System.Windows.Forms.TabControl();
             this.RtbConsoleInput = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.listBoxSubBots = new System.Windows.Forms.ListBox();
-            this.buttonEnableSubBot = new System.Windows.Forms.Button();
-            this.buttonDisableSubBot = new System.Windows.Forms.Button();
             this.RtbConsole = new Gui.RickTextConsole();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
@@ -77,11 +72,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).BeginInit();
             this.tabPageSubBots.SuspendLayout();
-            this.tableLayoutPanelSubBotTabs.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
@@ -91,11 +84,11 @@
             this.tabControlMainTabs.Controls.Add(this.tabPageRoom);
             this.tabControlMainTabs.Controls.Add(this.tabPageSubBots);
             this.tabControlMainTabs.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMainTabs.Location = new System.Drawing.Point(3, 3);
+            this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tabControlMainTabs.Location = new System.Drawing.Point(123, 3);
             this.tabControlMainTabs.Name = "tabControlMainTabs";
             this.tabControlMainTabs.SelectedIndex = 0;
-            this.tabControlMainTabs.Size = new System.Drawing.Size(484, 456);
+            this.tabControlMainTabs.Size = new System.Drawing.Size(364, 456);
             this.tabControlMainTabs.TabIndex = 0;
             // 
             // tabPageLoginConnect
@@ -107,7 +100,7 @@
             this.tabPageLoginConnect.Location = new System.Drawing.Point(4, 22);
             this.tabPageLoginConnect.Name = "tabPageLoginConnect";
             this.tabPageLoginConnect.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLoginConnect.Size = new System.Drawing.Size(476, 430);
+            this.tabPageLoginConnect.Size = new System.Drawing.Size(356, 430);
             this.tabPageLoginConnect.TabIndex = 0;
             this.tabPageLoginConnect.Text = "LoginConnect";
             this.tabPageLoginConnect.UseVisualStyleBackColor = true;
@@ -264,7 +257,7 @@
             this.tabPageMinimap.Location = new System.Drawing.Point(4, 22);
             this.tabPageMinimap.Name = "tabPageMinimap";
             this.tabPageMinimap.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMinimap.Size = new System.Drawing.Size(476, 430);
+            this.tabPageMinimap.Size = new System.Drawing.Size(356, 430);
             this.tabPageMinimap.TabIndex = 1;
             this.tabPageMinimap.Text = "Minimap";
             this.tabPageMinimap.UseVisualStyleBackColor = true;
@@ -276,7 +269,7 @@
             this.flowLayoutPanelMinimap.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelMinimap.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanelMinimap.Name = "flowLayoutPanelMinimap";
-            this.flowLayoutPanelMinimap.Size = new System.Drawing.Size(470, 424);
+            this.flowLayoutPanelMinimap.Size = new System.Drawing.Size(350, 424);
             this.flowLayoutPanelMinimap.TabIndex = 0;
             // 
             // pictureBoxMinimap
@@ -295,7 +288,7 @@
             this.tabPageRoom.Controls.Add(this.label1);
             this.tabPageRoom.Location = new System.Drawing.Point(4, 22);
             this.tabPageRoom.Name = "tabPageRoom";
-            this.tabPageRoom.Size = new System.Drawing.Size(476, 430);
+            this.tabPageRoom.Size = new System.Drawing.Size(356, 430);
             this.tabPageRoom.TabIndex = 2;
             this.tabPageRoom.Text = "Room";
             this.tabPageRoom.UseVisualStyleBackColor = true;
@@ -344,37 +337,22 @@
             // 
             // tabPageSubBots
             // 
-            this.tabPageSubBots.Controls.Add(this.tableLayoutPanelSubBotTabs);
+            this.tabPageSubBots.Controls.Add(this.tabControlSubBots);
             this.tabPageSubBots.Location = new System.Drawing.Point(4, 22);
             this.tabPageSubBots.Name = "tabPageSubBots";
-            this.tabPageSubBots.Size = new System.Drawing.Size(476, 430);
+            this.tabPageSubBots.Size = new System.Drawing.Size(356, 430);
             this.tabPageSubBots.TabIndex = 3;
             this.tabPageSubBots.Text = "Subbots";
             this.tabPageSubBots.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanelSubBotTabs
-            // 
-            this.tableLayoutPanelSubBotTabs.ColumnCount = 1;
-            this.tableLayoutPanelSubBotTabs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelSubBotTabs.Controls.Add(this.tabControlSubBots, 0, 1);
-            this.tableLayoutPanelSubBotTabs.Controls.Add(this.tableLayoutPanel3, 0, 0);
-            this.tableLayoutPanelSubBotTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelSubBotTabs.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanelSubBotTabs.Name = "tableLayoutPanelSubBotTabs";
-            this.tableLayoutPanelSubBotTabs.RowCount = 2;
-            this.tableLayoutPanelSubBotTabs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanelSubBotTabs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelSubBotTabs.Size = new System.Drawing.Size(476, 430);
-            this.tableLayoutPanelSubBotTabs.TabIndex = 1;
-            // 
             // tabControlSubBots
             // 
             this.tabControlSubBots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlSubBots.Location = new System.Drawing.Point(0, 38);
+            this.tabControlSubBots.Location = new System.Drawing.Point(0, 0);
             this.tabControlSubBots.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.tabControlSubBots.Name = "tabControlSubBots";
             this.tabControlSubBots.SelectedIndex = 0;
-            this.tabControlSubBots.Size = new System.Drawing.Size(473, 389);
+            this.tabControlSubBots.Size = new System.Drawing.Size(356, 430);
             this.tabControlSubBots.TabIndex = 0;
             // 
             // RtbConsoleInput
@@ -395,8 +373,8 @@
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 230F));
-            this.tableLayoutPanel2.Controls.Add(this.tabControlMainTabs, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.panel1, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tabControlMainTabs, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -429,53 +407,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(220, 452);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 3;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.buttonDisableSubBot, 2, 0);
-            this.tableLayoutPanel3.Controls.Add(this.listBoxSubBots, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.buttonEnableSubBot, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(476, 35);
-            this.tableLayoutPanel3.TabIndex = 1;
-            // 
-            // listBoxSubBots
-            // 
-            this.listBoxSubBots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxSubBots.FormattingEnabled = true;
-            this.listBoxSubBots.Location = new System.Drawing.Point(3, 3);
-            this.listBoxSubBots.Name = "listBoxSubBots";
-            this.listBoxSubBots.Size = new System.Drawing.Size(270, 29);
-            this.listBoxSubBots.TabIndex = 0;
-            // 
-            // buttonEnableSubBot
-            // 
-            this.buttonEnableSubBot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonEnableSubBot.Location = new System.Drawing.Point(279, 3);
-            this.buttonEnableSubBot.Name = "buttonEnableSubBot";
-            this.buttonEnableSubBot.Size = new System.Drawing.Size(94, 29);
-            this.buttonEnableSubBot.TabIndex = 1;
-            this.buttonEnableSubBot.Text = "Enable";
-            this.buttonEnableSubBot.UseVisualStyleBackColor = true;
-            // 
-            // buttonDisableSubBot
-            // 
-            this.buttonDisableSubBot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonDisableSubBot.Location = new System.Drawing.Point(379, 3);
-            this.buttonDisableSubBot.Name = "buttonDisableSubBot";
-            this.buttonDisableSubBot.Size = new System.Drawing.Size(94, 29);
-            this.buttonDisableSubBot.TabIndex = 2;
-            this.buttonDisableSubBot.Text = "Disable";
-            this.buttonDisableSubBot.UseVisualStyleBackColor = true;
             // 
             // RtbConsole
             // 
@@ -518,12 +449,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).EndInit();
             this.tabPageSubBots.ResumeLayout(false);
-            this.tableLayoutPanelSubBotTabs.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -562,11 +491,6 @@
         private System.Windows.Forms.Label labelCode;
         private System.Windows.Forms.TabPage tabPageSubBots;
         private System.Windows.Forms.TabControl tabControlSubBots;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSubBotTabs;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.ListBox listBoxSubBots;
-        private System.Windows.Forms.Button buttonDisableSubBot;
-        private System.Windows.Forms.Button buttonEnableSubBot;
     }
 }
 
