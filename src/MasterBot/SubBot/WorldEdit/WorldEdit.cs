@@ -11,14 +11,10 @@ namespace MasterBot.SubBot.WorldEdit
 {
     class WorldEdit : ASubBot
     {
-<<<<<<< HEAD
+        
+        BlockDrawer blockDrawer;
         public WorldEdit(IBot bot)
             : base(bot)
-=======
-        BlockDrawer blockDrawer;
-
-        public WorldEdit(IBot bot)
->>>>>>> origin/Ost
         {
             blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(0);
             blockDrawer.Start();
@@ -169,15 +165,8 @@ namespace MasterBot.SubBot.WorldEdit
                                     if (id != -1)
                                     {
                                         int layer = id >= 500 ? 1 : 0;
-<<<<<<< HEAD
+
                                         SetRegion(bot, region, new NormalBlock(id, layer));
-=======
-                                        foreach (Point pos in region)
-                                        {
-                                            if (bot.Room.getBlock(layer, pos.X, pos.Y).Id != id)
-                                                blockDrawer.PlaceBlock(new BlockWithPos(pos.X, pos.Y, new NormalBlock(id, layer)));
-                                        }
->>>>>>> origin/Ost
                                     }
                                     else
                                         bot.Connection.Send("say", player.name + ": Invalid ID.");
@@ -197,17 +186,8 @@ namespace MasterBot.SubBot.WorldEdit
                                 {
                                     int blockToReplace = int.Parse(args[0]);
                                     int blockToReplaceWith = int.Parse(args[1]);
-<<<<<<< HEAD
+
                                     SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
-=======
-                                    foreach (Point pos in region)
-                                    {
-                                        if (bot.Room.getBlock(blockToReplace >= 500 ? 1 : 0, pos.X, pos.Y).Id == blockToReplace)
-                                        {
-                                            blockDrawer.PlaceBlock(new BlockWithPos(pos.X, pos.Y, new NormalBlock(blockToReplaceWith, blockToReplaceWith >= 500 ? 1 : 0)));
-                                        }
-                                    }
->>>>>>> origin/Ost
                                 }
                                 else
                                     bot.Connection.Send("say", player.name + ": Usage: !replace <from> <to>");

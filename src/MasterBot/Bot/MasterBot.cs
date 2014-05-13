@@ -36,29 +36,12 @@ namespace MasterBot
             };
             new Thread(() => { Application.Run(mainForm); }).Start();
 
-<<<<<<< HEAD
             subBotHandler = new SubBotHandler(this, mainForm.BotTabPage);
             subBotHandler.AddSubBot((ASubBot)(room = new Room.Room(this)));
             subBotHandler.AddSubBot(new BlockPlaceTest(this));
             subBotHandler.AddSubBot(new Commands(this));
             subBotHandler.AddSubBot(new WorldEdit(this));
-=======
-            MinimapColors.CreateColorCodes();
-            subBotHandler = new SubBotHandler(mainForm.BotTabPage);
-            subBotHandler.AddSubBot("Room", (ASubBot)(room = new Room.Room(this)));
-            subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest());
-            subBotHandler.AddSubBot("Commands", new Commands());
-            subBotHandler.AddSubBot("WorldEdit", new WorldEdit(this));
 
-            updateTimer.Interval = 50;
-            updateTimer.Tick += updateTimer_Tick;
-            Application.Run(mainForm);
-        }
-
-        private void updateTimer_Tick(object sender, EventArgs e)
-        {
-            subBotHandler.Update(this);
->>>>>>> origin/Ost
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)

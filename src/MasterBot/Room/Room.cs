@@ -867,17 +867,15 @@ namespace MasterBot.Room
             get { return true; }
         }
 
-<<<<<<< HEAD
         public override string Name
         {
             get { return "Room"; }
         }
-=======
+
         public BlockDrawerPool BlockDrawerPool
         {
             get { return this.blockDrawerPool; }
         }
 
->>>>>>> origin/Ost
     }
 }
