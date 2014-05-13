@@ -66,5 +66,10 @@ namespace MasterBot.SubBot
         {
             get { return false; }
         }
+
+        public override string Name
+        {
+            get { return "BlockPlaceTest"; }
+        }
     }
 }

@@ -845,5 +845,10 @@ namespace MasterBot.Room
         {
             get { return true; }
         }
+
+        public override string Name
+        {
+            get { return "Room"; }
+        }
     }
 }

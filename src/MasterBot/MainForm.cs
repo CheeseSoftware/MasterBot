@@ -27,11 +27,14 @@ namespace MasterBot
             {
                 try
                 {
-                    this.Invoke(new Action(() =>
+                    if (bot.Room != null)
                     {
-                        blocksSentNumericUpDown.Value = bot.Room.BlocksSentSize;
-                        blocksToSendNumericUpDown.Value = bot.Room.BlocksToSendSize;
-                    }));
+                        this.Invoke(new Action(() =>
+                        {
+                            blocksSentNumericUpDown.Value = bot.Room.BlocksSentSize;
+                            blocksToSendNumericUpDown.Value = bot.Room.BlocksToSendSize;
+                        }));
+                    }
                 }
                 catch { }
             };
@@ -140,6 +143,11 @@ namespace MasterBot
             connecting = false;
         }
 
+        public void Console(string text, params Color[] color)
+        {
+            RtbConsole.WriteLine(text, color);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             RtbConsole.WriteLine("%c%Chello! %CHello!", Color.Black, Color.Red, Color.Green);
@@ -172,5 +180,15 @@ namespace MasterBot
 
 
         public TabControl BotTabPage { get { return this.tabControlSubBots; } }
+
+        private void tableLayoutPanelSubBotTabs_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

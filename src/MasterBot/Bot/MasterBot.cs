@@ -10,6 +10,7 @@ using PlayerIOClient;
 using MasterBot.Movement;
 using MasterBot.Minimap;
 using MasterBot.SubBot.WorldEdit;
+using System.Threading;
 
 namespace MasterBot
 {
@@ -26,20 +27,20 @@ namespace MasterBot
 
         public MasterBot()
         {
+            MinimapColors.CreateColorCodes();
+
             mainForm = new MainForm(this);
             mainForm.FormClosing += delegate
             {
                 Disconnect("Form Closing");
             };
+            new Thread(() => { Application.Run(mainForm); }).Start();
 
-            MinimapColors.CreateColorCodes();
             subBotHandler = new SubBotHandler(this, mainForm.BotTabPage);
-            subBotHandler.AddSubBot("Room", (ASubBot)(room = new Room.Room(this)));
-            subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest(this));
-            subBotHandler.AddSubBot("Commands", new Commands(this));
-            subBotHandler.AddSubBot("WorldEdit", new WorldEdit(this));
-
-            Application.Run(mainForm);
+            subBotHandler.AddSubBot((ASubBot)(room = new Room.Room(this)));
+            subBotHandler.AddSubBot(new BlockPlaceTest(this));
+            subBotHandler.AddSubBot(new Commands(this));
+            subBotHandler.AddSubBot(new WorldEdit(this));
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)

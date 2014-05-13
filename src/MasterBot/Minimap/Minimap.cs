@@ -129,5 +129,10 @@ namespace MasterBot.Minimap
         {
             get { return true; }
         }
+
+        public override string Name
+        {
+            get { return "Minimap"; }
+        }
     }
 }

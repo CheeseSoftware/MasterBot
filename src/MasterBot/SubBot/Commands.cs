@@ -127,5 +127,10 @@ namespace MasterBot
         {
             get { return true; }
         }
+
+        public override string Name
+        {
+            get { return "Commands"; }
+        }
     }
 }

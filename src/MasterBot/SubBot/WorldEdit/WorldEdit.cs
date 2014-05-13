@@ -273,5 +273,10 @@ namespace MasterBot.SubBot.WorldEdit
         {
             get { return false; }
         }
+
+        public override string Name
+        {
+            get { return "WorldEdit"; }
+        }
     }
 }

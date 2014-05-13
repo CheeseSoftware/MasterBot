@@ -10,7 +10,7 @@ namespace MasterBot.SubBot
 {
     public abstract class ASubBot : TabPage, ISubBot
     {
-                protected IBot bot;
+        protected IBot bot;
         private bool enabled = false;
         private System.Timers.Timer updateTimer;
 
@@ -42,8 +42,11 @@ namespace MasterBot.SubBot
                     onDisable();
                     DisableTick();
                 }
+                bot.MainForm.Console("Subbot " + Name + (value ? " enabled." : " disabled."));
             } 
         }
+
+        public abstract new string Name { get; }
 
         protected void EnableTick(double interval)
         {
