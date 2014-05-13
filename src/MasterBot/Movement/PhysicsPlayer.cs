@@ -294,18 +294,10 @@ namespace MasterBot.Movement
                                 if (hitTest((int)(xTest + _loc_2.x + xx * 16), (int)(yTest + _loc_2.y + yy * 16)))
                                 {
                                     double _loc_9 = _loc_4;
-<<<<<<< HEAD
-                                    IBlock currentBlock = room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
 
-                                    if (currentBlock != null)
-                                        _loc_11 = currentBlock.Id;
-                                    else
-                                        _loc_11 = 0;
-
-=======
                                     IBlock currentBlock = bot.Room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
                                     _loc_11 = currentBlock.Id;
->>>>>>> 3b85831a193bec81210c6e297fab7f51a4b70cd8
+
                                     if (ItemId.isSolid(_loc_11))
                                     {
                                         switch (_loc_11)
