@@ -6,36 +6,62 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
-    class BoxCodes : ISubBot
+    class BoxCodes : ASubBot
     {
-        public void onConnect(IBot bot)
+        public BoxCodes(IBot bot)
+            : base(bot)
+        {
+        }
+
+
+        public override void onEnable()
         {
             throw new NotImplementedException();
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onDisable()
         {
             throw new NotImplementedException();
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onConnect()
         {
             throw new NotImplementedException();
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onDisconnect(string reason)
         {
             throw new NotImplementedException();
         }
 
-        public void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onMessage(PlayerIOClient.Message m)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(IBot bot)
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
             throw new NotImplementedException();
+        }
+
+        public override void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void onTick()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool HasTab
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override string Name
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

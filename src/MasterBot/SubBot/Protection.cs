@@ -7,7 +7,7 @@ using MasterBot.Room.Block;
 
 namespace MasterBot.SubBot
 {
-    public class Protection : ISubBot
+   /* public class Protection : ISubBot
     {
         ISet<Player> protectedPlayers = new HashSet<Player>();
         ISet<Player> disabledPlayers = new HashSet<Player>();
@@ -30,7 +30,7 @@ namespace MasterBot.SubBot
                             {
                                 bot.Room.BlockMap.setBlock(x, y, block);
                                 break;
-                            }*/
+                            }* /
                         }
                     }
                 }
@@ -38,22 +38,22 @@ namespace MasterBot.SubBot
         }
 
 
-        public void onConnect(IBot bot)
+        public override void onConnect(IBot bot)
         {
 
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onDisconnect(IBot bot, string reason)
         {
 
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(IBot bot, PlayerIOClient.Message m)
         {
 
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
         {
             /*if (cmdSource is Player)
             {
@@ -126,10 +126,10 @@ namespace MasterBot.SubBot
                     break;
                 case "cleantroll":
                     break;
-            }*/
+            }* /
         }
 
-        public void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
         {
             if (!protectedPlayers.Contains(newBlock.Placer))
             {
@@ -150,9 +150,9 @@ namespace MasterBot.SubBot
             }
         }
 
-        public void Update(IBot bot)
+        public override void Update(IBot bot)
         {
 
         }
-    }
+    }*/
 }
