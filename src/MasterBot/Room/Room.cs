@@ -163,6 +163,9 @@ namespace MasterBot.Room
                 blockMap.setBlock(x, y, result);
                 bot.SubBotHandler.onBlockChange(x, y, result, oldBlock);
                 BlockWithPos b = new BlockWithPos(x, y, result);
+
+                blockDrawerPool.OnBlockPlace(b);
+
                 lock (blocksSent)
                 { }
                 while (blocksSent.Contains(b))

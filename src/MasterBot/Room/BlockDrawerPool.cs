@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MasterBot.Room.Block;
 
 namespace MasterBot.Room
 {
@@ -13,6 +14,9 @@ namespace MasterBot.Room
         IRoom room;
         SafeList<BlockDrawer> queuedBlockdrawers = new SafeList<BlockDrawer>();
         Thread drawerThread;
+
+        // Blocks that are not placed yet...
+        Dictionary<BlockPos, IBlock> waitingBlocks = new Dictionary<BlockPos, IBlock>();
 
         public BlockDrawerPool(IBot bot, IRoom room)
         {
@@ -25,7 +29,7 @@ namespace MasterBot.Room
 
                     while (bot.Connected)
                     {
-                        while (bot.Room.HasCode)
+                        while (bot.Connected && bot.Room.HasCode)
                         {
                             bool success;
 
@@ -73,6 +77,19 @@ namespace MasterBot.Room
             }
         }
 
+        public void OnBlockPlace(BlockWithPos blockWithPos)
+        {
+            lock (waitingBlocks)
+            {
+                BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
+                if (waitingBlocks.ContainsKey(blockPos))
+                {
+                    if (blockWithPos.Block.Equals(waitingBlocks[blockPos]))
+                        waitingBlocks.Remove(blockPos);
+                } 
+            }
+        }
+
         public void Start()
         {
             drawerThread.Start();
@@ -82,6 +99,38 @@ namespace MasterBot.Room
         {
             if (drawerThread.ThreadState == ThreadState.Running)
                 drawerThread.Abort();
+
+            lock (waitingBlocks)
+	        {
+                waitingBlocks.Clear();
+	        }
+        }
+
+        public void AddWaitingBlock(BlockWithPos blockWithPos)
+        {
+            lock (waitingBlocks)
+	        {
+		        BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
+                if (waitingBlocks.ContainsKey(blockPos))
+                {
+                    if (blockWithPos.Block.Equals(waitingBlocks[blockPos]))
+                        return;
+
+                    waitingBlocks.Remove(blockPos);
+                }
+                waitingBlocks.Add(blockPos, blockWithPos.Block);
+	        }
+        }
+
+        public IBlock getWaitingBlock(BlockPos blockPos)
+        {
+            lock (waitingBlocks)
+            {
+                if (waitingBlocks.ContainsKey(blockPos))
+                    return waitingBlocks[blockPos];
+                else
+                    return null; 
+            }
         }
     }
 }

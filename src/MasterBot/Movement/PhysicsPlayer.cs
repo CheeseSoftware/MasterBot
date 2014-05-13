@@ -295,7 +295,12 @@ namespace MasterBot.Movement
                                 {
                                     double _loc_9 = _loc_4;
                                     IBlock currentBlock = room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
-                                    _loc_11 = currentBlock.Id;
+
+                                    if (currentBlock != null)
+                                        _loc_11 = currentBlock.Id;
+                                    else
+                                        _loc_11 = 0;
+
                                     if (ItemId.isSolid(_loc_11))
                                     {
                                         switch (_loc_11)

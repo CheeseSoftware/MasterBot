@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    class BlockPos
+    public class BlockPos
     {
         private int x;
         private int y;
@@ -18,6 +18,21 @@ namespace MasterBot.Room.Block
         {
             this.x = x;
             this.y = y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is BlockPos)
+            {
+                if ((obj as BlockPos).x == this.x && (obj as BlockPos).y == this.y)
+                    return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (x << 8) | y;
         }
     }
 }
