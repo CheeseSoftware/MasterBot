@@ -94,7 +94,11 @@
     <Compile Include="SubBot\Commands.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SubBot\BlockPlaceTest.cs" />
+    <Compile Include="SubBot\BoxCodes.cs" />
+    <Compile Include="SubBot\Commands.cs" />
     <Compile Include="SubBot\ISubBotHandler.cs" />
+    <Compile Include="SubBot\Protection.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\ISubBot.cs" />
     <Compile Include="MainForm.cs">
