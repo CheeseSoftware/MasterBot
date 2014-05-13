@@ -17,6 +17,7 @@ namespace MasterBot.SubBot
             : base(bot)
         {
             this.tabControl = tabControl;
+            bot.MainForm.UpdateSubbotsDatasource(subBots);
         }
 
         private void AddTab(ASubBot subBot)
@@ -39,6 +40,7 @@ namespace MasterBot.SubBot
                 {
                     subBots.Add(subBot.Name, subBot);
                     AddTab(subBot);
+                    bot.MainForm.UpdateSubbotsDatasource(subBots);
                     bot.MainForm.Console("Subbot " + subBot.Name + " added.");
                 }
             }
@@ -53,6 +55,7 @@ namespace MasterBot.SubBot
                     subBots[name].Enabled = false;
                     RemoveTab(subBots[name]);
                     subBots.Remove(name);
+                    bot.MainForm.UpdateSubbotsDatasource(subBots);
                     bot.MainForm.Console("Subbot " + name + " removed.");
                 }
             }
