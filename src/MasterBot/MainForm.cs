@@ -233,7 +233,10 @@ namespace MasterBot
                 string cmd = input[0];
                 string[] args = new string[0];
                 if (input.Length >= 2)
+                {
+                    args = new string[input.Length - 1];
                     Array.Copy(input, 1, args, 0, input.Length - 1);
+                }
                 bot.SubBotHandler.onCommand(cmd, args, (ICmdSource)(new ConsoleCmdSource(bot)));
                 RtbConsoleInput.Clear();
             }
