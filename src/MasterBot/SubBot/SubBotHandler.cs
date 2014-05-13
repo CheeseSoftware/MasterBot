@@ -4,25 +4,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MasterBot.SubBot
 {
-    public class SubBotHandler : ISubBot, ISubBotHandler
+    public class SubBotHandler : ASubBot, ISubBotHandler
     {
-        Dictionary<string, ISubBot> subBots = new Dictionary<string, ISubBot>();
+        private Dictionary<string, ASubBot> subBots = new Dictionary<string, ASubBot>();
+        private TabControl tabControl;
 
-        public SubBotHandler()
+        public SubBotHandler(IBot bot, TabControl tabControl)
+            : base(bot)
         {
-
+            this.tabControl = tabControl;
         }
 
-        public void AddSubBot(string name, ISubBot subBot)
+        private void AddTab(ASubBot subBot)
         {
-            if (!subBots.ContainsKey(name))
+            if (subBot.HasTab)
+                tabControl.Invoke(new Action(() => { subBot.Text = subBot.Name; tabControl.TabPages.Add(subBot); }));
+        }
+
+        private void RemoveTab(ASubBot subBot)
+        {
+            if (tabControl.TabPages.Contains(subBot))
+                tabControl.Invoke(new Action(() => { tabControl.TabPages.Remove(subBot); }));
+        }
+
+        public void AddSubBot(ASubBot subBot)
+        {
+            if (!subBots.ContainsKey(subBot.Name))
             {
                 lock (subBots)
                 {
-                    subBots.Add(name, subBot);
+                    subBots.Add(subBot.Name, subBot);
+                    AddTab(subBot);
+                    bot.MainForm.Console("Subbot " + subBot.Name + " added.");
                 }
             }
         }
@@ -33,12 +50,15 @@ namespace MasterBot.SubBot
             {
                 lock (subBots)
                 {
+                    subBots[name].Enabled = false;
+                    RemoveTab(subBots[name]);
                     subBots.Remove(name);
+                    bot.MainForm.Console("Subbot " + name + " removed.");
                 }
             }
         }
 
-        public ISubBot GetSubBot(string name)
+        public ASubBot GetSubBot(string name)
         {
             if (subBots.ContainsKey(name))
             {
@@ -47,75 +67,93 @@ namespace MasterBot.SubBot
             return null;
         }
 
-        public Dictionary<string, ISubBot> SubBots
+        public Dictionary<string, ASubBot> SubBots
         {
             get { return subBots; }
         }
 
-        public void onConnect(IBot bot)
+        public override void onEnable()
+        {
+        }
+
+        public override void onDisable()
+        {
+        }
+
+        public override void onConnect()
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onConnect(bot);
+                    subBot.onConnect();
                 }
             }
         }
 
-        public void onDisconnect(IBot bot, string reason)
+        public override void onDisconnect(string reason)
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onDisconnect(bot, reason);
+                    subBot.onDisconnect(reason);
                 }
             }
         }
 
-        public void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onMessage(PlayerIOClient.Message m)
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onMessage(bot, m);
+                    subBot.onMessage(m);
                 }
             }
         }
 
-        public void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onCommand(bot, cmd, args, cmdSource);
+                    subBot.onCommand(cmd, args, cmdSource);
                 }
             }
         }
 
-        public void Update(IBot bot)
+        public override void onBlockChange(int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.Update(bot);
+                    subBot.onBlockChange(x, y, newBlock, oldBlock);
                 }
             }
         }
 
-        public void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onTick()
         {
             lock (subBots)
             {
-                foreach (ISubBot subBot in subBots.Values)
+                foreach (ASubBot subBot in subBots.Values)
                 {
-                    subBot.onBlockChange(bot, x, y, newBlock, oldBlock);
+                    subBot.onTick();
                 }
             }
+        }
+
+        public override bool HasTab
+        {
+            get { return true; }
+        }
+
+        public override string Name
+        {
+            get { return "SubBotHandler"; }
         }
     }
 }

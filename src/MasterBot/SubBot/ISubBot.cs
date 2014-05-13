@@ -9,11 +9,17 @@ namespace MasterBot.SubBot
 {
     public interface ISubBot
     {
-        void onConnect(IBot bot);
-        void onDisconnect(IBot bot, string reason);
-        void onMessage(IBot bot, PlayerIOClient.Message m);
-        void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource);
-        void onBlockChange(IBot bot, int x, int y, IBlock newBlock, IBlock oldBlock);
-        void Update(IBot bot);
+        void onEnable();
+        void onDisable();
+        void onConnect();
+        void onDisconnect(string reason);
+        void onMessage(PlayerIOClient.Message m);
+        void onCommand(string cmd, string[] args, ICmdSource cmdSource);
+        void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock);
+        void onTick();
+        
+        bool HasTab { get; }
+        bool Enabled { get; set; }
+        string Name { get; }
     }
 }

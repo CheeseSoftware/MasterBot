@@ -10,12 +10,12 @@ using PlayerIOClient;
 using MasterBot.Movement;
 using MasterBot.Minimap;
 using MasterBot.SubBot.WorldEdit;
+using System.Threading;
 
 namespace MasterBot
 {
     public class MasterBot : IBot
     {
-        private Timer updateTimer = new Timer();
         private MainForm mainForm;
         private SubBotHandler subBotHandler;
         private Client client;
@@ -28,30 +28,24 @@ namespace MasterBot
         public MasterBot()
         {
             MinimapColors.CreateColorCodes();
-            subBotHandler = new SubBotHandler();
-            subBotHandler.AddSubBot("Room", (ISubBot)(room = new Room.Room(this)));
-            subBotHandler.AddSubBot("BlockPlaceTest", new BlockPlaceTest());
-            subBotHandler.AddSubBot("Commands", new Commands());
-            subBotHandler.AddSubBot("WorldEdit", new WorldEdit());
+
             mainForm = new MainForm(this);
-            mainForm.FormClosing += delegate 
-            { 
+            mainForm.FormClosing += delegate
+            {
                 Disconnect("Form Closing");
             };
+            new Thread(() => { Application.Run(mainForm); }).Start();
 
-            updateTimer.Interval = 50;
-            updateTimer.Tick += updateTimer_Tick;
-            Application.Run(mainForm);
-        }
-
-        private void updateTimer_Tick(object sender, EventArgs e)
-        {
-            subBotHandler.Update(this);
+            subBotHandler = new SubBotHandler(this, mainForm.BotTabPage);
+            subBotHandler.AddSubBot((ASubBot)(room = new Room.Room(this)));
+            subBotHandler.AddSubBot(new BlockPlaceTest(this));
+            subBotHandler.AddSubBot(new Commands(this));
+            subBotHandler.AddSubBot(new WorldEdit(this));
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)
         {
-            subBotHandler.onMessage(this, m);
+            subBotHandler.onMessage(m);
         }
 
         public void onDisconnect(object sender, string reason)
@@ -91,7 +85,7 @@ namespace MasterBot
                         connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                         connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
                         mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
-                        subBotHandler.onConnect(this);
+                        subBotHandler.onConnect();
                     },
                     delegate(PlayerIOError tempError)
                     {
@@ -107,7 +101,7 @@ namespace MasterBot
         {
             if (Connected)
                 connection.Disconnect();
-            subBotHandler.onDisconnect(this, reason);
+            subBotHandler.onDisconnect(reason);
         }
 
         public SubBotHandler SubBotHandler

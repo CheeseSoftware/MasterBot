@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
-    <Compile Include="Minimap\Minimap.cs" />
+    <Compile Include="Minimap\Minimap.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Minimap\MinimapColors.cs" />
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
@@ -81,12 +83,27 @@
     </Compile>
     <Compile Include="Room\Block\BlockPortal.cs" />
     <Compile Include="Room\IRoom.cs" />
-    <Compile Include="Room\Room.cs" />
+    <Compile Include="Room\Room.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SafeDictionary.cs" />
-    <Compile Include="SubBot\BlockPlaceTest.cs" />
-    <Compile Include="SubBot\Commands.cs" />
+    <Compile Include="SubBot\ASubBot.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SubBot\BlockPlaceTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SubBot\Commands.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SubBot\BoxCodes.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\ISubBotHandler.cs" />
-    <Compile Include="SubBot\SubBotHandler.cs" />
+    <Compile Include="SubBot\Protection.cs" />
+    <Compile Include="SubBot\SubBotHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\ISubBot.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -98,7 +115,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubBot\WorldEdit\EditRegion.cs" />
-    <Compile Include="SubBot\WorldEdit\WorldEdit.cs" />
+    <Compile Include="SubBot\WorldEdit\WorldEdit.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
