@@ -9,11 +9,16 @@ namespace MasterBot.Room
 {
     public class BlockDrawerPool : IBlockDrawerPool
     {
+        IBot bot;
+        IRoom room;
         SafeList<BlockDrawer> queuedBlockdrawers = new SafeList<BlockDrawer>();
         Thread drawerThread;
 
-        public BlockDrawerPool(IBot bot)
+        public BlockDrawerPool(IBot bot, IRoom room)
         {
+            this.bot = bot;
+            this.room = room;
+
             drawerThread = new Thread(() =>
                 {
                     int i = 0;
@@ -47,7 +52,7 @@ namespace MasterBot.Room
 
         public BlockDrawer CreateBlockDrawer(byte priority)
         {
-            return new BlockDrawer(this, priority);
+            return new BlockDrawer(this, bot, priority);
         }
 
         public void StartBlockDrawer(BlockDrawer blockDrawer)
@@ -67,6 +72,5 @@ namespace MasterBot.Room
                     queuedBlockdrawers.RemoveAt(i);
             }
         }
-
     }
 }
