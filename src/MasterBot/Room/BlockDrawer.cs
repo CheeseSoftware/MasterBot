@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MasterBot.Room.Block;
 
 namespace MasterBot.Room
 {
     public class BlockDrawer
     {
         IBlockDrawerPool blockDrawerPool;
+        IRoom room;
         byte priority;
         bool running = false;
 
-        public BlockDrawer(IBlockDrawerPool blockDrawerPool, byte priority = 0)
+        Queue<BlockWithPos> blocksToDraw = new Queue<BlockWithPos>();
+        Queue<BlockWithPos> blocksToRepair = new Queue<BlockWithPos>();
+
+        public BlockDrawer(IBlockDrawerPool blockDrawerPool, IRoom room, byte priority = 0)
         {
+            this.blockDrawerPool = blockDrawerPool;
+            this.room = room;
             this.priority = priority;
         }
 
@@ -38,6 +45,15 @@ namespace MasterBot.Room
         {
             get { return priority; }
         }
-        
+
+        public void PlaceBlock(BlockWithPos blockWithPos)
+        {
+
+        }
+
+        public bool DrawBlock()
+        {
+            return false;
+        }
     }
 }
