@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\IBot.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />
     <Compile Include="IPlayer.cs" />

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MasterBot.Minimap
 {
+    /// <summary>
+    /// Crappy code from EE.
+    /// </summary>
     class ItemLayer
     {
         public const int BACKGROUND = 0;
@@ -13,6 +16,9 @@ namespace MasterBot.Minimap
         public const int ABOVE = 3;
     }
 
+    /// <summary>
+    /// Crappy code from EE.
+    /// </summary>
     class ItemTab
     {
         public const int BACKGROUND = 0;
@@ -21,6 +27,9 @@ namespace MasterBot.Minimap
         public const int ACTION = 3;
     }
 
+    /// <summary>
+    /// Crappy code from EE.
+    /// </summary>
     class ItemId
     {
         public const int SWITCH_PURPLE = 113;

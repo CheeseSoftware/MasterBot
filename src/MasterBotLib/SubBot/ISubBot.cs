@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
 {
+    /// <summary>
+    /// A SubBot is a module of the bot that can be enabled and disabled.
+    /// </summary>
     public interface ISubBot
     {
         void onEnable();
