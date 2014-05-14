@@ -52,7 +52,9 @@
     <Compile Include="ACmdSource.cs" />
     <Compile Include="ConsoleCmdSource.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
-    <Compile Include="Minimap\Minimap.cs" />
+    <Compile Include="Minimap\Minimap.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
     <Compile Include="Movement\ItemId.cs" />
@@ -66,7 +68,9 @@
     <Compile Include="Gui\RickTextConsole.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Room\Room.cs" />
+    <Compile Include="Room\Room.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SafeInvoke.cs" />
     <Compile Include="SubBot\BlockPlaceTest.cs">
       <SubType>Component</SubType>
@@ -74,12 +78,11 @@
     <Compile Include="SubBot\Commands.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SafeList.cs" />
-    <Compile Include="SafeDictionary.cs" />
-    <Compile Include="SubBot\Commands.cs" />
     <Compile Include="SubBot\BoxCodes.cs" />
     <Compile Include="SubBot\Protection.cs" />
-    <Compile Include="SubBot\SubBotHandler.cs" />
+    <Compile Include="SubBot\SubBotHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,7 +98,9 @@
     <Compile Include="SubBot\WorldEdit\Change\ManyBlocksEditChange.cs" />
     <Compile Include="SubBot\WorldEdit\EditRegion.cs" />
     <Compile Include="SubBot\WorldEdit\IBrush.cs" />
-    <Compile Include="SubBot\WorldEdit\WorldEdit.cs" />
+    <Compile Include="SubBot\WorldEdit\WorldEdit.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
