@@ -23,8 +23,8 @@ namespace MasterBot
 
         public MainForm(IBot bot)
         {
-            this.bot = bot;
             InitializeComponent();
+            this.bot = bot;
             LoadLogin("login.txt");
             System.Timers.Timer roomUpdateTimer = new System.Timers.Timer();
             roomUpdateTimer.Interval = 50;
@@ -89,7 +89,7 @@ namespace MasterBot
                 }
                 if (email != "")
                 {
-                    accounts.Add(email, new KeyValuePair<string, Queue<string>>(password, roomIds));
+                    accounts.Add(email, new KeyValuePair<string, Queue<string>>(password, new Queue<string>(roomIds)));
                     email = "";
                     password = "";
                     roomIds.Clear();
