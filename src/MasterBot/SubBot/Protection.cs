@@ -7,12 +7,13 @@ using MasterBot.Room.Block;
 
 namespace MasterBot.SubBot
 {
-   /* public class Protection : ISubBot
+   /*public class Protection : ASubBot
     {
         ISet<Player> protectedPlayers = new HashSet<Player>();
         ISet<Player> disabledPlayers = new HashSet<Player>();
 
-        private void Rollback(IBot bot, Func<bool, IBlock> lambda)
+        #region private
+        private void Rollback(IBot bot, Func<IBlock, bool> lambda)
         {
             for (int l = 0; l < 2; l++)
             {
@@ -26,39 +27,68 @@ namespace MasterBot.SubBot
                         {
                             IBlock block = blocks.Pop();
                             
-                            /*if (lambda(block))
+                            if (lambda(block))
                             {
                                 bot.Room.BlockMap.setBlock(x, y, block);
                                 break;
-                            }* /
+                            }
                         }
                     }
                 }
             }
         }
+        #endregion // private
+
+#region public
+        #region properties
+        public override string Name
+        {
+            get { return "Protection"; }
+        }
+
+        public override bool HasTab
+        {
+            get { throw new NotImplementedException(); }
+        }
+        #endregion // properties
+
+        public Protection(IBot bot)
+            : base(bot)
+        {
+        }
 
 
-        public override void onConnect(IBot bot)
+        public override void onEnable()
         {
 
         }
 
-        public override void onDisconnect(IBot bot, string reason)
+        public override void onDisable()
         {
 
         }
 
-        public override void onMessage(IBot bot, PlayerIOClient.Message m)
+        public override void onConnect()
         {
 
         }
 
-        public override void onCommand(IBot bot, string cmd, string[] args, ICmdSource cmdSource)
+        public override void onDisconnect(string reason)
         {
-            /*if (cmdSource is Player)
+
+        }
+
+        public override void onMessage(PlayerIOClient.Message m)
+        {
+
+        }
+
+        public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
+        {
+            if (cmdSource is Player)
             {
                 Player player = (Player)cmdSource;
-                if (player.name != "ostkaka" && player.name != "gustav9797" && player.name != "botost" && player.name != "gbot" && player.name != bot.Room.Owner)
+                if (player.Name != "ostkaka" && player.Name != "gustav9797" && player.Name != "botost" && player.Name != "gbot" && player.Name != bot.Room.Owner)
                     return;
             }
             switch (cmd)
@@ -126,10 +156,10 @@ namespace MasterBot.SubBot
                     break;
                 case "cleantroll":
                     break;
-            }* /
+            }
         }
 
-        public override void onBlockChange(IBot bot, int x, int y, Room.Block.IBlock newBlock, Room.Block.IBlock oldBlock)
+        public override void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock)
         {
             if (!protectedPlayers.Contains(newBlock.Placer))
             {
@@ -150,9 +180,10 @@ namespace MasterBot.SubBot
             }
         }
 
-        public override void Update(IBot bot)
+        public override void onTick()
         {
-
         }
+#endregion // public
+
     }*/
 }
