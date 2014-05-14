@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot.WorldEdit.Change
 {
-    class ManyBlocksEditChange : IEditChange
+    class EditChangeList : IEditChange
     {
-        ICollection<BlockEditChange> blocks;
+        List<IEditChange> editChanges;
 
-        public ManyBlocksEditChange(ICollection<BlockEditChange> blocks)
+        public EditChangeList(List<IEditChange> editChanges)
         {
-            this.blocks = blocks;
+            this.editChanges = editChanges;
         }
 
         public void Undo(IBlockDrawer drawer)
         {
-            foreach (BlockEditChange change in blocks)
+            foreach (IEditChange change in editChanges)
                 change.Undo(drawer);
         }
 
         public void Redo(IBlockDrawer drawer)
         {
-            foreach (BlockEditChange change in blocks)
+            foreach (IEditChange change in editChanges)
                 change.Redo(drawer);
         }
     }

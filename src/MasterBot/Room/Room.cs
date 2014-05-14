@@ -19,8 +19,7 @@ namespace MasterBot.Room
         private Minimap.Minimap minimap = null;
         private IBlockDrawerPool blockDrawerPool;
         private IBlockDrawer blockDrawer;
-        public IBlockDrawer BlockDrawer { get { return blockDrawer; } }//TODO: fix temporary public >.<
-        
+
         #region EE_Variables
         private string owner = "";
         private string title = "";
@@ -267,9 +266,12 @@ namespace MasterBot.Room
                                     break;
                                 }
                         }
-                        result.OnReceive(bot, xIndex, yIndex);
-                        blockMap.setBlock(xIndex, yIndex, result);
-                        bot.SubBotHandler.onBlockChange(xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
+                        if (result != null)
+                        {
+                            result.OnReceive(bot, xIndex, yIndex);
+                            blockMap.setBlock(xIndex, yIndex, result);
+                            bot.SubBotHandler.onBlockChange(xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
+                        }
                     }
                     i += toAdd;
                     i += 3;
@@ -355,7 +357,7 @@ namespace MasterBot.Room
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (block != null && block.Id != getBlock(block.Layer, x, y).Id && blockMap.isWithinMap(x, y))
+            if (block.Id != getBlock(block.Layer, x, y).Id && blockMap.isWithinMap(x, y))
                 blockDrawer.PlaceBlock(x, y, block);
         }
 
@@ -780,9 +782,12 @@ namespace MasterBot.Room
 
         public IBlockDrawerPool BlockDrawerPool
         {
-            get { return this.blockDrawerPool; }
+            get { return blockDrawerPool; }
         }
 
-
+        public IBlockDrawer BlockDrawer
+        {
+            get { return blockDrawer; }
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace MasterBot.Room.Block
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (block != null && isWithinMap(x, y))
+            if (isWithinMap(x, y))
             {
                 if (block.Layer == 0)
                     foregroundMap[x, y].Push(block);
@@ -89,14 +89,14 @@ namespace MasterBot.Room.Block
 
         public IBlock getBlock(int x, int y)
         {
-            if (isWithinMap(x, y) && foregroundMap[x, y] != null && foregroundMap[x, y].Count > 0)
+            if (isWithinMap(x, y) && foregroundMap[x, y].Count > 0)
                 return foregroundMap[x, y].Peek();
             return new NormalBlock(0, 0); ;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
-            if (isWithinMap(x, y) && backgroundMap[x, y] != null && backgroundMap[x, y].Count > 0)
+            if (isWithinMap(x, y) && backgroundMap[x, y].Count > 0)
                 return backgroundMap[x, y].Peek();
             return new NormalBlock(0, 1); ;
         }

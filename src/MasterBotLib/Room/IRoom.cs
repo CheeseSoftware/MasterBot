@@ -31,6 +31,7 @@ namespace MasterBot.Room
         IDictionary<int, IPlayer> Players { get; }
         BlockMap BlockMap { get; }
         IBlockDrawerPool BlockDrawerPool { get; }
+        IBlockDrawer BlockDrawer { get; }
         #endregion
 
         IBlock getBlock(int layer, int x, int y);

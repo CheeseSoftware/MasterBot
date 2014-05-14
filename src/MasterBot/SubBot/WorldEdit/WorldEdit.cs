@@ -1,5 +1,6 @@
 ﻿using MasterBot.Room;
 using MasterBot.Room.Block;
+using MasterBot.SubBot.WorldEdit.Change;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,8 +12,11 @@ namespace MasterBot.SubBot.WorldEdit
 {
     class WorldEdit : ASubBot
     {
-        
-        IBlockDrawer blockDrawer;
+        //List<IEditChange> history = new List<IEditChange>();
+
+        private IBlockDrawer blockDrawer;
+        private IPlayer recordingPlayer;
+
         public WorldEdit(IBot bot)
             : base(bot)
         {
@@ -20,10 +24,39 @@ namespace MasterBot.SubBot.WorldEdit
             blockDrawer.Start();
         }
 
+        private void BeginRecord(IPlayer player)
+        {
+            player.SetMetadata("worldeditrecord", new List<IEditChange>());
+            recordingPlayer = player;
+        }
+
+        private void EndRecord(IPlayer player)
+        {
+            List<IEditChange> record = (List<IEditChange>)recordingPlayer.GetMetadata("worldeditrecord");
+            if (record.Count > 0)
+            {
+                if (!player.HasMetadata("worldedithistory"))
+                    player.SetMetadata("worldedithistory", new List<IEditChange>());
+                List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
+                history.Add(new EditChangeList((List<IEditChange>)record));
+                if (!player.HasMetadata("worldedithistoryindex"))
+                    player.SetMetadata("worldedithistoryindex", 0);
+                else
+                    player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
+            }
+            player.RemoveMetadata("worldeditrecord");
+            recordingPlayer = null;
+        }
+
         private void RecordSetBlock(int x, int y, IBlock block)
         {
+            if (recordingPlayer != null)
+            {
+                IBlock oldBlock = bot.Room.getBlock(block.Layer, x, y);
+                BlockWithPos oldBlockWithPos = new BlockWithPos(x, y, oldBlock);
+                ((List<IEditChange>)recordingPlayer.GetMetadata("worldeditrecord")).Add(new BlockEditChange(new BlockWithPos(x, y, block), oldBlockWithPos));
+            }
             blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));
-            //changes.add blablab
         }
 
         public void DrawLine(int x1, int y1, int x2, int y2, IBlock block)
@@ -158,8 +191,47 @@ namespace MasterBot.SubBot.WorldEdit
                 if (player.GetMetadata("editregion") == null)
                     player.SetMetadata("editregion", new EditRegion());
                 EditRegion region = (EditRegion)player.GetMetadata("editregion");
+                BeginRecord(player);
                 switch (cmd)
                 {
+                    case "undo":
+                        {
+                            if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
+                            {
+                                List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
+                                int index = (int)player.GetMetadata("worldedithistoryindex");
+                                if (history.Count > index)
+                                {
+                                    history[index].Undo(blockDrawer);
+                                    if (index - 1 >= 0)
+                                        player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) - 1);
+                                }
+                                else
+                                    player.Reply("Nothing left to undo.");
+                            }
+                            else
+                                player.Reply("No history.");
+                            break;
+                        }
+                    case "redo":
+                        {
+                            if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
+                            {
+                                List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
+                                int index = (int)player.GetMetadata("worldedithistoryindex");
+                                if (index <= history.Count - 1)
+                                {
+                                    history[index].Redo(blockDrawer);
+                                    if (index + 1 <= history.Count - 1)
+                                        player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
+                                }
+                                else
+                                    player.Reply("Nothing left to redo.");
+                            }
+                            else
+                                player.Reply("No history.");
+                            break;
+                        }
                     case "set":
                         {
                             if (region.Set)
@@ -281,6 +353,7 @@ namespace MasterBot.SubBot.WorldEdit
                             return;
                         }
                 }
+                EndRecord(player);
             }
         }
 

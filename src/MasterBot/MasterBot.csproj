@@ -95,7 +95,7 @@
     <Compile Include="SubBot\WorldEdit\ABrush.cs" />
     <Compile Include="SubBot\WorldEdit\Change\BlockEditChange.cs" />
     <Compile Include="SubBot\WorldEdit\Change\IEditChange.cs" />
-    <Compile Include="SubBot\WorldEdit\Change\ManyBlocksEditChange.cs" />
+    <Compile Include="SubBot\WorldEdit\Change\EditChangeList.cs" />
     <Compile Include="SubBot\WorldEdit\EditRegion.cs" />
     <Compile Include="SubBot\WorldEdit\IBrush.cs" />
     <Compile Include="SubBot\WorldEdit\WorldEdit.cs">

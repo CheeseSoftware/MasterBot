@@ -56,7 +56,7 @@ namespace MasterBot.Room
         {
             BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
 
-            if (!blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(blockPos)))
+            if (!blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(blockPos)) && bot.Room.getBlock(blockWithPos.Block.Layer, blockPos.X, blockPos.Y).Id != blockWithPos.Block.Id)
             {
                 blockDrawerPool.AddWaitingBlock(blockWithPos);
 
