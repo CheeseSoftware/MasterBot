@@ -81,18 +81,21 @@ namespace MasterBot.Room.Block
             }
         }
 
-        public virtual void Send(IBot bot, int x, int y)
+        public virtual void PlaceNormally(IBot bot, int x, int y)
+        {
+            bot.Room.setBlock(x, y, this);
+            OnSend(bot, x, y);
+        }
+
+        public virtual void OnSend(IBot bot, int x, int y)
         {
             dateSent = DateTime.Now;
-            bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id);
-            timesSent++;
         }
 
         public virtual void OnReceive(IBot bot, int x, int y)
         {
             datePlaced = DateTime.Now;
             placed = true;
-            //bot.SubBotHandler.onBlockChange(x, y, this, bot.Room.getOldBlocks(layer, x, y).Count >= 2 ? bot.Room.getOldBlocks(layer, x, y).ElementAt(1) : new NormalBlock(0));
         }
 
         public bool Placed

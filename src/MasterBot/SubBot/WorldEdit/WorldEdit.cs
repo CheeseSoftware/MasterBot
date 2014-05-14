@@ -20,6 +20,12 @@ namespace MasterBot.SubBot.WorldEdit
             blockDrawer.Start();
         }
 
+        private void RecordSetBlock(int x, int y, IBlock block)
+        {
+            blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));
+            //changes.add blablab
+        }
+
         public void DrawLine(int x1, int y1, int x2, int y2, IBlock block)
         {
             int iTag = 0;
@@ -110,7 +116,7 @@ namespace MasterBot.SubBot.WorldEdit
             {
                 foreach (Point pos in region)
                 {
-                    bot.Room.setBlock(pos.X, pos.Y, replaceWith);
+                    blockDrawer.PlaceBlock(pos.X, pos.Y, replaceWith);
                 }
             }
             else
@@ -118,7 +124,7 @@ namespace MasterBot.SubBot.WorldEdit
                 foreach (Point pos in region)
                 {
                     if (bot.Room.getBlock(replaceWith.Layer, pos.X, pos.Y).Id == replace.Id)
-                        bot.Room.setBlock(pos.X, pos.Y, replaceWith);
+                        blockDrawer.PlaceBlock(pos.X, pos.Y, replaceWith);
                 }
             }
         }

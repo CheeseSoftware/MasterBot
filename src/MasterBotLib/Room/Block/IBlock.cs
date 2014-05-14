@@ -20,7 +20,8 @@ namespace MasterBot.Room.Block
         bool Placed { get; }
         int TimesSent { get; }
 
-        void Send(IBot bot, int x, int y);
+        void PlaceNormally(IBot bot, int x, int y);
+        void OnSend(IBot bot, int x, int y);
         void OnReceive(IBot bot, int x, int y);
     }
 }

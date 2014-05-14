@@ -21,8 +21,6 @@ namespace MasterBot.Room
         private IBlockDrawer blockDrawer;
         public IBlockDrawer BlockDrawer { get { return blockDrawer; } }//TODO: fix temporary public >.<
         
-        //private Thread playerTickThread;
-
         #region EE_Variables
         private string owner = "";
         private string title = "";
@@ -57,7 +55,6 @@ namespace MasterBot.Room
             this.blockDrawerPool = new BlockDrawerPool(bot, this);
             this.blockDrawer = blockDrawerPool.CreateBlockDrawer(15);
             this.blockDrawer.Start();
-            //playerTickThread = new Thread(UpdatePhysics);
             playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
             playerTickTimer.MicroTimerElapsed += UpdatePhysics;
             playerTickTimer.Start();
@@ -336,7 +333,7 @@ namespace MasterBot.Room
                         BlockWithPos block = blocksToSend.Dequeue();
                         if (blockMap.getBlock(block.X, block.Y) != block.Block)
                         {
-                            block.Block.Send(bot, block.X, block.Y);
+                            block.Block.PlaceNormally(bot, block.X, block.Y);
                             lock (blocksSent)
                             {
                                 if (block.Block.TimesSent < 10)
@@ -427,9 +424,7 @@ namespace MasterBot.Room
         public void setBlock(int x, int y, IBlock block)
         {
             if (block != null && block.Id != getBlock(block.Layer, x, y).Id && blockMap.isWithinMap(x, y))
-            {
-                blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));//blocksToSend.Enqueue(new BlockWithPos(x, y, block));
-            }
+                blockDrawer.PlaceBlock(x, y, block);
         }
 
         public override void onEnable()

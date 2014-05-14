@@ -16,10 +16,10 @@ namespace MasterBot.Room.Block
             this.coins = coins;
         }
 
-        public override void Send(IBot bot, int x, int y)
+        public override void PlaceNormally(IBot bot, int x, int y)
         {
             bot.Connection.Send("b", Layer, x, y, Id, coins);
-            datePlaced = DateTime.Now;
+            OnSend(bot, x, y);
         }
     }
 }

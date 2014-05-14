@@ -54,13 +54,9 @@ namespace MasterBot.Room
 
         public void PlaceBlock(BlockWithPos blockWithPos)
         {
-            //Block a
-            //Block b
-
             BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
 
-            if (!blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(blockPos))/* && !bot.Room.getBlock(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y).Equals(blockWithPos.Block) &&
-                !blocksToRepair.Contains(blockWithPos)*/)
+            if (!blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(blockPos)))
             {
                 blockDrawerPool.AddWaitingBlock(blockWithPos);
 
@@ -69,6 +65,11 @@ namespace MasterBot.Room
                     blocksToDraw.Enqueue(blockWithPos); 
                 }
             }
+        }
+
+        public void PlaceBlock(int x, int y, IBlock block)
+        {
+            PlaceBlock(new BlockWithPos(x, y, block));
         }
 
         public bool DrawBlock()
@@ -94,7 +95,7 @@ namespace MasterBot.Room
             {
                 if (blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(new BlockPos(blockWithPos.X, blockWithPos.Y))))// (!bot.Room.getBlock(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y).Equals(blockWithPos.Block))
                 {
-                    blockWithPos.Block.Send(bot, blockWithPos.X, blockWithPos.Y);
+                    bot.Connection.Send(bot.Room.WorldKey, blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y, blockWithPos.Block.Id);
 
                     lock (blocksToRepair)
                     {

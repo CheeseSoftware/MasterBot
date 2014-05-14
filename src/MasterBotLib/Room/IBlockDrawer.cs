@@ -15,6 +15,7 @@ namespace MasterBot.Room
         void Stop();
         void setPriority(byte priority);
         void PlaceBlock(BlockWithPos blockWithPos);
+        void PlaceBlock(int x, int y, IBlock block);
         bool DrawBlock();
     }
 }
