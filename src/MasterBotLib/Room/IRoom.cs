@@ -30,8 +30,6 @@ namespace MasterBot.Room
         bool HideTimeDoor { get; }
         IDictionary<int, IPlayer> Players { get; }
         BlockMap BlockMap { get; }
-        int BlocksToSendSize { get; }
-        int BlocksSentSize { get; }
         IBlockDrawerPool BlockDrawerPool { get; }
         #endregion
 

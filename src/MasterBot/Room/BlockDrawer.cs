@@ -95,8 +95,7 @@ namespace MasterBot.Room
             {
                 if (blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(new BlockPos(blockWithPos.X, blockWithPos.Y))))// (!bot.Room.getBlock(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y).Equals(blockWithPos.Block))
                 {
-                    bot.Connection.Send(bot.Room.WorldKey, blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y, blockWithPos.Block.Id);
-                    blockWithPos.Block.OnSend(bot, blockWithPos.X, blockWithPos.Y);
+                    blockWithPos.Block.Send(bot, blockWithPos.X, blockWithPos.Y);
 
                     lock (blocksToRepair)
                     {

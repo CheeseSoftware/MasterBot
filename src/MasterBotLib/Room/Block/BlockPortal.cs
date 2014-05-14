@@ -20,7 +20,7 @@ namespace MasterBot.Room.Block
             this.destinationId = destinationId;
         }
 
-        public override void PlaceNormally(IBot bot, int x, int y)
+        public override void Send(IBot bot, int x, int y)
         {
             bot.Connection.Send("b", bot.Room.WorldKey, Layer, x, y, Id, rotation, myId, destinationId);
             OnSend(bot, x, y);

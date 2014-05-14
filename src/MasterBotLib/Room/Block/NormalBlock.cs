@@ -81,9 +81,9 @@ namespace MasterBot.Room.Block
             }
         }
 
-        public virtual void PlaceNormally(IBot bot, int x, int y)
+        public virtual void Send(IBot bot, int x, int y)
         {
-            bot.Room.setBlock(x, y, this);
+            bot.Connection.Send("b", layer, x, y, Id);
             OnSend(bot, x, y);
         }
 

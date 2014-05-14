@@ -41,12 +41,6 @@ namespace MasterBot.Room
         private bool hideTimeDoor = false;
         #endregion
 
-        private List<BlockWithPos> blocksSent = new List<BlockWithPos>();
-        private Queue<BlockWithPos> blocksToSend = new Queue<BlockWithPos>();
-
-        private Thread blockRepairThread;
-        private Thread checkSentBlocksThread;
-
         public Room(IBot bot)
             : base(bot)
         {
@@ -163,13 +157,6 @@ namespace MasterBot.Room
                 BlockWithPos b = new BlockWithPos(x, y, result);
 
                 blockDrawerPool.OnBlockPlace(b);
-
-                lock (blocksSent)
-                { }
-                while (blocksSent.Contains(b))
-                {
-                    blocksSent.Remove(b);
-                }
             }
         }
 
@@ -322,61 +309,6 @@ namespace MasterBot.Room
             //potions end "pe"
         }
 
-        private void BlockRepairLoop()
-        {
-            while (true)
-            {
-                while (blocksToSend.Count > 0)
-                {
-                    lock (blocksToSend)
-                    {
-                        BlockWithPos block = blocksToSend.Dequeue();
-                        if (blockMap.getBlock(block.X, block.Y) != block.Block)
-                        {
-                            block.Block.PlaceNormally(bot, block.X, block.Y);
-                            lock (blocksSent)
-                            {
-                                if (block.Block.TimesSent < 10)
-                                {
-                                    if (!blocksSent.Contains(block))
-                                        blocksSent.Add(block);
-                                }
-                                else
-                                {
-                                    while (blocksSent.Contains(block))
-                                        blocksSent.Remove(block);
-                                }
-                            }
-                        }
-                    }
-                    System.Threading.Thread.Sleep(11);
-                }
-                System.Threading.Thread.Sleep(1);
-            }
-        }
-
-        private void CheckSentBlocks()
-        {
-            List<BlockWithPos> tempBlocksSent;
-            while (true)
-            {
-                lock (blocksSent)
-                    tempBlocksSent = new List<BlockWithPos>(blocksSent);
-                foreach (BlockWithPos block in tempBlocksSent.ToList())
-                {
-                    if (block != null && block.Block != null && !block.Block.Placed && !blocksToSend.Contains(block))
-                    {
-                        lock (blocksToSend)
-                        {
-                            if (block.Block.TimeSinceSent > 500)
-                                blocksToSend.Enqueue(block);
-                        }
-                    }
-                }
-                System.Threading.Thread.Sleep(1);
-            }
-        }
-
         private string rot13(string arg1)
         {
             int num = 0;
@@ -439,20 +371,12 @@ namespace MasterBot.Room
         {
             blockDrawerPool.Start();
             playerTickTimer.Start();
-            blockRepairThread = new Thread(BlockRepairLoop);
-            checkSentBlocksThread = new Thread(CheckSentBlocks);
-            blockRepairThread.Start();
-            checkSentBlocksThread.Start();
         }
 
         public override void onDisconnect(string reason)
         {
             blockDrawerPool.Stop();
             playerTickTimer.Stop();
-            if (blockRepairThread != null)
-                blockRepairThread.Abort();
-            if (checkSentBlocksThread != null)
-                checkSentBlocksThread.Abort();
             if (minimap != null)
                 minimap.onDisconnect(reason);
             if (blockMap != null)
@@ -473,10 +397,6 @@ namespace MasterBot.Room
                     }
                 case "reset":
                     {
-                        lock (blocksToSend)
-                            blocksToSend.Clear();
-                        lock (blocksSent)
-                            blocksSent.Clear();
                         LoadWorld(m, 0, width, height);
                         break;
                     }
@@ -699,8 +619,6 @@ namespace MasterBot.Room
                         else
                             minimap = new Minimap.Minimap(bot, width, height);
                         DrawBorder();
-                        blocksToSend.Clear();
-                        blocksSent.Clear();
                     }
                     break;
                 case "tele":
@@ -848,17 +766,6 @@ namespace MasterBot.Room
         public BlockMap BlockMap
         {
             get { return blockMap; }
-        }
-
-
-        public int BlocksToSendSize
-        {
-            get { return blocksToSend.Count; }
-        }
-
-        public int BlocksSentSize
-        {
-            get { return blocksSent.Count; }
         }
 
         public override bool HasTab
