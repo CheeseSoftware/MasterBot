@@ -1,4 +1,5 @@
-﻿using MasterBot.Room.Block;
+﻿using MasterBot.Minimap;
+using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
 using System.Linq;

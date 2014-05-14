@@ -717,5 +717,6 @@ namespace MasterBot.Minimap
             createBrick(389, ItemLayer.ABOVE, decorationsBMD, "brickfarm", ItemTab.DECORATIVE, false, true, 246);
             createBrick(212, ItemLayer.DECORATION, forgroundBricksBMD, "brickfarm", ItemTab.BLOCK, false, true, 184, 4291608181);
         }
+
     }
 }

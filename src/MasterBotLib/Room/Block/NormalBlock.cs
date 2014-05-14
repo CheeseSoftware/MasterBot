@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MasterBot.Minimap;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -36,8 +37,8 @@ namespace MasterBot.Room.Block
             {
                 if (id == 0)
                     return Color.Black;
-                else if (Minimap.MinimapColors.ColorCodes.ContainsKey(id))
-                    return Minimap.MinimapColors.ColorCodes[id];
+                else if (MinimapColors.ColorCodes.ContainsKey(id))
+                    return MinimapColors.ColorCodes[id];
                 return Color.Black;
             }
         }
@@ -91,6 +92,7 @@ namespace MasterBot.Room.Block
         {
             datePlaced = DateTime.Now;
             placed = true;
+            //bot.SubBotHandler.onBlockChange(x, y, this, bot.Room.getOldBlocks(layer, x, y).Count >= 2 ? bot.Room.getOldBlocks(layer, x, y).ElementAt(1) : new NormalBlock(0));
         }
 
         public bool Placed

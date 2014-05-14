@@ -79,6 +79,7 @@ namespace MasterBot.Minimap
 
         public override void onDisable()
         {
+            Die();
         }
 
         public override void onConnect()
@@ -89,7 +90,7 @@ namespace MasterBot.Minimap
 
         public override void onDisconnect(string reason)
         {
-            Die();
+            onDisable();
         }
 
         public override void onMessage(PlayerIOClient.Message m)

@@ -17,9 +17,10 @@ namespace MasterBot.Room
         private SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
-        IBlockDrawerPool blockDrawerPool;
-        IBlockDrawer blockDrawer;
+        private IBlockDrawerPool blockDrawerPool;
+        private IBlockDrawer blockDrawer;
         public IBlockDrawer BlockDrawer { get { return blockDrawer; } }//TODO: fix temporary public >.<
+        
         //private Thread playerTickThread;
 
         #region EE_Variables
@@ -879,6 +880,7 @@ namespace MasterBot.Room
         {
             get { return this.blockDrawerPool; }
         }
+
 
     }
 }
