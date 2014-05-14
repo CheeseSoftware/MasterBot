@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MasterBot;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace Gui
         // %u -> Not underline
         public void WriteLine(string text, params Color[] color)
         {
-            this.Invoke(new Action(() =>
+            SafeInvoke.Invoke(this, new Action(() =>
                 {
                     int startIndex = 0;
                     int colorIndex = 0;
@@ -89,7 +90,7 @@ namespace Gui
                                     RickTextBox.AppendText(text.Substring(startIndex, i - 1 - startIndex));
 
                                 //string RtfText
-#region switch...
+                                #region switch...
                                 switch (text[i])
                                 {
                                     case 's':
@@ -157,7 +158,7 @@ namespace Gui
                                         this.AppendText("[%" + text[i] + "]");
                                         break;
                                 }
-#endregion
+                                #endregion
 
                                 startIndex = i + 1;
                                 continue;

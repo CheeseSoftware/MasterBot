@@ -63,11 +63,11 @@ namespace MasterBot
                 delegate(Client tempClient)
                 {
                     client = tempClient;
-                    mainForm.Invoke(new Action(() => { mainForm.onLoginFinished(true); }));
+                    SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onLoginFinished(true); }));
                 },
                 delegate(PlayerIOError tempError)
                 {
-                    mainForm.Invoke(new Action(() => { mainForm.onLoginFinished(false); }));
+                    SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onLoginFinished(false); }));
                     MessageBox.Show(tempError.ToString());
                 });
         }
@@ -85,12 +85,12 @@ namespace MasterBot
                         connection.Send("init");
                         connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                         connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
-                        mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(true); }));
+                        SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(true); }));
                         subBotHandler.onConnect();
                     },
                     delegate(PlayerIOError tempError)
                     {
-                        mainForm.Invoke(new Action(() => { mainForm.onConnectFinished(false); }));
+                        SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(false); }));
                         MessageBox.Show(tempError.ToString());
                     });
                 return true;

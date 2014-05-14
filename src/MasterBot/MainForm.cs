@@ -122,7 +122,7 @@ namespace MasterBot
                         connecting = true;
                         buttonConnect.Enabled = false;
                         connectTimeoutTimer.Interval = 5000;
-                        connectTimeoutTimer.Elapsed += delegate { this.Invoke(new Action(() => { onConnectFinished(false); })); };
+                        connectTimeoutTimer.Elapsed += delegate { SafeInvoke.Invoke(this, (new Action(() => { onConnectFinished(false); }))); };
                         connectTimeoutTimer.Start();
                         buttonConnect.Text = "Connecting..";
                     }
@@ -150,7 +150,7 @@ namespace MasterBot
             timer.Interval = 1000;
             timer.Tick += new EventHandler(new Action<object, EventArgs>((object sender, EventArgs e) =>
             {
-                buttonLogin.Invoke(new Action(() =>
+                SafeInvoke.Invoke(buttonLogin, new Action(() =>
                 {
                     buttonLogin.Text = "Login";
                     timer.Stop();
@@ -175,12 +175,12 @@ namespace MasterBot
                 timer.Interval = 1000;
                 timer.Tick += new EventHandler(new Action<object, EventArgs>((object sender, EventArgs e) =>
                 {
-                    buttonConnect.Invoke(new Action(() =>
+                    SafeInvoke.Invoke(buttonConnect, (new Action(() =>
                     {
                         buttonConnect.Text = "Connect";
                         buttonConnect.Enabled = true;
                         timer.Stop();
-                    }));
+                    })));
                 }));
                 timer.Start();
                 loggingIn = false;
@@ -191,10 +191,10 @@ namespace MasterBot
 
         public void UpdateSubbotsDatasource(Dictionary<string, ASubBot> source)
         {
-            this.Invoke(new Action(() =>
+            SafeInvoke.Invoke(checkedListBoxSubBots, new Action(() =>
             {
-                checkedListBoxSubBots.Items.Clear();             
-                foreach(ASubBot subBot in source.Values)
+                checkedListBoxSubBots.Items.Clear();
+                foreach (ASubBot subBot in source.Values)
                 {
                     checkedListBoxSubBots.Items.Add(subBot.Name, subBot.Enabled);
                 }
@@ -213,7 +213,7 @@ namespace MasterBot
                 try
                 {
                     Bitmap temp = new Bitmap(bitmap);
-                    this.Invoke(new Action(() =>
+                    SafeInvoke.Invoke(pictureBoxMinimap, new Action(() =>
                     {
                         pictureBoxMinimap.Size = temp.Size;
                         pictureBoxMinimap.Image = temp;
@@ -267,7 +267,7 @@ namespace MasterBot
         private void comboBoxEmail_SelectionChangeCommitted(object sender, EventArgs e)
         {
             string selected = (string)comboBoxEmail.SelectedItem;
-            if(accounts.ContainsKey(selected))
+            if (accounts.ContainsKey(selected))
             {
                 textBoxPassword.Text = accounts[selected].Key;
                 if (accounts[selected].Value.Count > 0)

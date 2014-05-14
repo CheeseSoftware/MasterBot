@@ -72,6 +72,7 @@
     <Compile Include="Room\Room.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SafeInvoke.cs" />
     <Compile Include="SafeList.cs" />
     <Compile Include="SafeDictionary.cs" />
     <Compile Include="SubBot\BlockPlaceTest.cs">
