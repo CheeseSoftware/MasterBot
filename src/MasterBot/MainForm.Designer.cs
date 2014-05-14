@@ -49,11 +49,6 @@
             this.tabPageMinimap = new System.Windows.Forms.TabPage();
             this.flowLayoutPanelMinimap = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBoxMinimap = new System.Windows.Forms.PictureBox();
-            this.tabPageRoom = new System.Windows.Forms.TabPage();
-            this.blocksToSendNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.blocksSentNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabPageSubBots = new System.Windows.Forms.TabPage();
             this.tabControlSubBots = new System.Windows.Forms.TabControl();
             this.RtbConsoleInput = new System.Windows.Forms.TextBox();
@@ -70,9 +65,6 @@
             this.tabPageMinimap.SuspendLayout();
             this.flowLayoutPanelMinimap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMinimap)).BeginInit();
-            this.tabPageRoom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).BeginInit();
             this.tabPageSubBots.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -83,7 +75,6 @@
             // 
             this.tabControlMainTabs.Controls.Add(this.tabPageLoginConnect);
             this.tabControlMainTabs.Controls.Add(this.tabPageMinimap);
-            this.tabControlMainTabs.Controls.Add(this.tabPageRoom);
             this.tabControlMainTabs.Controls.Add(this.tabPageSubBots);
             this.tabControlMainTabs.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tabControlMainTabs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -223,7 +214,7 @@
             // 
             this.textBoxPassword.Location = new System.Drawing.Point(68, 45);
             this.textBoxPassword.Name = "textBoxPassword";
-            this.textBoxPassword.PasswordChar = 'ऑ';
+            this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(169, 20);
             this.textBoxPassword.TabIndex = 6;
             // 
@@ -292,61 +283,6 @@
             this.pictureBoxMinimap.Size = new System.Drawing.Size(0, 0);
             this.pictureBoxMinimap.TabIndex = 0;
             this.pictureBoxMinimap.TabStop = false;
-            // 
-            // tabPageRoom
-            // 
-            this.tabPageRoom.Controls.Add(this.blocksToSendNumericUpDown);
-            this.tabPageRoom.Controls.Add(this.blocksSentNumericUpDown);
-            this.tabPageRoom.Controls.Add(this.label2);
-            this.tabPageRoom.Controls.Add(this.label1);
-            this.tabPageRoom.Location = new System.Drawing.Point(4, 22);
-            this.tabPageRoom.Name = "tabPageRoom";
-            this.tabPageRoom.Size = new System.Drawing.Size(476, 430);
-            this.tabPageRoom.TabIndex = 2;
-            this.tabPageRoom.Text = "Room";
-            this.tabPageRoom.UseVisualStyleBackColor = true;
-            // 
-            // blocksToSendNumericUpDown
-            // 
-            this.blocksToSendNumericUpDown.Location = new System.Drawing.Point(98, 34);
-            this.blocksToSendNumericUpDown.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.blocksToSendNumericUpDown.Name = "blocksToSendNumericUpDown";
-            this.blocksToSendNumericUpDown.Size = new System.Drawing.Size(84, 20);
-            this.blocksToSendNumericUpDown.TabIndex = 3;
-            // 
-            // blocksSentNumericUpDown
-            // 
-            this.blocksSentNumericUpDown.Location = new System.Drawing.Point(98, 7);
-            this.blocksSentNumericUpDown.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.blocksSentNumericUpDown.Name = "blocksSentNumericUpDown";
-            this.blocksSentNumericUpDown.Size = new System.Drawing.Size(84, 20);
-            this.blocksSentNumericUpDown.TabIndex = 2;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 34);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Blocks to send:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Blocks sent:";
             // 
             // tabPageSubBots
             // 
@@ -455,10 +391,6 @@
             this.tabPageMinimap.ResumeLayout(false);
             this.flowLayoutPanelMinimap.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMinimap)).EndInit();
-            this.tabPageRoom.ResumeLayout(false);
-            this.tabPageRoom.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.blocksToSendNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blocksSentNumericUpDown)).EndInit();
             this.tabPageSubBots.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -487,11 +419,6 @@
         private System.Windows.Forms.PictureBox pictureBoxMinimap;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TabPage tabPageRoom;
-        private System.Windows.Forms.NumericUpDown blocksToSendNumericUpDown;
-        private System.Windows.Forms.NumericUpDown blocksSentNumericUpDown;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBoxCode;
         private System.Windows.Forms.Button buttonSendCode;
         private System.Windows.Forms.TextBox textBoxCode;

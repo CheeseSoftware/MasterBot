@@ -26,7 +26,7 @@ namespace MasterBot
             InitializeComponent();
             this.bot = bot;
             LoadLogin("login.txt");
-            System.Timers.Timer roomUpdateTimer = new System.Timers.Timer();
+            /*System.Timers.Timer roomUpdateTimer = new System.Timers.Timer();
             roomUpdateTimer.Interval = 50;
             roomUpdateTimer.Elapsed += delegate
             {
@@ -43,7 +43,7 @@ namespace MasterBot
                 }
                 catch { }
             };
-            roomUpdateTimer.Start();
+            roomUpdateTimer.Start();*/
         }
 
         private void LoadLogin(string file)
