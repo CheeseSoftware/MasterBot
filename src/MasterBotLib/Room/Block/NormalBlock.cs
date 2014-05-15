@@ -55,7 +55,7 @@ namespace MasterBot.Room.Block
 
         public bool Background
         {
-            get { return layer >= 500; }
+            get { return id >= 500; }
         }
 
         public DateTime DatePlaced

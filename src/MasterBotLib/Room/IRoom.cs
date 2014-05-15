@@ -29,13 +29,14 @@ namespace MasterBot.Room
         bool HideBlue { get; }
         bool HideTimeDoor { get; }
         IDictionary<int, IPlayer> Players { get; }
+        IDictionary<string, IPlayer> NamePlayers { get; }
         BlockMap BlockMap { get; }
         IBlockDrawerPool BlockDrawerPool { get; }
         IBlockDrawer BlockDrawer { get; }
         #endregion
 
         IBlock getBlock(int layer, int x, int y);
-        Stack<IBlock> getOldBlocks(int layer, int x, int y);
+        Stack<IBlock> getBlockHistory(int layer, int x, int y);
         void setBlock(int x, int y, IBlock block);
     }
 }

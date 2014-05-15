@@ -7,13 +7,12 @@ using MasterBot.Room.Block;
 
 namespace MasterBot.SubBot
 {
-   /*public class Protection : ASubBot
+    public class Protection : ASubBot
     {
-        ISet<Player> protectedPlayers = new HashSet<Player>();
-        ISet<Player> disabledPlayers = new HashSet<Player>();
+        HashSet<IPlayer> protectedPlayers = new HashSet<IPlayer>();
+        HashSet<IPlayer> disabledPlayers = new HashSet<IPlayer>();
 
-        #region private
-        private void Rollback(IBot bot, Func<IBlock, bool> lambda)
+        private void Rollback(IBot bot, Func<IBlock, IBlock, bool> lambda)
         {
             for (int l = 0; l < 2; l++)
             {
@@ -21,34 +20,32 @@ namespace MasterBot.SubBot
                 {
                     for (int y = 0; y < bot.Room.Width; y++)
                     {
-                        Stack<IBlock> blocks = bot.Room.BlockMap.getOldBlocks(l, x, y);
+                        Stack<IBlock> blocks = new Stack<IBlock>(new Stack<IBlock>(bot.Room.BlockMap.getBlockHistory(l, x, y)));
 
                         while (blocks.Count > 0)
                         {
                             IBlock block = blocks.Pop();
-                            
-                            if (lambda(block))
+                            IBlock oldBlock = blocks.Count > 0 ? blocks.Peek() : null;
+                            //if its the block that we hate, send the old one
+                            if (lambda(block, oldBlock))
                             {
-                                bot.Room.BlockMap.setBlock(x, y, block);
-                                break;
+                                bot.Room.setBlock(x, y, oldBlock != null ? oldBlock : new NormalBlock(0, l));
                             }
                         }
                     }
                 }
             }
         }
-        #endregion // private
 
-#region public
         #region properties
-        public override string Name
+        public override string BotName
         {
             get { return "Protection"; }
         }
 
         public override bool HasTab
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
         #endregion // properties
 
@@ -85,71 +82,93 @@ namespace MasterBot.SubBot
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
-            if (cmdSource is Player)
+            if (cmdSource is IPlayer)
             {
-                Player player = (Player)cmdSource;
+                IPlayer player = (IPlayer)cmdSource;
                 if (player.Name != "ostkaka" && player.Name != "gustav9797" && player.Name != "botost" && player.Name != "gbot" && player.Name != bot.Room.Owner)
                     return;
             }
+            IPlayer arg = null;
+            if (args.Length >= 1 && bot.Room.NamePlayers.ContainsKey(args[0]))
+            {
+                arg = bot.Room.NamePlayers[args[0]];
+            }
+            if (arg != null)
+            {
+                switch (cmd)
+                {
+                    case "protect":
+                        if (args.Length >= 1)
+                        {
+                            lock (protectedPlayers)
+                            {
+                                if (!protectedPlayers.Contains(arg))
+                                    protectedPlayers.Add(arg);
+                            }
+                        }
+                        break;
+                    case "unprotect":
+                        if (args.Length >= 1)
+                        {
+                            lock (protectedPlayers)
+                            {
+                                if (protectedPlayers.Contains(arg))
+                                    protectedPlayers.Remove(arg);
+                            }
+                        }
+                        break;
+                    case "disableedit":
+                        if (args.Length >= 1)
+                        {
+                            lock (disabledPlayers)
+                            {
+                                if (!disabledPlayers.Contains(arg))
+                                    disabledPlayers.Add(arg);
+                            }
+                        }
+                        break;
+                    case "enableedit":
+                        if (args.Length >= 1)
+                        {
+                            lock (disabledPlayers)
+                            {
+                                if (disabledPlayers.Contains(arg))
+                                    disabledPlayers.Remove(arg);
+                            }
+                        }
+                        break;
+                    case "disabletroll":
+                        if (args.Length >= 1)
+                        {
+                            lock (disabledPlayers)
+                            {
+                                if (!disabledPlayers.Contains(arg))
+                                    disabledPlayers.Add(arg);
+                            }
+                        }
+                        goto case "rollbackpl";
+                    case "rollbackplayer":
+                    case "rollbackpl":
+                        Rollback(bot, (IBlock block, IBlock oldBlock) =>
+                        {
+                            if (block.Placer != null)
+                            {
+                                if (block.Placer.Name == arg.Name)
+                                {
+                                    if (oldBlock == null || oldBlock.Placer == null || oldBlock.Placer.Name != arg.Name)
+                                        return true;
+                                }
+                            }
+                            return false;
+                        });
+                        break;
+                }
+            }
+            //else
+              //  cmdSource.Reply("Could not find player");
+
             switch (cmd)
             {
-                case "protect":
-                    if (args.Length >= 1)
-                    {
-                        //bot.Room.pla
-
-                        lock (protectedPlayers)
-                        {
-                            if (!protectedPlayers.Contains(args[0]))
-                                protectedPlayers.Add(args[0]);
-                        }
-                    }
-                    break;
-                case "unprotect":
-                    if (args.Length >= 1)
-                    {
-                        lock (protectedPlayers)
-                        {
-                            if (protectedPlayers.Contains(args[0]))
-                                protectedPlayers.Remove(args[0]);
-                        }
-                    }
-                    break;
-                case "disableedit":
-                    if (args.Length >= 1)
-                    {
-                        lock (disabledPlayers)
-                        {
-                            if (!disabledPlayers.Contains(args[0]))
-                                disabledPlayers.Add(args[0]);
-                        }
-                    }
-                    break;
-                case "enableedit":
-                    if (args.Length >= 1)
-                    {
-                        lock (disabledPlayers)
-                        {
-                            if (!disabledPlayers.Contains(args[0]))
-                                disabledPlayers.Add(args[0]);
-                        }
-                    }
-                    break;
-                case "rollbackplayer":
-                case "rollbackpl":
-                    Rollback(bot, (IBlock block) => { return true; });
-                    break;
-                case "disabletroll":
-                    if (args.Length >= 1)
-                    {
-                        lock (disabledPlayers)
-                        {
-                            if (!disabledPlayers.Contains(args[0]))
-                                disabledPlayers.Add(args[0]);
-                        }
-                    }
-                    goto case "rollbackpl";
-                    break;
                 case "repair":
                     break;
                 case "repairprotected":
@@ -165,25 +184,18 @@ namespace MasterBot.SubBot
             {
                 bool repair = false;
                 if (protectedPlayers.Contains(oldBlock.Placer))
-                {
                     repair = true;
-                } if (repair);
                 else if (disabledPlayers.Contains(newBlock.Placer))
-                {
                     repair = true;
-                }
 
                 if (repair)
-                {
-                    //bot.Room.BlockMap.setBlock(oldBlock);
-                }
+                    bot.Room.setBlock(x, y, oldBlock);
             }
         }
 
         public override void onTick()
         {
         }
-#endregion // public
 
-    }*/
+    }
 }

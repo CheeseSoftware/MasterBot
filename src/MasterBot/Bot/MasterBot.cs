@@ -41,6 +41,7 @@ namespace MasterBot
             subBotHandler.AddSubBot(new BlockPlaceTest(this));
             subBotHandler.AddSubBot(new Commands(this));
             subBotHandler.AddSubBot(new WorldEdit(this));
+            subBotHandler.AddSubBot(new Protection(this));
 
         }
 

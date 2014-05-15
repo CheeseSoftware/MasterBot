@@ -10,12 +10,15 @@ namespace MasterBot.Room.Block
     {
         private int x;
         private int y;
+        private int layer;
 
         public int X { get { return x; } }
         public int Y { get { return y; } }
+        public int Layer { get { return layer; } }
 
-        public BlockPos(int x, int y)
+        public BlockPos(int layer, int x, int y)
         {
+            this.layer = layer;
             this.x = x;
             this.y = y;
         }
@@ -24,7 +27,7 @@ namespace MasterBot.Room.Block
         {
             if (obj is BlockPos)
             {
-                if ((obj as BlockPos).x == this.x && (obj as BlockPos).y == this.y)
+                if ((obj as BlockPos).x == this.x && (obj as BlockPos).y == this.y && (obj as BlockPos).layer == this.layer)
                     return true;
             }
             return false;
@@ -32,7 +35,7 @@ namespace MasterBot.Room.Block
 
         public override int GetHashCode()
         {
-            return (x << 8) | y;
+            return (x << 16) | (y << 8) | layer;
         }
     }
 }

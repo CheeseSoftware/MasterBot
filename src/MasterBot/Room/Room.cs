@@ -15,6 +15,7 @@ namespace MasterBot.Room
     {
         private BlockMap blockMap;
         private SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
+        private SafeDictionary<string, IPlayer> namePlayers = new SafeDictionary<string, IPlayer>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
         private IBlockDrawerPool blockDrawerPool;
@@ -270,7 +271,7 @@ namespace MasterBot.Room
                         {
                             result.OnReceive(bot, xIndex, yIndex);
                             blockMap.setBlock(xIndex, yIndex, result);
-                            bot.SubBotHandler.onBlockChange(xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getOldBlocks(layer, xIndex, yIndex).Count >= 2 ? blockMap.getOldBlocks(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
+                            bot.SubBotHandler.onBlockChange(xIndex, yIndex, blockMap.getBlock(layer, xIndex, yIndex), blockMap.getBlockHistory(layer, xIndex, yIndex).Count >= 2 ? blockMap.getBlockHistory(layer, xIndex, yIndex).ElementAt(1) : new NormalBlock(0, layer));
                         }
                     }
                     i += toAdd;
@@ -345,9 +346,9 @@ namespace MasterBot.Room
             return str;
         }
 
-        public Stack<IBlock> getOldBlocks(int layer, int x, int y)
+        public Stack<IBlock> getBlockHistory(int layer, int x, int y)
         {
-            return blockMap.getOldBlocks(layer, x, y);
+            return blockMap.getBlockHistory(layer, x, y);
         }
 
         public IBlock getBlock(int layer, int x, int y)
@@ -385,6 +386,8 @@ namespace MasterBot.Room
                 blockMap.Clear();
             if (players != null)
                 players.Clear();
+            if (namePlayers != null)
+                namePlayers.Clear();
         }
 
         public override void onMessage(PlayerIOClient.Message m)
@@ -410,6 +413,7 @@ namespace MasterBot.Room
                             Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
                             player.IsClubMember = m.GetBoolean(12);
                             players.Add(id, player);
+                            namePlayers.Add(player.Name, player);
                         }
                         break;
                     }
@@ -418,6 +422,7 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
+                            namePlayers.Remove(players[id].Name);
                             players.Remove(id);
                         }
                         break;
@@ -763,6 +768,11 @@ namespace MasterBot.Room
         public IDictionary<int, IPlayer> Players
         {
             get { return players; }
+        }
+
+        public IDictionary<string, IPlayer> NamePlayers
+        {
+            get { return namePlayers; }
         }
 
         public BlockMap BlockMap

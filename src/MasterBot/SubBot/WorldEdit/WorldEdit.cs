@@ -325,7 +325,7 @@ namespace MasterBot.SubBot.WorldEdit
                                             int blax = x + region.FirstCorner.X;
                                             int blay = y + region.FirstCorner.Y;
                                             RecordSetBlock(blax, blay, selection.getBackgroundBlock(x, y));
-                                            RecordSetBlock(blax, blay, selection.getBlock(x, y));
+                                            RecordSetBlock(blax, blay, selection.getForegroundBlock(x, y));
                                         }
                                     }
                                 }

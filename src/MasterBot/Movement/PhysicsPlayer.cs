@@ -296,6 +296,8 @@ namespace MasterBot.Movement
                                     double _loc_9 = _loc_4;
 
                                     IBlock currentBlock = bot.Room.getBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16));
+                                    if (currentBlock == null)
+                                        continue;
                                     _loc_11 = currentBlock.Id;
 
                                     if (ItemId.isSolid(_loc_11))

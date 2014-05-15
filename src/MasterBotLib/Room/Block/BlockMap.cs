@@ -68,7 +68,7 @@ namespace MasterBot.Room.Block
             }
         }
 
-        public Stack<IBlock> getOldBlocks(int layer, int x, int y)
+        public Stack<IBlock> getBlockHistory(int layer, int x, int y)
         {
             if (isWithinMap(x, y))
             {
@@ -77,19 +77,19 @@ namespace MasterBot.Room.Block
                 else if (layer == 1)
                     return backgroundMap[x, y];
             }
-            return new Stack<IBlock>(new[] { new NormalBlock(0, 0) });
+            return new Stack<IBlock>(new[] { new NormalBlock(0, layer) });
         }
 
         public IBlock getBlock(int layer, int x, int y)
         {
             if (layer == 0)
-                return getBlock(x, y);
+                return getForegroundBlock(x, y);
             else if (layer == 1)
                 return getBackgroundBlock(x, y);
-            return new NormalBlock(0, 0);
+            return new NormalBlock(0, layer);
         }
 
-        public IBlock getBlock(int x, int y)
+        public IBlock getForegroundBlock(int x, int y)
         {
             if (isWithinMap(x, y) && foregroundMap[x, y].Count > 0)
                 return foregroundMap[x, y].Peek();
@@ -110,8 +110,8 @@ namespace MasterBot.Room.Block
 
         public Color getColor(int x, int y)
         {
-            if (getBlock(x, y).Id != 0 && getBlock(x, y).Color != Color.Transparent)
-                return getBlock(x, y).Color;
+            if (getForegroundBlock(x, y).Id != 0 && getForegroundBlock(x, y).Color != Color.Transparent)
+                return getForegroundBlock(x, y).Color;
             else if (getBackgroundBlock(x, y).Color != Color.Transparent)
                 return getBackgroundBlock(x, y).Color;
             else

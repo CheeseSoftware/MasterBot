@@ -29,12 +29,10 @@ namespace MasterBot
             }
             else
             {
-                if (uiElement.IsDisposed)
+                if (!uiElement.IsDisposed)
                 {
-                    throw new ObjectDisposedException("Control is already disposed.");
+                    updater();
                 }
-
-                updater();
             }
         }
     }

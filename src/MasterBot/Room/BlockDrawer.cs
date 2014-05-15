@@ -54,7 +54,7 @@ namespace MasterBot.Room
 
         public void PlaceBlock(BlockWithPos blockWithPos)
         {
-            BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
+            BlockPos blockPos = new BlockPos(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y);
 
             if (!blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(blockPos)) && bot.Room.getBlock(blockWithPos.Block.Layer, blockPos.X, blockPos.Y).Id != blockWithPos.Block.Id)
             {
@@ -96,7 +96,7 @@ namespace MasterBot.Room
 
             if (blockWithPos != null)
             {
-                if (blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(new BlockPos(blockWithPos.X, blockWithPos.Y))))// (!bot.Room.getBlock(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y).Equals(blockWithPos.Block))
+                if (blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(new BlockPos(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y))))// (!bot.Room.getBlock(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y).Equals(blockWithPos.Block))
                 {
                     blockWithPos.Block.Send(bot, blockWithPos.X, blockWithPos.Y);
 

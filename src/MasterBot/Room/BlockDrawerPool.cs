@@ -80,7 +80,7 @@ namespace MasterBot.Room
         {
             lock (waitingBlocks)
             {
-                BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
+                BlockPos blockPos = new BlockPos(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y);
                 if (waitingBlocks.ContainsKey(blockPos))
                 {
                     if (blockWithPos.Block.Equals(waitingBlocks[blockPos]))
@@ -110,7 +110,7 @@ namespace MasterBot.Room
         {
             lock (waitingBlocks)
 	        {
-		        BlockPos blockPos = new BlockPos(blockWithPos.X, blockWithPos.Y);
+                BlockPos blockPos = new BlockPos(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y);
                 if (waitingBlocks.ContainsKey(blockPos))
                 {
                     if (blockWithPos.Block.Equals(waitingBlocks[blockPos]))
