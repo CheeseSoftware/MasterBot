@@ -57,6 +57,8 @@ namespace MasterBot.Room.Block
 
         public void setBlock(int x, int y, IBlock block)
         {
+            if (block == null)
+                throw(new Exception("block should not be null!"));
             if (isWithinMap(x, y))
             {
                 if (block.Layer == 0)

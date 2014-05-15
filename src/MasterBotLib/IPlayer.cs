@@ -10,15 +10,11 @@ namespace MasterBot
     {
         #region IPlayer
         int Id { get; }
-
+        bool IsOp { get; }
         void Send(string message);
-
         void SetMetadata(string key, object value);
-
         bool HasMetadata(string key);
-
         void RemoveMetadata(string key);
-
         object GetMetadata(string key);
         #endregion
 

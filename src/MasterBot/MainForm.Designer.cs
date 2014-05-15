@@ -47,6 +47,9 @@
             this.tabPageMinimap = new System.Windows.Forms.TabPage();
             this.flowLayoutPanelMinimap = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBoxMinimap = new System.Windows.Forms.PictureBox();
+            this.tabPageEnableDisableSubBots = new System.Windows.Forms.TabPage();
+            this.groupBoxSubBots = new System.Windows.Forms.GroupBox();
+            this.checkedListBoxSubBots = new System.Windows.Forms.CheckedListBox();
             this.tabPageSubBots = new System.Windows.Forms.TabPage();
             this.tabControlSubBots = new System.Windows.Forms.TabControl();
             this.RtbConsoleInput = new System.Windows.Forms.TextBox();
@@ -54,9 +57,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.RtbConsole = new Gui.RickTextConsole();
-            this.tabPageEnableDisableSubBots = new System.Windows.Forms.TabPage();
-            this.groupBoxSubBots = new System.Windows.Forms.GroupBox();
-            this.checkedListBoxSubBots = new System.Windows.Forms.CheckedListBox();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
             this.groupBoxCode.SuspendLayout();
@@ -65,12 +65,12 @@
             this.tabPageMinimap.SuspendLayout();
             this.flowLayoutPanelMinimap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMinimap)).BeginInit();
+            this.tabPageEnableDisableSubBots.SuspendLayout();
+            this.groupBoxSubBots.SuspendLayout();
             this.tabPageSubBots.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tabPageEnableDisableSubBots.SuspendLayout();
-            this.groupBoxSubBots.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMainTabs
@@ -265,6 +265,38 @@
             this.pictureBoxMinimap.TabIndex = 0;
             this.pictureBoxMinimap.TabStop = false;
             // 
+            // tabPageEnableDisableSubBots
+            // 
+            this.tabPageEnableDisableSubBots.Controls.Add(this.groupBoxSubBots);
+            this.tabPageEnableDisableSubBots.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEnableDisableSubBots.Name = "tabPageEnableDisableSubBots";
+            this.tabPageEnableDisableSubBots.Size = new System.Drawing.Size(476, 430);
+            this.tabPageEnableDisableSubBots.TabIndex = 4;
+            this.tabPageEnableDisableSubBots.Text = "Enable/Disable Subbots";
+            this.tabPageEnableDisableSubBots.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxSubBots
+            // 
+            this.groupBoxSubBots.Controls.Add(this.checkedListBoxSubBots);
+            this.groupBoxSubBots.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBoxSubBots.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSubBots.Name = "groupBoxSubBots";
+            this.groupBoxSubBots.Size = new System.Drawing.Size(200, 430);
+            this.groupBoxSubBots.TabIndex = 10;
+            this.groupBoxSubBots.TabStop = false;
+            this.groupBoxSubBots.Text = "Subbots";
+            // 
+            // checkedListBoxSubBots
+            // 
+            this.checkedListBoxSubBots.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxSubBots.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkedListBoxSubBots.FormattingEnabled = true;
+            this.checkedListBoxSubBots.Location = new System.Drawing.Point(3, 16);
+            this.checkedListBoxSubBots.Name = "checkedListBoxSubBots";
+            this.checkedListBoxSubBots.Size = new System.Drawing.Size(194, 411);
+            this.checkedListBoxSubBots.TabIndex = 0;
+            this.checkedListBoxSubBots.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSubBots_ItemCheck);
+            // 
             // tabPageSubBots
             // 
             this.tabPageSubBots.Controls.Add(this.tabControlSubBots);
@@ -352,37 +384,6 @@
             this.RtbConsole.TabIndex = 3;
             this.RtbConsole.Text = "";
             // 
-            // tabPageEnableDisableSubBots
-            // 
-            this.tabPageEnableDisableSubBots.Controls.Add(this.groupBoxSubBots);
-            this.tabPageEnableDisableSubBots.Location = new System.Drawing.Point(4, 22);
-            this.tabPageEnableDisableSubBots.Name = "tabPageEnableDisableSubBots";
-            this.tabPageEnableDisableSubBots.Size = new System.Drawing.Size(476, 430);
-            this.tabPageEnableDisableSubBots.TabIndex = 4;
-            this.tabPageEnableDisableSubBots.Text = "Enable/Disable Subbots";
-            this.tabPageEnableDisableSubBots.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxSubBots
-            // 
-            this.groupBoxSubBots.Controls.Add(this.checkedListBoxSubBots);
-            this.groupBoxSubBots.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBoxSubBots.Location = new System.Drawing.Point(0, 0);
-            this.groupBoxSubBots.Name = "groupBoxSubBots";
-            this.groupBoxSubBots.Size = new System.Drawing.Size(200, 430);
-            this.groupBoxSubBots.TabIndex = 10;
-            this.groupBoxSubBots.TabStop = false;
-            this.groupBoxSubBots.Text = "Subbots";
-            // 
-            // checkedListBoxSubBots
-            // 
-            this.checkedListBoxSubBots.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.checkedListBoxSubBots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkedListBoxSubBots.FormattingEnabled = true;
-            this.checkedListBoxSubBots.Location = new System.Drawing.Point(3, 16);
-            this.checkedListBoxSubBots.Name = "checkedListBoxSubBots";
-            this.checkedListBoxSubBots.Size = new System.Drawing.Size(194, 411);
-            this.checkedListBoxSubBots.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -402,13 +403,13 @@
             this.tabPageMinimap.ResumeLayout(false);
             this.flowLayoutPanelMinimap.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMinimap)).EndInit();
+            this.tabPageEnableDisableSubBots.ResumeLayout(false);
+            this.groupBoxSubBots.ResumeLayout(false);
             this.tabPageSubBots.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tabPageEnableDisableSubBots.ResumeLayout(false);
-            this.groupBoxSubBots.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

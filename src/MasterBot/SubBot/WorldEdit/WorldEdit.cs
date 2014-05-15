@@ -190,7 +190,7 @@ namespace MasterBot.SubBot.WorldEdit
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
-            if (cmdSource is Player)
+            if (cmdSource is Player && ((Player)cmdSource).IsOp)
             {
                 Player player = (Player)cmdSource;
                 if (player.GetMetadata("editregion") == null)

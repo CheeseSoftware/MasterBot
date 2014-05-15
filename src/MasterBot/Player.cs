@@ -62,6 +62,11 @@ namespace MasterBot
             return null;
         }
 
+        public bool IsOp
+        {
+            get { return Name == "ostkaka" || Name == "gustav9797" || Name == "gbot" || Name == "botost"; }
+        }
+
 #region PhysicsPlayer
         public int BlockX { get { return physicsPlayer.BlockX; } set { physicsPlayer.BlockX = value; } }
 
@@ -116,6 +121,5 @@ namespace MasterBot
             physicsPlayer.tick();
         }
 #endregion
-
     }
 }
