@@ -58,11 +58,14 @@ namespace MasterBot.Room
 
             if (!blockWithPos.Block.Equals(blockDrawerPool.getWaitingBlock(blockPos)) && bot.Room.getBlock(blockWithPos.Block.Layer, blockPos.X, blockPos.Y).Id != blockWithPos.Block.Id)
             {
-                blockDrawerPool.AddWaitingBlock(blockWithPos);
-
-                lock (blocksToDraw)
+                if (bot.Room.BlockMap.isWithinMap(blockPos.X, blockPos.Y))
                 {
-                    blocksToDraw.Enqueue(blockWithPos); 
+                    blockDrawerPool.AddWaitingBlock(blockWithPos);
+
+                    lock (blocksToDraw)
+                    {
+                        blocksToDraw.Enqueue(blockWithPos);
+                    }
                 }
             }
         }
@@ -109,5 +112,14 @@ namespace MasterBot.Room
 
         }
 
+        public int BlocksToDrawSize
+        {
+            get { return blocksToDraw.Count; }
+        }
+
+        public int BlocksToRepairSize
+        {
+            get { return blocksToRepair.Count; }
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace MasterBot.Room
     public interface IBlockDrawer
     {
         byte Priority { get; }
+        int BlocksToDrawSize { get; }
+        int BlocksToRepairSize { get; }
 
         void Start();
         void Stop();

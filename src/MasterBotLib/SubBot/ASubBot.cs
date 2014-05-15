@@ -1,6 +1,7 @@
 ﻿using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Windows.Forms;
 
 namespace MasterBot.SubBot
 {
+    [TypeDescriptionProvider(typeof(AbstractControlDescriptionProvider<ASubBot, UserControl>))]
     public abstract class ASubBot : TabPage, ISubBot
     {
         protected IBot bot;
@@ -16,6 +18,7 @@ namespace MasterBot.SubBot
 
         public ASubBot(IBot bot)
         {
+            this.InitializeComponent();
             this.bot = bot;
             this.updateTimer = new System.Timers.Timer();
             updateTimer.Elapsed += delegate { onTick(); };
@@ -46,7 +49,7 @@ namespace MasterBot.SubBot
             } 
         }
 
-        public abstract new string Name { get; }
+        public abstract string BotName { get; }
 
         protected void EnableTick(double interval)
         {
@@ -57,6 +60,11 @@ namespace MasterBot.SubBot
         protected void DisableTick()
         {
             updateTimer.Stop();
+        }
+
+        protected virtual void InitializeComponent()
+        {
+
         }
 
     }

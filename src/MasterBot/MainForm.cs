@@ -196,7 +196,7 @@ namespace MasterBot
                 checkedListBoxSubBots.Items.Clear();
                 foreach (ASubBot subBot in source.Values)
                 {
-                    checkedListBoxSubBots.Items.Add(subBot.Name, subBot.Enabled);
+                    checkedListBoxSubBots.Items.Add(subBot.BotName, subBot.Enabled);
                 }
             }));
         }

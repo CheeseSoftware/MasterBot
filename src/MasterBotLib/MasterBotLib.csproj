@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractControlDescriptionProvider.cs" />
     <Compile Include="Bot\IBot.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />

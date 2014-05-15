@@ -128,7 +128,7 @@ namespace MasterBot
             get { return true; }
         }
 
-        public override string Name
+        public override string BotName
         {
             get { return "Commands"; }
         }

@@ -775,7 +775,7 @@ namespace MasterBot.Room
             get { return true; }
         }
 
-        public override string Name
+        public override string BotName
         {
             get { return "Room"; }
         }
@@ -788,6 +788,18 @@ namespace MasterBot.Room
         public IBlockDrawer BlockDrawer
         {
             get { return blockDrawer; }
+        }
+
+        protected override void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // Room
+            // 
+            this.Name = "Room";
+            this.Size = new System.Drawing.Size(332, 275);
+            this.ResumeLayout(false);
+
         }
     }
 }
