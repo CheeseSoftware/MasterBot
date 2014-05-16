@@ -785,7 +785,7 @@ namespace MasterBot.Room
             get { return true; }
         }
 
-        public override string BotName
+        public override string SubBotName
         {
             get { return "Room"; }
         }

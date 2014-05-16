@@ -38,7 +38,7 @@ namespace MasterBot.SubBot
         }
 
         #region properties
-        public override string BotName
+        public override string SubBotName
         {
             get { return "Protection"; }
         }

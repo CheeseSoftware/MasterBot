@@ -49,7 +49,7 @@ namespace MasterBot.SubBot
             } 
         }
 
-        public abstract string BotName { get; }
+        public abstract string SubBotName { get; }
 
         protected void EnableTick(double interval)
         {

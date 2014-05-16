@@ -23,6 +23,6 @@ namespace MasterBot.SubBot
         
         bool HasTab { get; }
         bool Enabled { get; set; }
-        string BotName { get; }
+        string SubBotName { get; }
     }
 }

@@ -131,7 +131,7 @@ namespace MasterBot.Minimap
             get { return true; }
         }
 
-        public override string BotName
+        public override string SubBotName
         {
             get { return "Minimap"; }
         }

@@ -22,7 +22,7 @@ namespace MasterBot.SubBot
         private void AddTab(ASubBot subBot)
         {
             if (subBot.HasTab)
-                SafeInvoke.Invoke(tabControl, new Action(() => { subBot.Text = subBot.BotName; tabControl.TabPages.Add(subBot); }));
+                SafeInvoke.Invoke(tabControl, new Action(() => { subBot.Text = subBot.SubBotName; tabControl.TabPages.Add(subBot); }));
         }
 
         private void RemoveTab(ASubBot subBot)
@@ -33,16 +33,16 @@ namespace MasterBot.SubBot
 
         public void AddSubBot(ASubBot subBot, bool enabledByDefault = true)
         {
-            if (!subBots.ContainsKey(subBot.BotName))
+            if (!subBots.ContainsKey(subBot.SubBotName))
             {
                 lock (subBots)
                 {
-                    subBots.Add(subBot.BotName, subBot);
+                    subBots.Add(subBot.SubBotName, subBot);
                     AddTab(subBot);
                     if (enabledByDefault)
                         subBot.Enabled = true;
                     bot.MainForm.UpdateSubbotsDatasource(subBots);
-                    bot.MainForm.Console("Subbot " + subBot.BotName + " added.");
+                    bot.MainForm.Console("Subbot " + subBot.SubBotName + " added.");
                 }
             }
         }
@@ -153,7 +153,7 @@ namespace MasterBot.SubBot
             get { return true; }
         }
 
-        public override string BotName
+        public override string SubBotName
         {
             get { return "SubBotHandler"; }
         }
