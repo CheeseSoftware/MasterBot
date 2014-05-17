@@ -584,78 +584,45 @@ namespace MasterBot.SubBot.WorldEdit
                                 int layer = baseBlock.Layer;
                                 int x = player.BlockX;
                                 int y = player.BlockY;
+                                List<Point> closeBlocks = new List<Point> { new Point(1, 0), new Point(0, -1), new Point(-1, 0), new Point(0, 1) };
+                                HashSet<Point> previouslySetBlocks = new HashSet<Point>();
 
-
-                                List<Point> blocksToSet = new List<Point>();
-
-                                int xx = x;
-                                while (bot.Room.getBlock(layer, xx + 1, y).Id == baseBlock.Id && xx < 2000)
-                                    xx++;
-
-                                List<Point> closeBlocks = new List<Point> { new Point(1, 0), new Point(0, -1), new Point(-1, 0), new Point(0, 1), new Point(1, 1), new Point(-1, -1), new Point(-1, 1), new Point(1, -1) };
-                                Queue<Point> blocksToCheck = new Queue<Point>();
-                                Point startPoint = new Point(xx, y);
-                                blocksToCheck.Enqueue(startPoint);
-                                blocksToSet.Add(startPoint);
-
-                                for (int currentThickness = 0; currentThickness < Width; currentThickness++)
+                                for (int currentThickness = 0; currentThickness < thickness; currentThickness++)
                                 {
+                                    int xx = x;
+                                    while (bot.Room.getBlock(layer, xx + 1, y).Id == baseBlock.Id && !previouslySetBlocks.Contains(new Point(xx + 1, y)) && xx < 2000)
+                                        xx++;
+                                    List<Point> blocksToSet = new List<Point>();
+                                    HashSet<Point> blocksChecked = new HashSet<Point>();
+                                    Queue<Point> blocksToCheck = new Queue<Point>();
+                                    Point startPoint = new Point(xx, y);
+                                    blocksToCheck.Enqueue(startPoint);
+                                    blocksToSet.Add(startPoint);
 
                                     while (blocksToCheck.Count > 0)
                                     {
                                         Point parent = blocksToCheck.Dequeue();
-                                        bool done = false;
-                                        List<KeyValuePair<Point, int>> mostOtherBlocks = new List<KeyValuePair<Point, int>>();
-
                                         for (int i = 0; i < closeBlocks.Count; i++)
                                         {
                                             Point current = new Point(closeBlocks[i].X + parent.X, closeBlocks[i].Y + parent.Y);
-
-                                            IBlock checkBlock = bot.Room.getBlock(layer, current.X, current.Y);
-                                            if (checkBlock.Id == baseBlock.Id && !blocksToSet.Contains(current))
+                                            IBlock currentBlock = bot.Room.BlockMap.getBlock(layer, current.X, current.Y);
+                                            if (currentBlock.Id == baseBlock.Id && !previouslySetBlocks.Contains(current) && !blocksToCheck.Contains(current) && !blocksChecked.Contains(current))
                                             {
-                                                int otherBlocks = 0;
-                                                int neighbours = 0;
-                                                for (int c = 0; c < closeBlocks.Count; c++)
-                                                {
-                                                    Point weirdBlock = new Point(closeBlocks[c].X + current.X, closeBlocks[c].Y + current.Y);
-                                                    if (bot.Room.getBlock(layer, weirdBlock.X, weirdBlock.Y).Id != baseBlock.Id)
-                                                    {
-                                                        otherBlocks++;
-                                                    }
-                                                    else
-                                                        neighbours++;
-                                                }
-                                                if (otherBlocks > 0 && neighbours >= 2)
-                                                    mostOtherBlocks.Add(new KeyValuePair<Point, int>(current, otherBlocks));
+                                                blocksToCheck.Enqueue(current);
                                             }
-                                            else if (blocksToSet.Count > 4 && blocksToSet.Contains(current) && current == startPoint) //finished
+                                            else if ((currentBlock.Id != baseBlock.Id || previouslySetBlocks.Contains(current)) && !blocksToSet.Contains(parent))
                                             {
-                                                done = true;
-                                                break;
+                                                blocksToSet.Add(parent);
                                             }
-                                        }
-
-                                        if (done)
-                                            break;
-
-                                        if (mostOtherBlocks.Count > 0)
-                                        {
-                                            List<KeyValuePair<Point, int>> mostOtherBlocksSorted = mostOtherBlocks.OrderByDescending(o => o.Value).ToList();
-                                            foreach (KeyValuePair<Point, int> pair in mostOtherBlocksSorted)
-                                            {
-                                                blocksToSet.Add(pair.Key);
-                                                blocksToCheck.Enqueue(pair.Key);
-                                                break;
-                                            }
-                                            break;
+                                            blocksChecked.Add(parent);
                                         }
                                     }
-                                }
 
-                                foreach (Point p in blocksToSet)
-                                {
-                                    RecordSetBlock(p.X, p.Y, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                    foreach (Point p in blocksToSet)
+                                    {
+                                        RecordSetBlock(p.X, p.Y, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                        previouslySetBlocks.Add(p);
+                                    }
                                 }
                             }
                             else

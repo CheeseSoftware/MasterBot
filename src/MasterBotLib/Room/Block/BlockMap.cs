@@ -15,6 +15,7 @@ namespace MasterBot.Room.Block
         private Stack<IBlock>[,] foregroundMap = null;
         private int width;
         private int height;
+        private bool reseting = false;
 
         public int Width { get { return width; } }
         public int Height { get { return height; } }
@@ -58,7 +59,7 @@ namespace MasterBot.Room.Block
         public void setBlock(int x, int y, IBlock block)
         {
             if (block == null)
-                throw(new Exception("block should not be null!"));
+                throw (new Exception("block should not be null!"));
             if (isWithinMap(x, y))
             {
                 if (block.Layer == 0)
@@ -82,30 +83,41 @@ namespace MasterBot.Room.Block
 
         public IBlock getBlock(int layer, int x, int y)
         {
-            if (layer == 0)
-                return getForegroundBlock(x, y);
-            else if (layer == 1)
-                return getBackgroundBlock(x, y);
+            if (!reseting)
+            {
+                if (layer == 0)
+                    return getForegroundBlock(x, y);
+                else if (layer == 1)
+                    return getBackgroundBlock(x, y);
+            }
             return new NormalBlock(0, layer);
         }
 
         public IBlock getForegroundBlock(int x, int y)
         {
-            if (isWithinMap(x, y) && foregroundMap[x, y].Count > 0)
-                return foregroundMap[x, y].Peek();
+            if (!reseting)
+            {
+                if (isWithinMap(x, y) && foregroundMap[x, y].Count > 0)
+                    return foregroundMap[x, y].Peek();
+            }
             return new NormalBlock(0, 0); ;
         }
 
         public IBlock getBackgroundBlock(int x, int y)
         {
-            if (isWithinMap(x, y) && backgroundMap[x, y].Count > 0)
-                return backgroundMap[x, y].Peek();
+            if (!reseting)
+            {
+                if (isWithinMap(x, y) && backgroundMap[x, y].Count > 0)
+                    return backgroundMap[x, y].Peek();
+            }
             return new NormalBlock(0, 1); ;
         }
 
         public void Clear()
         {
+            reseting = true;
             Reset();
+            reseting = false;
         }
 
         public Color getColor(int x, int y)
