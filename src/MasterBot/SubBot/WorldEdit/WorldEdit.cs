@@ -4,6 +4,7 @@ using MasterBot.SubBot.WorldEdit.Change;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +65,7 @@ namespace MasterBot.SubBot.WorldEdit
             blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));
         }
 
+        #region edit functions
         public void DrawLine(int x1, int y1, int x2, int y2, IBlock block)
         {
             int iTag = 0;
@@ -167,6 +169,87 @@ namespace MasterBot.SubBot.WorldEdit
             }
         }
 
+        public void WriteLetter(int spacing, string filename, int x, int y, IBlock block)
+        {
+            switch (filename)
+            {
+                case ".":
+                    filename = "dota";
+                    break;
+                case @":":
+                    filename = "dotb";
+                    break;
+                case @"?":
+                    filename = "dotc";
+                    break;
+                case "\"":
+                    filename = "dotd";
+                    break;
+                case @"<":
+                    filename = "dote";
+                    break;
+                case @">":
+                    filename = "dotf";
+                    break;
+                case @"*":
+                    filename = "dotg";
+                    break;
+                case @"/":
+                    filename = "doth";
+                    break;
+                case @"\":
+                    filename = "doti";
+                    break;
+                case @"|":
+                    filename = "dotj";
+                    break;
+            }
+            int bigletterspacex = 0;
+            int bigletterspacey = 0;
+            int bigletterspaceyup = 0;
+
+            string attskriva1 = File.ReadAllText(@"write/" + filename);
+            string[] attskriva = new string[100];
+            attskriva = attskriva1.Split(',');
+            int valdsak = 0;
+            if (filename == @"@")
+                bigletterspacex = 4;
+            if (filename == @"apskfpasFIXTHISFY" || filename == @"w" || filename == @"#" || filename == @"&")
+                bigletterspacex = 2;
+            if (filename == @"n" || filename == @"%" || filename == @"doth" || filename == @"doti")
+                bigletterspacex = 1;
+            if (filename == @"," || filename == @"&" || filename == @"@")
+                bigletterspacey = 1;
+            if (filename == @"$")
+                bigletterspacey = 2;
+
+            for (int localwy = 0 - bigletterspaceyup; localwy < 5 + bigletterspacey; localwy++)
+            {
+                for (int localwx = 0; localwx <= 2 + bigletterspacex; localwx++)
+                {
+                    int sendx = spacing + localwx + x;
+                    int sendy = localwy + y;
+                    if (Convert.ToInt32(attskriva[valdsak]) == 1)
+                        RecordSetBlock(sendx, sendy, block);
+                    valdsak++;
+                }
+            }
+            valdsak = 0;
+        }
+
+        public double RawDistance(Point first, Point second)
+        {
+            int dx = second.X - first.X;
+            int dy = second.Y - first.Y;
+            return Math.Pow(dx, 2) + Math.Pow(dy, 2);
+        }
+
+        public double Distance(Point first, Point second)
+        {
+            return Math.Sqrt(RawDistance(first, second));
+        }
+
+        #endregion
 
         public override void onEnable()
         {
@@ -433,6 +516,150 @@ namespace MasterBot.SubBot.WorldEdit
                     case "stop":
                         {
                             blockDrawer.Stop();
+                            break;
+                        }
+                    case "start":
+                        {
+                            blockDrawer.Start();
+                            break;
+                        }
+                    case "write":
+                        {
+                            if (region.FirstCornerSet)
+                            {
+                                int drawBlock = 0;
+                                if (args.Length > 1 && int.TryParse(args[0], out drawBlock))
+                                {
+                                    List<char[]> letters = new List<char[]>();
+                                    foreach (string str in args.Skip(1))
+                                        letters.Add(str.ToLower().ToCharArray());
+
+                                    int spacing = 0;
+                                    foreach (char[] array in letters)
+                                    {
+                                        for (int letterindex = 0; letterindex < array.Length; letterindex++)
+                                        {
+                                            string l = array[letterindex].ToString();
+                                            if (l != "_")
+                                            {
+                                                WriteLetter(spacing, l, region.FirstCorner.X, region.FirstCorner.Y, new NormalBlock(drawBlock, drawBlock >= 500 ? 1 : 0));
+                                            }
+                                            if (l == @"@")
+                                                spacing += 4;
+                                            else if (l == "m" || l == "w" || l == "#" || l == "&")
+                                                spacing += 2;
+                                            else if (l == "n" || l == "%" || l == @"/" || l == @"\")
+                                                spacing += 1;
+
+                                            if (l == "|" || l == "." || l == "," || l == "'" || l == "!")
+                                            {
+                                                spacing -= 2;
+                                            }
+                                            else if (l == ",")
+                                            {
+                                                spacing -= 1;
+                                            }
+                                            spacing += 4;
+                                        }
+                                        spacing += array.Length;
+                                    }
+                                }
+                                else
+                                    player.Reply("Usage: !write <block> <text..>");
+                            }
+                            else
+                                player.Reply("You have to set the first corner.");
+                            break;
+                        }
+                    case "border":
+                        {
+                            int thickness;
+                            int block;
+                            if (args.Length > 1 && int.TryParse(args[0], out thickness) && int.TryParse(args[1], out block))
+                            {
+                                IBlock baseBlock =
+                                    (bot.Room.getBlock(1, player.BlockX, player.BlockY).Id == 0 ?
+                                    bot.Room.getBlock(0, player.BlockX, player.BlockY) :
+                                    bot.Room.getBlock(0, player.BlockX, player.BlockY));
+                                int layer = baseBlock.Layer;
+                                int x = player.BlockX;
+                                int y = player.BlockY;
+
+
+                                List<Point> blocksToSet = new List<Point>();
+
+                                int xx = x;
+                                while (bot.Room.getBlock(layer, xx + 1, y).Id == baseBlock.Id && xx < 2000)
+                                    xx++;
+
+                                List<Point> closeBlocks = new List<Point> { new Point(1, 0), new Point(0, -1), new Point(-1, 0), new Point(0, 1), new Point(1, 1), new Point(-1, -1), new Point(-1, 1), new Point(1, -1) };
+                                Queue<Point> blocksToCheck = new Queue<Point>();
+                                Point startPoint = new Point(xx, y);
+                                blocksToCheck.Enqueue(startPoint);
+                                blocksToSet.Add(startPoint);
+
+                                for (int currentThickness = 0; currentThickness < Width; currentThickness++)
+                                {
+
+                                    while (blocksToCheck.Count > 0)
+                                    {
+                                        Point parent = blocksToCheck.Dequeue();
+                                        bool done = false;
+                                        List<KeyValuePair<Point, int>> mostOtherBlocks = new List<KeyValuePair<Point, int>>();
+
+                                        for (int i = 0; i < closeBlocks.Count; i++)
+                                        {
+                                            Point current = new Point(closeBlocks[i].X + parent.X, closeBlocks[i].Y + parent.Y);
+
+                                            IBlock checkBlock = bot.Room.getBlock(layer, current.X, current.Y);
+                                            if (checkBlock.Id == baseBlock.Id && !blocksToSet.Contains(current))
+                                            {
+                                                int otherBlocks = 0;
+                                                int neighbours = 0;
+                                                for (int c = 0; c < closeBlocks.Count; c++)
+                                                {
+                                                    Point weirdBlock = new Point(closeBlocks[c].X + current.X, closeBlocks[c].Y + current.Y);
+                                                    if (bot.Room.getBlock(layer, weirdBlock.X, weirdBlock.Y).Id != baseBlock.Id)
+                                                    {
+                                                        otherBlocks++;
+                                                    }
+                                                    else
+                                                        neighbours++;
+                                                }
+                                                if (otherBlocks > 0 && neighbours >= 2)
+                                                    mostOtherBlocks.Add(new KeyValuePair<Point, int>(current, otherBlocks));
+                                            }
+                                            else if (blocksToSet.Count > 4 && blocksToSet.Contains(current) && current == startPoint) //finished
+                                            {
+                                                done = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (done)
+                                            break;
+
+                                        if (mostOtherBlocks.Count > 0)
+                                        {
+                                            List<KeyValuePair<Point, int>> mostOtherBlocksSorted = mostOtherBlocks.OrderByDescending(o => o.Value).ToList();
+                                            foreach (KeyValuePair<Point, int> pair in mostOtherBlocksSorted)
+                                            {
+                                                blocksToSet.Add(pair.Key);
+                                                blocksToCheck.Enqueue(pair.Key);
+                                                break;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                foreach (Point p in blocksToSet)
+                                {
+                                    RecordSetBlock(p.X, p.Y, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                }
+                            }
+                            else
+                                player.Reply("Usage: !border <thickness> <block>");
                             break;
                         }
                     default:
