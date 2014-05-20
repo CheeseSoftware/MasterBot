@@ -43,14 +43,14 @@ namespace MasterBot.Room.Block
 
         public bool isWithinMap(int x, int y)
         {
-            if (x >= 0 && y >= 0 && x <= width && y <= height)
+            if (x >= 0 && y >= 0 && x < width && y < height)
                 return true;
             return false;
         }
 
         public bool isOnBorder(int x, int y)
         {
-            return x == 0 || y == 0 || x == width || y == height;
+            return x == 0 || y == 0 || x == width - 1 || y == height - 1;
         }
 
         public bool isPlaceAble(BlockWithPos block)

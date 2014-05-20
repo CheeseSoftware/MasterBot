@@ -82,7 +82,7 @@ namespace MasterBot.Room
             lock (blocksToDraw)
             {
                 if (blocksToDraw.Count > 0)
-                    blockWithPos = blocksToDraw.Dequeue(); 
+                    blockWithPos = blocksToDraw.Dequeue();
             }
 
             if (blockWithPos == null)
@@ -90,7 +90,7 @@ namespace MasterBot.Room
                 lock (blocksToRepair)
                 {
                     if (blocksToRepair.Count > 0)
-                        blockWithPos = blocksToRepair.Dequeue();  
+                        blockWithPos = blocksToRepair.Dequeue();
                 }
             }
 
@@ -102,7 +102,8 @@ namespace MasterBot.Room
 
                     lock (blocksToRepair)
                     {
-                        blocksToRepair.Enqueue(blockWithPos); 
+                        if (!blocksToRepair.Contains(blockWithPos))
+                            blocksToRepair.Enqueue(blockWithPos);
                     }
                     return true;
                 }
