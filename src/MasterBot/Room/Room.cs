@@ -686,7 +686,7 @@ namespace MasterBot.Room
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (x == 0 || y == 0 || x == width - 1 || y == width - 1)
+                    if(blockMap.isOnBorder(x, y))
                     {
                         blockMap.setBlock(x, y, new NormalBlock(9, 0));
                         bot.SubBotHandler.onBlockChange(x, y, new NormalBlock(9, 0), new NormalBlock(0, 0));

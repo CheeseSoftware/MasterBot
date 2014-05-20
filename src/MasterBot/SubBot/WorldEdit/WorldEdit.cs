@@ -626,6 +626,24 @@ namespace MasterBot.SubBot.WorldEdit
                                 player.Reply("Usage: !border <thickness> <block>");
                             break;
                         }
+                    case "worldborder":
+                        {
+                            int block;
+                            if (int.TryParse(args[0], out block))
+                            {
+                                for (int x = 0; x < bot.Room.Width; x++)
+                                {
+                                    for (int y = 0; y < bot.Room.Width; y++)
+                                    {
+                                        if (bot.Room.BlockMap.isOnBorder(x, y))
+                                            RecordSetBlock(x, y, new NormalBlock(block));
+                                    }
+                                }
+                            }
+                            else
+                                player.Reply("Usage: !worldborder <block>");
+                            break;
+                        }
                     default:
                         {
                             return;

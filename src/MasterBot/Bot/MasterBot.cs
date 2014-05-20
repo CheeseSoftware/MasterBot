@@ -42,7 +42,6 @@ namespace MasterBot
             subBotHandler.AddSubBot(new Commands(this));
             subBotHandler.AddSubBot(new WorldEdit(this));
             subBotHandler.AddSubBot(new Protection(this));
-
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)
