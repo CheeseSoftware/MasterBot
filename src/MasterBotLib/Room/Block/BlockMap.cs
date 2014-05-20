@@ -48,6 +48,39 @@ namespace MasterBot.Room.Block
             return false;
         }
 
+        public bool isOnBorder(int x, int y)
+        {
+            return x == 0 || y == 0 || x == width || y == height;
+        }
+
+        public bool isPlaceAble(BlockWithPos block)
+        {
+            if (isWithinMap(block.X, block.Y))
+            {
+                if (isOnBorder(block.X, block.Y))
+                {
+                    switch (block.Block.Id)
+                    {
+                        case 44:
+                        case 182:
+                        case 9:
+                        case 10:
+                        case 11:
+                        case 12:
+                        case 13:
+                        case 14:
+                        case 15:
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+                else //TODO: Check if bot has the block pack
+                    return true;
+            }
+            return false;
+        }
+
         public void setSize(int width, int height)
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];

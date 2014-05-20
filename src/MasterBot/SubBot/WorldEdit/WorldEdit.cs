@@ -16,10 +16,6 @@ namespace MasterBot.SubBot.WorldEdit
         //List<IEditChange> history = new List<IEditChange>();
 
         private IBlockDrawer blockDrawer;
-        private System.Windows.Forms.Label labelBlocksToRepair;
-        private System.Windows.Forms.NumericUpDown numericUpDownBlocksToRepair;
-        private System.Windows.Forms.Label labelBlocksToPlace;
-        private System.Windows.Forms.NumericUpDown numericUpDownBlocksToPlace;
         private IPlayer recordingPlayer;
 
         public WorldEdit(IBot bot)
@@ -27,7 +23,6 @@ namespace MasterBot.SubBot.WorldEdit
         {
             blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(0);
             blockDrawer.Start();
-            EnableTick(50);
         }
 
         private void BeginRecord(IPlayer player)
@@ -273,7 +268,7 @@ namespace MasterBot.SubBot.WorldEdit
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
-            if (cmdSource is Player/* && ((Player)cmdSource).IsOp*/)
+            if (cmdSource is Player && ((Player)cmdSource).IsOp)
             {
                 Player player = (Player)cmdSource;
                 if (player.GetMetadata("editregion") == null)
@@ -330,7 +325,9 @@ namespace MasterBot.SubBot.WorldEdit
                                     int.TryParse(args[0], out id);
                                     if (id != -1)
                                     {
-                                        int layer = id >= 500 ? 1 : 0;
+                                        int layer = id >= 500 || id == 1337 ? 1 : 0;
+                                        if (id == 1337)
+                                            id = 0;
 
                                         SetRegion(bot, region, new NormalBlock(id, layer));
                                     }
@@ -642,7 +639,7 @@ namespace MasterBot.SubBot.WorldEdit
         {
             if (newBlock.Id == 32)
             {
-                if (newBlock.Placer != null)
+                if (newBlock.Placer != null && newBlock.Placer.IsOp)
                 {
                     IPlayer player = newBlock.Placer;
                     if (player.GetMetadata("editregion") == null)
@@ -671,14 +668,7 @@ namespace MasterBot.SubBot.WorldEdit
 
         public override void onTick()
         {
-            SafeInvoke.Invoke(this, new Action(() =>
-            {
-                if (blockDrawer != null)
-                {
-                    numericUpDownBlocksToPlace.Value = blockDrawer.BlocksToDrawSize;
-                    numericUpDownBlocksToRepair.Value = blockDrawer.BlocksToRepairSize;
-                }
-            }));
+
         }
 
         public override bool HasTab
@@ -693,68 +683,13 @@ namespace MasterBot.SubBot.WorldEdit
 
         protected override void InitializeComponent()
         {
-            this.labelBlocksToRepair = new System.Windows.Forms.Label();
-            this.numericUpDownBlocksToRepair = new System.Windows.Forms.NumericUpDown();
-            this.labelBlocksToPlace = new System.Windows.Forms.Label();
-            this.numericUpDownBlocksToPlace = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToRepair)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToPlace)).BeginInit();
             this.SuspendLayout();
-            // 
-            // labelBlocksToRepair
-            // 
-            this.labelBlocksToRepair.AutoSize = true;
-            this.labelBlocksToRepair.Location = new System.Drawing.Point(20, 46);
-            this.labelBlocksToRepair.Name = "labelBlocksToRepair";
-            this.labelBlocksToRepair.Size = new System.Drawing.Size(83, 13);
-            this.labelBlocksToRepair.TabIndex = 7;
-            this.labelBlocksToRepair.Text = "Blocks to repair:";
-            // 
-            // numericUpDownBlocksToRepair
-            // 
-            this.numericUpDownBlocksToRepair.Location = new System.Drawing.Point(109, 44);
-            this.numericUpDownBlocksToRepair.Maximum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBlocksToRepair.Name = "numericUpDownBlocksToRepair";
-            this.numericUpDownBlocksToRepair.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownBlocksToRepair.TabIndex = 6;
-            // 
-            // labelBlocksToPlace
-            // 
-            this.labelBlocksToPlace.AutoSize = true;
-            this.labelBlocksToPlace.Location = new System.Drawing.Point(20, 20);
-            this.labelBlocksToPlace.Name = "labelBlocksToPlace";
-            this.labelBlocksToPlace.Size = new System.Drawing.Size(83, 13);
-            this.labelBlocksToPlace.TabIndex = 5;
-            this.labelBlocksToPlace.Text = "Blocks to place:";
-            // 
-            // numericUpDownBlocksToPlace
-            // 
-            this.numericUpDownBlocksToPlace.Location = new System.Drawing.Point(109, 18);
-            this.numericUpDownBlocksToPlace.Maximum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBlocksToPlace.Name = "numericUpDownBlocksToPlace";
-            this.numericUpDownBlocksToPlace.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownBlocksToPlace.TabIndex = 4;
             // 
             // WorldEdit
             // 
-            this.Controls.Add(this.labelBlocksToRepair);
-            this.Controls.Add(this.numericUpDownBlocksToRepair);
-            this.Controls.Add(this.labelBlocksToPlace);
-            this.Controls.Add(this.numericUpDownBlocksToPlace);
             this.Name = "WorldEdit";
             this.Size = new System.Drawing.Size(319, 272);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToRepair)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToPlace)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
     }

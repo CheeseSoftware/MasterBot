@@ -14,7 +14,6 @@ namespace MasterBot.Minimap
 {
     public class Minimap : ASubBot
     {
-        private IBot bot;
         private int width;
         private int height;
         private Bitmap bitmap;
@@ -44,6 +43,7 @@ namespace MasterBot.Minimap
                     lock (pixelsToSet)
                     {
                         KeyValuePair<Point, Color> pixel = pixelsToSet.Dequeue();
+                        //if (bot.Room.BlockMap.isWithinMap(pixel.Key.X, pixel.Key.Y))
                         bitmap.SetPixel(pixel.Key.X, pixel.Key.Y, pixel.Value);
                     }
                 }

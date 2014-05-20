@@ -38,6 +38,12 @@ namespace MasterBot.Room
         private bool hideRed = false;
         private bool hideGreen = false;
         private bool hideBlue = false;
+        private System.Windows.Forms.Label labelBlocksToRepair;
+        private System.Windows.Forms.NumericUpDown numericUpDownBlocksToRepair;
+        private System.Windows.Forms.Label labelBlocksToPlace;
+        private System.Windows.Forms.NumericUpDown numericUpDownBlocksToPlace;
+        private System.Windows.Forms.Label labelWaitingBlocks;
+        private System.Windows.Forms.NumericUpDown numericUpDownWaitingBlocks;
         private bool hideTimeDoor = false;
         #endregion
 
@@ -52,6 +58,7 @@ namespace MasterBot.Room
             playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
             playerTickTimer.MicroTimerElapsed += UpdatePhysics;
             playerTickTimer.Start();
+            EnableTick(50);
         }
 
         private void UpdatePhysics(object sender, EventArgs e)
@@ -353,12 +360,12 @@ namespace MasterBot.Room
 
         public IBlock getBlock(int layer, int x, int y)
         {
-            return blockMap.getBlock(layer, x, y);
+            return blockDrawerPool.getWaitingBlock(new BlockPos(layer, x, y)) != null ? blockDrawerPool.getWaitingBlock(new BlockPos(layer, x, y)) : blockMap.getBlock(layer, x, y);
         }
 
         public void setBlock(int x, int y, IBlock block)
         {
-            if (block.Id != getBlock(block.Layer, x, y).Id && blockMap.isWithinMap(x, y))
+            if (block.Id != getBlock(block.Layer, x, y).Id && blockMap.isPlaceAble(new BlockWithPos(x, y, block)))
                 blockDrawer.PlaceBlock(x, y, block);
         }
 
@@ -656,7 +663,15 @@ namespace MasterBot.Room
 
         public override void onTick()
         {
-
+            SafeInvoke.Invoke(this, new Action(() =>
+            {
+                if (blockDrawer != null)
+                {
+                    numericUpDownBlocksToPlace.Value = blockDrawerPool.TotalBlocksToDrawSize;
+                    numericUpDownBlocksToRepair.Value = blockDrawerPool.TotalBlocksToRepairSize;
+                    numericUpDownWaitingBlocks.Value = blockDrawerPool.WaitingBlocks.Count;
+                }
+            }));
         }
 
         public override void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock)
@@ -802,13 +817,95 @@ namespace MasterBot.Room
 
         protected override void InitializeComponent()
         {
+            this.labelBlocksToRepair = new System.Windows.Forms.Label();
+            this.numericUpDownBlocksToRepair = new System.Windows.Forms.NumericUpDown();
+            this.labelBlocksToPlace = new System.Windows.Forms.Label();
+            this.numericUpDownBlocksToPlace = new System.Windows.Forms.NumericUpDown();
+            this.labelWaitingBlocks = new System.Windows.Forms.Label();
+            this.numericUpDownWaitingBlocks = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToRepair)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToPlace)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitingBlocks)).BeginInit();
             this.SuspendLayout();
+            // 
+            // labelBlocksToRepair
+            // 
+            this.labelBlocksToRepair.AutoSize = true;
+            this.labelBlocksToRepair.Location = new System.Drawing.Point(5, 31);
+            this.labelBlocksToRepair.Name = "labelBlocksToRepair";
+            this.labelBlocksToRepair.Size = new System.Drawing.Size(109, 13);
+            this.labelBlocksToRepair.TabIndex = 11;
+            this.labelBlocksToRepair.Text = "Total blocks to repair:";
+            // 
+            // numericUpDownBlocksToRepair
+            // 
+            this.numericUpDownBlocksToRepair.Location = new System.Drawing.Point(120, 29);
+            this.numericUpDownBlocksToRepair.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBlocksToRepair.Name = "numericUpDownBlocksToRepair";
+            this.numericUpDownBlocksToRepair.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownBlocksToRepair.TabIndex = 10;
+            // 
+            // labelBlocksToPlace
+            // 
+            this.labelBlocksToPlace.AutoSize = true;
+            this.labelBlocksToPlace.Location = new System.Drawing.Point(5, 5);
+            this.labelBlocksToPlace.Name = "labelBlocksToPlace";
+            this.labelBlocksToPlace.Size = new System.Drawing.Size(109, 13);
+            this.labelBlocksToPlace.TabIndex = 9;
+            this.labelBlocksToPlace.Text = "Total blocks to place:";
+            // 
+            // numericUpDownBlocksToPlace
+            // 
+            this.numericUpDownBlocksToPlace.Location = new System.Drawing.Point(120, 3);
+            this.numericUpDownBlocksToPlace.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBlocksToPlace.Name = "numericUpDownBlocksToPlace";
+            this.numericUpDownBlocksToPlace.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownBlocksToPlace.TabIndex = 8;
+            // 
+            // labelWaitingBlocks
+            // 
+            this.labelWaitingBlocks.AutoSize = true;
+            this.labelWaitingBlocks.Location = new System.Drawing.Point(34, 57);
+            this.labelWaitingBlocks.Name = "labelWaitingBlocks";
+            this.labelWaitingBlocks.Size = new System.Drawing.Size(80, 13);
+            this.labelWaitingBlocks.TabIndex = 13;
+            this.labelWaitingBlocks.Text = "Waiting blocks:";
+            // 
+            // numericUpDownWaitingBlocks
+            // 
+            this.numericUpDownWaitingBlocks.Location = new System.Drawing.Point(120, 55);
+            this.numericUpDownWaitingBlocks.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numericUpDownWaitingBlocks.Name = "numericUpDownWaitingBlocks";
+            this.numericUpDownWaitingBlocks.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownWaitingBlocks.TabIndex = 12;
             // 
             // Room
             // 
+            this.Controls.Add(this.labelWaitingBlocks);
+            this.Controls.Add(this.numericUpDownWaitingBlocks);
+            this.Controls.Add(this.labelBlocksToRepair);
+            this.Controls.Add(this.numericUpDownBlocksToRepair);
+            this.Controls.Add(this.labelBlocksToPlace);
+            this.Controls.Add(this.numericUpDownBlocksToPlace);
             this.Name = "Room";
             this.Size = new System.Drawing.Size(332, 275);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToRepair)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBlocksToPlace)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaitingBlocks)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
     }

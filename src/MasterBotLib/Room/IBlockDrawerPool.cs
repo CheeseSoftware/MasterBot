@@ -9,6 +9,9 @@ namespace MasterBot.Room
     public interface IBlockDrawerPool
     {
         IBlockDrawer CreateBlockDrawer(byte priority = 0);
+        Dictionary<BlockPos, IBlock> WaitingBlocks { get; }
+        int TotalBlocksToDrawSize { get; }
+        int TotalBlocksToRepairSize { get; }
 
         void StartBlockDrawer(IBlockDrawer blockDrawer);
         void StopBlockDrawer(IBlockDrawer blockDrawer);

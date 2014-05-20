@@ -64,7 +64,7 @@ namespace MasterBot
 
         public bool IsOp
         {
-            get { return Name == "ostkaka" || Name == "gustav9797" || Name == "gbot" || Name == "botost"; }
+            get { return Name == "ostkaka" || Name == "gustav9797" || Name == "gbot" || Name == "botost" || bot.Room.Owner == Name; }
         }
 
 #region PhysicsPlayer
@@ -112,9 +112,9 @@ namespace MasterBot
 
         public string Name { get { return physicsPlayer.name; } set { physicsPlayer.name = value; } }
 
-        public int OldBlockY { get { return physicsPlayer.OldBlockX; } }
+        public int OldBlockX { get { return physicsPlayer.OldBlockX; } }
 
-        public int OldBlockX { get { return physicsPlayer.OldBlockY; } }
+        public int OldBlockY { get { return physicsPlayer.OldBlockY; } }
 
         public void tick()
         {

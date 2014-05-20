@@ -133,8 +133,19 @@ namespace MasterBot.Room
             }
         }
 
+        public Dictionary<BlockPos, IBlock> WaitingBlocks
+        {
+            get { return waitingBlocks; }
+        }
 
+        public int TotalBlocksToDrawSize
+        {
+            get { int total = 0; foreach (IBlockDrawer drawer in queuedBlockdrawers) total += drawer.BlocksToDrawSize; return total; }
+        }
 
-
+        public int TotalBlocksToRepairSize
+        {
+            get { int total = 0; foreach (IBlockDrawer drawer in queuedBlockdrawers) total += drawer.BlocksToRepairSize; return total; }
+        }
     }
 }
