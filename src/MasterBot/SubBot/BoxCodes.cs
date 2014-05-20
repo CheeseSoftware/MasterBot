@@ -34,7 +34,7 @@ namespace MasterBot.SubBot
             throw new NotImplementedException();
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
             throw new NotImplementedException();
         }

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Drawing;
 using MasterBot.SubBot;
 using MasterBot.Room.Block;
+using MasterBot.Network;
 
 namespace MasterBot
 {
@@ -88,7 +89,7 @@ namespace MasterBot
         {
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
         }
 

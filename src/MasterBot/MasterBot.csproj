@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PlayerIOClient">
-      <HintPath>..\PlayerIOClient.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -79,7 +76,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SubBot\BoxCodes.cs" />
-    <Compile Include="SubBot\Protection.cs" />
+    <Compile Include="SubBot\Protection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\SubBotHandler.cs">
       <SubType>Component</SubType>
     </Compile>

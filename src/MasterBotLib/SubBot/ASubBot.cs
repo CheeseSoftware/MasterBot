@@ -28,7 +28,7 @@ namespace MasterBot.SubBot
         public abstract void onDisable();
         public abstract void onConnect();
         public abstract void onDisconnect(string reason);
-        public abstract void onMessage(PlayerIOClient.Message m);
+        public abstract void onMessage(Network.Message m);
         public abstract void onCommand(string cmd, string[] args, ICmdSource cmdSource);
         public abstract void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock);
         public abstract void onTick();

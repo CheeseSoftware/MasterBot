@@ -8,6 +8,7 @@ using MasterBot.Room.Block;
 using MasterBot.Movement;
 using System.Timers;
 using System.Threading;
+using MasterBot.Network;
 
 namespace MasterBot.Room
 {
@@ -72,7 +73,7 @@ namespace MasterBot.Room
             }
         }
 
-        private void HandleBlockPlace(PlayerIOClient.Message m)
+        private void HandleBlockPlace(Message m)
         {
             int layer;
             int x;
@@ -167,7 +168,7 @@ namespace MasterBot.Room
             }
         }
 
-        private uint LoadWorld(PlayerIOClient.Message m, uint ws, int width, int height)
+        private uint LoadWorld(Message m, uint ws, int width, int height)
         {
             if (minimap != null)
             {
@@ -289,7 +290,7 @@ namespace MasterBot.Room
             //world end "we"
         }
 
-        private void DeserializeInit(PlayerIOClient.Message m)
+        private void DeserializeInit(Message m)
         {
             owner = m.GetString(0);
             title = m.GetString(1);
@@ -397,7 +398,7 @@ namespace MasterBot.Room
                 namePlayers.Clear();
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
             switch (m.Type)
             {

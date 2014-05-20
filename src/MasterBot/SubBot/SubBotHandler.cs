@@ -108,7 +108,7 @@ namespace MasterBot.SubBot
             }
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Network.Message m)
         {
             lock (subBots)
             {

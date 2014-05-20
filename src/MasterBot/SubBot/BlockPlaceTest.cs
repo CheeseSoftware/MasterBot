@@ -1,4 +1,5 @@
-﻿using MasterBot.Room.Block;
+﻿using MasterBot.Network;
+using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace MasterBot.SubBot
         {
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
 
         }

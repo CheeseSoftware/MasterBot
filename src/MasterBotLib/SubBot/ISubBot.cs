@@ -1,4 +1,5 @@
-﻿using MasterBot.Room.Block;
+﻿using MasterBot.Network;
+using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace MasterBot.SubBot
         void onDisable();
         void onConnect();
         void onDisconnect(string reason);
-        void onMessage(PlayerIOClient.Message m);
+        void onMessage(Message m);
         void onCommand(string cmd, string[] args, ICmdSource cmdSource);
         void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock);
         void onTick();

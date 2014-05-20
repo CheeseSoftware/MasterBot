@@ -1,4 +1,5 @@
 ﻿using MasterBot.Minimap;
+using MasterBot.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -83,7 +84,7 @@ namespace MasterBot.Room.Block
 
         public virtual void Send(IBot bot, int x, int y)
         {
-            bot.Connection.Send(bot.Room.WorldKey, layer, x, y, Id);
+            bot.Connection.Send(new Message(bot.Room.WorldKey, layer, x, y, Id));
             OnSend(bot, x, y);
         }
 

@@ -1275,12 +1275,12 @@ namespace MasterBot.Movement
                         }
                         case ItemId.DIAMOND:
                         {
-                            this.connection.send("diamondtouch", cx, cy);
+                            this.Connection.Send("diamondtouch", cx, cy);
                             break;
                         }
                         case ItemId.CAKE:
                         {
-                            this.connection.send("caketouch", cx, cy);
+                            this.Connection.Send("caketouch", cx, cy);
                             break;
                         }
                         case ItemId.CHECKPOINT:
@@ -1289,7 +1289,7 @@ namespace MasterBot.Movement
                             {
                                 this.checkpoint_x = cx;
                                 this.checkpoint_y = cy;
-                                this.connection.send("checkpoint", cx, cy);
+                                this.Connection.Send("checkpoint", cx, cy);
                             }
                             break;
                         }
@@ -1297,7 +1297,7 @@ namespace MasterBot.Movement
                         {
                             if (!isgodmod)
                             {
-                                this.connection.send("levelcomplete");
+                                this.Connection.Send("levelcomplete");
                                 if (!this.hascrownsilver)
                                 {
                                     Global.base.showLevelComplete(new LevelComplete());
@@ -1319,12 +1319,12 @@ namespace MasterBot.Movement
                     this.ov = this.vertical;
                     if (this.connection.connected)
                     {
-                        this.connection.send("m", this.x, this.y, this.speedX, this.speedY, this.modifierX, this.modifierY, this.horizontal, this.vertical, this.gravityMultiplier, this.spacedown);
+                        this.Connection.Send("m", this.x, this.y, this.speedX, this.speedY, this.modifierX, this.modifierY, this.horizontal, this.vertical, this.gravityMultiplier, this.spacedown);
                     }
                 }
                 if (cchanged)
                 {
-                    this.connection.send("c", this.coins, cx, cy);
+                    this.Connection.Send("c", this.coins, cx, cy);
                     if (Math.random() * 3000 >> 0 == 0)
                     {
                         Global.base.awardSwappits();
@@ -1536,7 +1536,7 @@ namespace MasterBot.Movement
                         if (this.isme && !this.deathsend)
                         {
                             this.deathsend = true;
-                            this.connection.send("death");
+                            this.Connection.Send("death");
                         }
                         return;
                     }

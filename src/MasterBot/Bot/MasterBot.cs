@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MasterBot.SubBot;
 using MasterBot.Room;
-using PlayerIOClient;
 using MasterBot.Movement;
 using MasterBot.Minimap;
 using MasterBot.SubBot.WorldEdit;
 using System.Threading;
+using MasterBot.Network;
 
 namespace MasterBot
 {
@@ -18,12 +18,14 @@ namespace MasterBot
     {
         private MainForm mainForm;
         private SubBotHandler subBotHandler;
-        private Client client;
-        private Connection connection;
+        private PIOCon connection;
         private IRoom room;
 
-        public bool LoggedIn { get { return client != null; } }
-        public bool Connected { get { return connection != null && connection.Connected; } }
+        //public bool LoggedIn { get { return client != null; } }
+        //public bool Connected { get { return connection != null && connection.Connected; } }
+
+        public bool LoggedIn { get { return connection != null; } }
+        public bool Connected { get { return connection != null; } }
 
         public MasterBot()
         {
@@ -44,7 +46,7 @@ namespace MasterBot
             subBotHandler.AddSubBot(new Protection(this));
         }
 
-        public void onMessage(object sender, PlayerIOClient.Message m)
+        public void onMessage(object sender, Network.Message m)
         {
             subBotHandler.onMessage(m);
         }
@@ -56,7 +58,15 @@ namespace MasterBot
 
         public void Login(string game, string email, string password)
         {
-            PlayerIO.QuickConnect.SimpleConnect(
+            connection = new PIOCon();
+            connection.Connect(game + '', email, password, "PW1IPLpnFZbEI", "Everybodyedits178");
+            SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onLoginFinished(true); }));
+            connection.onMessage += onMessage;
+            SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(true); }));
+            subBotHandler.onConnect();
+            Thread.Sleep(1000);
+            Connection.Send("init");
+            /*PlayerIO.QuickConnect.SimpleConnect(
                 "everybody-edits-su9rn58o40itdbnw69plyw",
                 email,
                 password,
@@ -69,12 +79,12 @@ namespace MasterBot
                 {
                     SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onLoginFinished(false); }));
                     MessageBox.Show(tempError.ToString());
-                });
+                });*/
         }
 
         public bool Connect(string roomId)
         {
-            if (LoggedIn)
+            /*if (LoggedIn)
             {
                 client.Multiplayer.JoinRoom(
                     roomId,
@@ -82,7 +92,7 @@ namespace MasterBot
                     delegate(PlayerIOClient.Connection tempConnection)
                     {
                         connection = tempConnection;
-                        connection.Send("init");
+                        Connection.Send("init");
                         connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                         connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
                         SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(true); }));
@@ -95,13 +105,14 @@ namespace MasterBot
                     });
                 return true;
             }
+            return false;*/
             return false;
         }
 
         public void Disconnect(string reason)
         {
-            if (Connected)
-                connection.Disconnect();
+            //if (Connected)
+            //  connection.Disconnect();
             subBotHandler.onDisconnect(reason);
         }
 
@@ -115,12 +126,7 @@ namespace MasterBot
             get { return mainForm; }
         }
 
-        public Client Client
-        {
-            get { return client; }
-        }
-
-        public Connection Connection
+        public PIOCon Connection
         {
             get { return connection; }
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MasterBot.Room.Block;
+using MasterBot.Network;
 
 namespace MasterBot.SubBot
 {
@@ -75,7 +76,7 @@ namespace MasterBot.SubBot
 
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
 
         }

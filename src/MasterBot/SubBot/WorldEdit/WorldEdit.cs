@@ -1,4 +1,5 @@
-﻿using MasterBot.Room;
+﻿using MasterBot.Network;
+using MasterBot.Room;
 using MasterBot.Room.Block;
 using MasterBot.SubBot.WorldEdit.Change;
 using System;
@@ -262,7 +263,7 @@ namespace MasterBot.SubBot.WorldEdit
         {
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
         }
 

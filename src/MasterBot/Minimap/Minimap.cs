@@ -9,6 +9,7 @@ using MasterBot.SubBot;
 using System.Timers;
 using System.Threading;
 using System.Diagnostics;
+using MasterBot.Network;
 
 namespace MasterBot.Minimap
 {
@@ -93,7 +94,7 @@ namespace MasterBot.Minimap
             onDisable();
         }
 
-        public override void onMessage(PlayerIOClient.Message m)
+        public override void onMessage(Message m)
         {
         }
 

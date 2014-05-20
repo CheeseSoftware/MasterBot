@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PlayerIOClient">
-      <HintPath>..\PlayerIOClient.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -46,12 +43,18 @@
   <ItemGroup>
     <Compile Include="AbstractControlDescriptionProvider.cs" />
     <Compile Include="Bot\IBot.cs" />
+    <Compile Include="Network\ByteWriter.cs" />
+    <Compile Include="Network\Class117.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="IRichTextConsole.cs" />
+    <Compile Include="Network\LittleEndianToNetworkOrderBitConverter.cs" />
+    <Compile Include="Network\Message.cs" />
+    <Compile Include="Network\MessageSerializer.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\MinimapColors.cs" />
+    <Compile Include="Network\PIOCon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room\Block\BlockCoinDoor.cs" />
     <Compile Include="Room\Block\BlockCoinGate.cs" />
@@ -78,7 +81,6 @@
     <Compile Include="SubBot\ISubBot.cs" />
     <Compile Include="SubBot\ISubBotHandler.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

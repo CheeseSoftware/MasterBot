@@ -18,7 +18,7 @@ namespace MasterBot
 
             if (uiElement.InvokeRequired)
             {
-                if (forceSynchronous)
+                if (forceSynchronous && !uiElement.Disposing && !uiElement.IsDisposed)
                 {
                     uiElement.Invoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
                 }
