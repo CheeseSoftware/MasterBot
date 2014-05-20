@@ -283,7 +283,7 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
                                 int index = (int)player.GetMetadata("worldedithistoryindex");
-                                if (history.Count > index)
+                                if (index - 1 >= 0)
                                 {
                                     history[index].Undo(blockDrawer);
                                     if (index - 1 >= 0)
@@ -302,9 +302,9 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
                                 int index = (int)player.GetMetadata("worldedithistoryindex");
-                                if (index <= history.Count - 1)
+                                if (index < history.Count - 1)
                                 {
-                                    history[index].Redo(blockDrawer);
+                                    history[index + 1].Redo(blockDrawer);
                                     if (index + 1 <= history.Count - 1)
                                         player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
                                 }
@@ -447,6 +447,29 @@ namespace MasterBot.SubBot.WorldEdit
                                 player.Send("You have to place a region block.");
                             break;
                         }
+                    case "square":
+                        {
+                            if (region.FirstCornerSet)
+                            {
+                                int radius;
+                                int block;
+                                if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
+                                {
+                                    for (int x = region.FirstCorner.X - radius; x <= region.FirstCorner.X + radius; x++)
+                                    {
+                                        for (int y = region.FirstCorner.Y - radius; y <= region.FirstCorner.Y + radius; y++)
+                                        {
+                                            RecordSetBlock(x, y, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                        }
+                                    }
+                                }
+                                else
+                                    player.Send("Usage: !circle <radius> <block>");
+                            }
+                            else
+                                player.Send("You have to place a region block.");
+                            break;
+                        }
                     case "fillexpand":
                         {
                             int toReplace = 0;
@@ -481,7 +504,6 @@ namespace MasterBot.SubBot.WorldEdit
                                 while (blocksToCheck.Count > 0)
                                 {
                                     Point parent = blocksToCheck.Dequeue();
-                                    //if (!blocksToFill.Contains(parent))
                                     for (int i = 0; i < closeBlocks.Count; i++)
                                     {
                                         Point current = new Point(closeBlocks[i].X + parent.X, closeBlocks[i].Y + parent.Y);
@@ -491,11 +513,6 @@ namespace MasterBot.SubBot.WorldEdit
                                             blocksToFill.Add(current);
                                             blocksToCheck.Enqueue(current);
                                             total++;
-                                            /*if (total > 10000)
-                                            {
-                                                bot.Connection.Send("say", "Don't try to fill the whole world, fool!");
-                                                return;
-                                            }*/
                                         }
                                     }
                                 }
