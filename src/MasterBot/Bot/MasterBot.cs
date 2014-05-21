@@ -11,6 +11,9 @@ using MasterBot.Movement;
 using MasterBot.Minimap;
 using MasterBot.SubBot.WorldEdit;
 using System.Threading;
+using System.IO;
+using System.Xml;
+using System.Reflection;
 
 namespace MasterBot
 {
@@ -42,6 +45,68 @@ namespace MasterBot
             subBotHandler.AddSubBot(new Commands(this));
             subBotHandler.AddSubBot(new WorldEdit(this));
             subBotHandler.AddSubBot(new Protection(this));
+
+
+            //////////////////////////////////////
+
+            //PluginSectionHandler pluginSectionHandler = new PluginSectionHandler();
+
+            string[] pluginDirectories = Directory.GetDirectories("plugins\\");
+
+            for (int i = 0; i < pluginDirectories.Count(); i++)
+            {
+                string[] pluginFiles = Directory.GetFiles(pluginDirectories[i]);
+
+                for (int j = 0; j < pluginFiles.Count(); j++)
+                {
+                    if (Path.GetFileName(pluginFiles[j]).EndsWith(".dll")
+                        && Path.GetFileName(pluginFiles[j]) != "PlayerIOClient.dll"
+                        && Path.GetFileName(pluginFiles[j]) != "MasterBotLib.dll")
+                    {
+                        Assembly.LoadFrom(Path.GetFullPath(pluginFiles[j]));
+
+                        //Loop through all opened assemblies in the current AppDomain
+                        foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            foreach (Type t in a.GetTypes())
+                            {
+                                if (t.GetInterface("IPlugin") != null)
+                                {
+                                    try
+                                    {
+                                        IPlugin pluginclass = Activator.CreateInstance(t) as IPlugin;
+                                        pluginclass.PerformAction(this);
+                                        return;
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+                            }
+                        }
+
+                        /////////////////////////////////////////
+                        //  OLD /////////////////////////////////
+                        /////////////////////////////////////////
+
+                        /*string text;
+                        StreamReader reader = new StreamReader(pluginFiles[j]);
+                        text = reader.ReadToEnd();
+                        reader.Close();
+
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(text);
+
+                        List<IPlugin> plugins = (List<IPlugin>) pluginSectionHandler.Create(this, pluginFiles[j], xmlDoc);
+
+                        foreach(IPlugin p in plugins)
+                            p.PerformAction(this);*/
+
+
+                    }
+                }
+            }
+
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)

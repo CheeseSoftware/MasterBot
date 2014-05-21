@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterBot", "MasterBot\Mast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterBotLib", "MasterBotLib\MasterBotLib.csproj", "{4B4A35F9-1A51-4C7B-8777-67C58130B76C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginExample", "PluginExample\PluginExample.csproj", "{AC3F530D-FA55-450B-A0F9-B853E8638604}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{4B4A35F9-1A51-4C7B-8777-67C58130B76C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B4A35F9-1A51-4C7B-8777-67C58130B76C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B4A35F9-1A51-4C7B-8777-67C58130B76C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

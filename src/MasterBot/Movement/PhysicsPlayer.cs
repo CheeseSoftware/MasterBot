@@ -262,7 +262,8 @@ namespace MasterBot.Movement
             int _loc_11 = 0;
             if (param1.x < 0 || param1.y < 0 || param1.x >= bot.Room.Width * 16 - 8 || param1.y >= bot.Room.Height * 16 - 8)
             {
-                //Console.WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
+                //
+                //WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
                 return 1;
             }
             //else

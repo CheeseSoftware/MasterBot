@@ -79,7 +79,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SubBot\BoxCodes.cs" />
-    <Compile Include="SubBot\Protection.cs" />
+    <Compile Include="SubBot\Protection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\SubBotHandler.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -136,6 +138,7 @@
     <ProjectReference Include="..\MasterBotLib\MasterBotLib.csproj">
       <Project>{4b4a35f9-1a51-4c7b-8777-67c58130b76c}</Project>
       <Name>MasterBotLib</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <Content Include="image 1000.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

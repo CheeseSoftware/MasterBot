@@ -22,7 +22,11 @@ namespace MasterBot.SubBot
         private void AddTab(ASubBot subBot)
         {
             if (subBot.HasTab)
-                SafeInvoke.Invoke(tabControl, new Action(() => { subBot.Text = subBot.SubBotName; tabControl.TabPages.Add(subBot); }));
+                SafeInvoke.Invoke(tabControl, new Action(() =>
+                {
+                    subBot.Text = subBot.SubBotName;
+                    tabControl.TabPages.Add(subBot);
+                }));
         }
 
         private void RemoveTab(ASubBot subBot)
