@@ -72,11 +72,11 @@ namespace MasterBot
                                         {
                                             IPlugin pluginclass = Activator.CreateInstance(t) as IPlugin;
                                             pluginclass.PerformAction(this);
-                                            return;
+                                            break;
                                         }
                                         catch (Exception e)
                                         {
-                                            this.mainForm.Console.WriteLine("%eError(may be false): " + e.Message);
+                                            this.mainForm.Console.WriteLine("%eError loading plugin(may be false): " + e.Message);
                                         }
                                     }
                                 }
