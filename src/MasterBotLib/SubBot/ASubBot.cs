@@ -45,7 +45,7 @@ namespace MasterBot.SubBot
                     onDisable();
                     DisableTick();
                 }
-                bot.MainForm.Console("Subbot " + Name + (value ? " enabled." : " disabled."));
+                bot.MainForm.Console.WriteLine("Subbot " + Name + (value ? " enabled." : " disabled."));
             } 
         }
 

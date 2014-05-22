@@ -12,9 +12,9 @@ namespace MasterBot
     public interface IMainForm
     {
         TabControl BotTabPage { get; }
+        IRichTextConsole Console { get; }
 
         void UpdateSubbotsDatasource(Dictionary<string, ASubBot> source);
-        void Console(string text, params Color[] color);
         void UpdateMinimap(Bitmap bitmap);
     }
 }

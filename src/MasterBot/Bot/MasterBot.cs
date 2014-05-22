@@ -51,60 +51,68 @@ namespace MasterBot
 
             //PluginSectionHandler pluginSectionHandler = new PluginSectionHandler();
 
-            string[] pluginDirectories = Directory.GetDirectories("plugins\\");
-
-            for (int i = 0; i < pluginDirectories.Count(); i++)
-            {
-                string[] pluginFiles = Directory.GetFiles(pluginDirectories[i]);
-
-                for (int j = 0; j < pluginFiles.Count(); j++)
+            Action<string[]> lambda = new Action<string[]>((string[] pluginFiles) =>
                 {
-                    if (Path.GetFileName(pluginFiles[j]).EndsWith(".dll")
-                        && Path.GetFileName(pluginFiles[j]) != "PlayerIOClient.dll"
-                        && Path.GetFileName(pluginFiles[j]) != "MasterBotLib.dll")
+                    for (int j = 0; j < pluginFiles.Count(); j++)
                     {
-                        Assembly.LoadFrom(Path.GetFullPath(pluginFiles[j]));
-
-                        //Loop through all opened assemblies in the current AppDomain
-                        foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                        if (Path.GetFileName(pluginFiles[j]).EndsWith(".dll")
+                            && Path.GetFileName(pluginFiles[j]) != "PlayerIOClient.dll"
+                            && Path.GetFileName(pluginFiles[j]) != "MasterBotLib.dll")
                         {
-                            foreach (Type t in a.GetTypes())
+                            Assembly.LoadFrom(Path.GetFullPath(pluginFiles[j]));
+
+                            //Loop through all opened assemblies in the current AppDomain
+                            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
                             {
-                                if (t.GetInterface("IPlugin") != null)
+                                foreach (Type t in a.GetTypes())
                                 {
-                                    try
+                                    if (t.GetInterface("IPlugin") != null)
                                     {
-                                        IPlugin pluginclass = Activator.CreateInstance(t) as IPlugin;
-                                        pluginclass.PerformAction(this);
-                                        return;
-                                    }
-                                    catch
-                                    {
+                                        try
+                                        {
+                                            IPlugin pluginclass = Activator.CreateInstance(t) as IPlugin;
+                                            pluginclass.PerformAction(this);
+                                            return;
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            this.mainForm.Console.WriteLine("%eError(may be false): " + e.Message);
+                                        }
                                     }
                                 }
                             }
+
+                            /////////////////////////////////////////
+                            //  OLD /////////////////////////////////
+                            /////////////////////////////////////////
+
+                            /*string text;
+                            StreamReader reader = new StreamReader(pluginFiles[j]);
+                            text = reader.ReadToEnd();
+                            reader.Close();
+
+                            XmlDocument xmlDoc = new XmlDocument();
+                            xmlDoc.LoadXml(text);
+
+                            List<IPlugin> plugins = (List<IPlugin>) pluginSectionHandler.Create(this, pluginFiles[j], xmlDoc);
+
+                            foreach(IPlugin p in plugins)
+                                p.PerformAction(this);*/
+
+
                         }
-
-                        /////////////////////////////////////////
-                        //  OLD /////////////////////////////////
-                        /////////////////////////////////////////
-
-                        /*string text;
-                        StreamReader reader = new StreamReader(pluginFiles[j]);
-                        text = reader.ReadToEnd();
-                        reader.Close();
-
-                        XmlDocument xmlDoc = new XmlDocument();
-                        xmlDoc.LoadXml(text);
-
-                        List<IPlugin> plugins = (List<IPlugin>) pluginSectionHandler.Create(this, pluginFiles[j], xmlDoc);
-
-                        foreach(IPlugin p in plugins)
-                            p.PerformAction(this);*/
-
-
                     }
-                }
+                });
+
+            const string path = "plugins\\";
+
+            lambda(Directory.GetFiles(path));
+
+            string[] pluginDirectories = Directory.GetDirectories("plugins\\");
+            
+            for (int i = 0; i < pluginDirectories.Count(); i++)
+            {
+                lambda(Directory.GetFiles(pluginDirectories[i]));
             }
 
         }

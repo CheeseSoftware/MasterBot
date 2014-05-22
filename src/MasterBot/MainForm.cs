@@ -21,6 +21,8 @@ namespace MasterBot
 
         public IBot bot;
 
+        public IRichTextConsole Console { get { return this.RtbConsole; } }
+
         public MainForm(IBot bot)
         {
             InitializeComponent();
@@ -201,7 +203,7 @@ namespace MasterBot
             }));
         }
 
-        public void Console(string text, params Color[] color)
+        public void Console_(string text, params Color[] color)
         {
             RtbConsole.WriteLine(text, color);
         }
