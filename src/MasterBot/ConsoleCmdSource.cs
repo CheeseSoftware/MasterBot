@@ -16,7 +16,7 @@ namespace MasterBot
 
         public override void Reply(string message)
         {
-            bot.MainForm.Console(message);
+            bot.MainForm.Console.WriteLine(message);
         }
 
     }

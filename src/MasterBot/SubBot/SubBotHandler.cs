@@ -46,7 +46,7 @@ namespace MasterBot.SubBot
                     if (enabledByDefault)
                         subBot.Enabled = true;
                     bot.MainForm.UpdateSubbotsDatasource(subBots);
-                    bot.MainForm.Console("Subbot " + subBot.SubBotName + " added.");
+                    bot.MainForm.Console.WriteLine("Subbot " + subBot.SubBotName + " added.");
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace MasterBot.SubBot
                     RemoveTab(subBots[name]);
                     subBots.Remove(name);
                     bot.MainForm.UpdateSubbotsDatasource(subBots);
-                    bot.MainForm.Console("Subbot " + name + " removed.");
+                    bot.MainForm.Console.WriteLine("Subbot " + name + " removed.");
                 }
             }
         }

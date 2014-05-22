@@ -98,7 +98,7 @@ namespace MasterBot
                 }
 
             }
-            catch { Console("Could not load login data."); }
+            catch { Console.WriteLine("Could not load login data."); }
         }
 
         #region Connect stuff
@@ -262,7 +262,7 @@ namespace MasterBot
                 if (subBot != null)
                     subBot.Enabled = (e.NewValue == CheckState.Checked) ? true : false;
                 else
-                    Console("ERROR! subbots checkedlistbox has bugged out.");
+                    Console.WriteLine("ERROR! subbots checkedlistbox has bugged out.");
             }
         }
 
