@@ -105,7 +105,8 @@ namespace MasterBot
                 });
 
             const string path = "plugins\\";
-
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
             lambda(Directory.GetFiles(path));
 
             string[] pluginDirectories = Directory.GetDirectories("plugins\\");
