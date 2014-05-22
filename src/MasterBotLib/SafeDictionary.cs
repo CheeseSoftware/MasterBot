@@ -156,7 +156,7 @@ namespace MasterBot
 
         public void Add(KeyValuePair<T, V> item)
         {
-            throw new NotImplementedException();
+            Add(item.Key, item.Value);
         }
 
         public bool Contains(KeyValuePair<T, V> item)

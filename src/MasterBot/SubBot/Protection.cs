@@ -89,9 +89,9 @@ namespace MasterBot.SubBot
                     return;
             }
             IPlayer arg = null;
-            if (args.Length >= 1 && bot.Room.NamePlayers.ContainsKey(args[0]))
+            if (args.Length >= 1 && bot.Room.getPlayer(args[0]) != null)
             {
-                arg = bot.Room.NamePlayers[args[0]];
+                arg = bot.Room.getPlayer(args[0]);
             }
             if (arg != null)
             {

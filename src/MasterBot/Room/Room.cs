@@ -15,7 +15,8 @@ namespace MasterBot.Room
     {
         private BlockMap blockMap;
         private SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
-        private SafeDictionary<string, IPlayer> namePlayers = new SafeDictionary<string, IPlayer>();
+        private SafeDictionary<string, List<IPlayer>> namePlayers = new SafeDictionary<string, List<IPlayer>>();
+        private SafeDictionary<string, List<IPlayer>> disconnectedPlayers = new SafeDictionary<string, List<IPlayer>>();
         private MicroTimer playerTickTimer = new MicroTimer();
         private Minimap.Minimap minimap = null;
         private IBlockDrawerPool blockDrawerPool;
@@ -420,7 +421,11 @@ namespace MasterBot.Room
                             Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
                             player.IsClubMember = m.GetBoolean(12);
                             players.Add(id, player);
-                            namePlayers.Add(player.Name, player);
+                            if (!namePlayers.ContainsKey(player.Name))
+                                namePlayers.Add(new KeyValuePair<string, List<IPlayer>>(player.Name, new List<IPlayer>()));
+                            namePlayers[player.Name].Add(player);
+                            if (disconnectedPlayers.ContainsKey(player.Name))
+                                disconnectedPlayers.Remove(player.Name);
                         }
                         break;
                     }
@@ -429,6 +434,13 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
                         {
+                            IPlayer left = players[id];
+                            if (left != null)
+                            {
+                                if (!disconnectedPlayers.ContainsKey(left.Name))
+                                    disconnectedPlayers.Add(new KeyValuePair<string, List<IPlayer>>(left.Name, new List<IPlayer>()));
+                                disconnectedPlayers[left.Name].Add(left);
+                            }
                             namePlayers.Remove(players[id].Name);
                             players.Remove(id);
                         }
@@ -686,7 +698,7 @@ namespace MasterBot.Room
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if(blockMap.isOnBorder(x, y))
+                    if (blockMap.isOnBorder(x, y))
                     {
                         blockMap.setBlock(x, y, new NormalBlock(9, 0));
                         bot.SubBotHandler.onBlockChange(x, y, new NormalBlock(9, 0), new NormalBlock(0, 0));
@@ -780,14 +792,9 @@ namespace MasterBot.Room
             get { return hideTimeDoor; }
         }
 
-        public IDictionary<int, IPlayer> Players
+        public ICollection<IPlayer> Players
         {
-            get { return players; }
-        }
-
-        public IDictionary<string, IPlayer> NamePlayers
-        {
-            get { return namePlayers; }
+            get { return players.Values; }
         }
 
         public BlockMap BlockMap
@@ -815,6 +822,40 @@ namespace MasterBot.Room
             get { return blockDrawer; }
         }
 
+        public IPlayer getPlayer(string name)
+        {
+            if (namePlayers.ContainsKey(name))
+            {
+                List<IPlayer> players = namePlayers[name];
+                if (players != null && players.Count > 0)
+                    return players.First();
+            }
+            else if (disconnectedPlayers.ContainsKey(name))
+            {
+                List<IPlayer> players = disconnectedPlayers[name];
+                if (players != null && players.Count > 0)
+                    return players.First();
+            }
+            return null;
+        }
+
+        public List<IPlayer> getPlayers(string name)
+        {
+            if (namePlayers.ContainsKey(name))
+                return namePlayers[name];
+            else if (disconnectedPlayers.ContainsKey(name))
+                return disconnectedPlayers[name];
+            return null;
+        }
+
+        public IPlayer getPlayer(int id)
+        {
+            if (players.ContainsKey(id))
+                return players[id];
+            return null;
+        }
+
+        #region gui
         protected override void InitializeComponent()
         {
             this.labelBlocksToRepair = new System.Windows.Forms.Label();
@@ -908,5 +949,6 @@ namespace MasterBot.Room
             this.PerformLayout();
 
         }
+        #endregion
     }
 }
