@@ -1,4 +1,5 @@
-﻿using MasterBot.SubBot;
+﻿using MasterBot.Gui;
+using MasterBot.SubBot;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -17,6 +17,8 @@ Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "MasterBot", "MasterBot.exe"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginExample", "PluginExample\PluginExample.csproj", "{AC3F530D-FA55-450B-A0F9-B853E8638604}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChat", "SimpleChat\SimpleChat.csproj", "{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,16 @@ Global
 		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AC3F530D-FA55-450B-A0F9-B853E8638604}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

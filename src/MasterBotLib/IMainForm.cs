@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using MasterBot.SubBot;
+using MasterBot.Gui;
 
 namespace MasterBot
 {

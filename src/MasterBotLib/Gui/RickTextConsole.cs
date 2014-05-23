@@ -1,5 +1,4 @@
 ﻿using MasterBot;
-using MasterBot.Gui;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Gui
+namespace MasterBot.Gui
 {
-    class RickTextConsole : RichTextBox, IRichTextConsole
+    public class RickTextConsole : RichTextBox, IRichTextConsole
     {
         public System.Windows.Forms.RichTextBox RickTextBox
         {

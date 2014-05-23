@@ -1,4 +1,5 @@
-﻿namespace MasterBot
+﻿using Gui;
+namespace MasterBot
 {
     partial class MainForm
     {
@@ -56,7 +57,7 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.RtbConsole = new Gui.RickTextConsole();
+            this.RtbConsole = new RickTextConsole();
             this.tabControlMainTabs.SuspendLayout();
             this.tabPageLoginConnect.SuspendLayout();
             this.groupBoxCode.SuspendLayout();
@@ -425,7 +426,7 @@
         private System.Windows.Forms.GroupBox groupBoxConnect;
         private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.Label labelRoomId;
-        private Gui.RickTextConsole RtbConsole;
+        private RickTextConsole RtbConsole;
         private System.Windows.Forms.TextBox RtbConsoleInput;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TabPage tabPageMinimap;

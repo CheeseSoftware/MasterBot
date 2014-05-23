@@ -17,8 +17,6 @@ namespace AntiGodEdit
     {
         public AntiGodEdit() : base(null)
         {
-            // This is for GUI: 
-            //this.InitializeComponent();
         }
 
         public void PerformAction(IBot bot)
@@ -82,9 +80,10 @@ namespace AntiGodEdit
                         // No gods are allowed:
                         if (isGod)
                         {
-                            if (bot.Room.Players.ContainsKey(userId))
+                            IPlayer player = bot.Room.getPlayer(userId);
+                            if (player != null)
                             {
-                                string name = bot.Room.Players[userId].Name;
+                                string name = player.Name;
 
                                 bot.Connection.Send(Message.Create("say", "/removeedit " + name));
                                 Thread.Sleep(10);

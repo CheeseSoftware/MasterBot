@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AC3F530D-FA55-450B-A0F9-B853E8638604}</ProjectGuid>
+    <ProjectGuid>{FC0B49C9-2CDB-4FEB-B3EB-8E1BAAD6ACCF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PluginExample</RootNamespace>
-    <AssemblyName>PluginExample</AssemblyName>
+    <RootNamespace>SimpleChat</RootNamespace>
+    <AssemblyName>SimpleChat</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -24,12 +24,10 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\plugins\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MasterBotLib">
@@ -51,14 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PluginExample.cs">
+    <Compile Include="Gui\RichTextBoxConsoleChild.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SimpleChat.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PluginExample.resx">
-      <DependentUpon>PluginExample.cs</DependentUpon>
+    <EmbeddedResource Include="SimpleChat.resx">
+      <DependentUpon>SimpleChat.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

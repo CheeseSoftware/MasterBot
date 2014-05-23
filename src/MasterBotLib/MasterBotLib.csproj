@@ -46,11 +46,14 @@
   <ItemGroup>
     <Compile Include="AbstractControlDescriptionProvider.cs" />
     <Compile Include="Bot\IBot.cs" />
+    <Compile Include="Gui\RickTextConsole.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="IPlugin.cs" />
-    <Compile Include="IRichTextConsole.cs" />
+    <Compile Include="Gui\IRichTextConsole.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\MinimapColors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="Room\IBlockDrawerPool.cs" />
     <Compile Include="Room\IRoom.cs" />
     <Compile Include="SafeDictionary.cs" />
+    <Compile Include="SafeInvoke.cs" />
     <Compile Include="SafeList.cs" />
     <Compile Include="SubBot\ASubBot.cs">
       <SubType>Component</SubType>

@@ -25,9 +25,6 @@ namespace PluginExample
     
         public PluginExample() : base(null)
         {
-            // Without this the tab page would be empty.
-            if (!DesignMode)
-                InitializeComponent();
         }
 
         public string PluginName
