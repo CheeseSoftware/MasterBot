@@ -15,7 +15,7 @@ namespace MasterBot.Room.Block
         private Stack<IBlock>[,] foregroundMap = null;
         private int width;
         private int height;
-        private bool reseting = false;
+        private object resetLockObject = null;
 
         public int Width { get { return width; } }
         public int Height { get { return height; } }
@@ -116,7 +116,7 @@ namespace MasterBot.Room.Block
 
         public IBlock getBlock(int layer, int x, int y)
         {
-            if (!reseting)
+            lock (resetLockObject)
             {
                 if (layer == 0)
                     return getForegroundBlock(x, y);
@@ -128,7 +128,7 @@ namespace MasterBot.Room.Block
 
         public IBlock getForegroundBlock(int x, int y)
         {
-            if (!reseting)
+            lock (resetLockObject)
             {
                 if (isWithinMap(x, y) && foregroundMap[x, y].Count > 0)
                     return foregroundMap[x, y].Peek();
@@ -138,7 +138,7 @@ namespace MasterBot.Room.Block
 
         public IBlock getBackgroundBlock(int x, int y)
         {
-            if (!reseting)
+            lock (resetLockObject)
             {
                 if (isWithinMap(x, y) && backgroundMap[x, y].Count > 0)
                     return backgroundMap[x, y].Peek();
@@ -148,9 +148,8 @@ namespace MasterBot.Room.Block
 
         public void Clear()
         {
-            reseting = true;
-            Reset();
-            reseting = false;
+            lock (resetLockObject)
+                Reset();
         }
 
         public Color getColor(int x, int y)

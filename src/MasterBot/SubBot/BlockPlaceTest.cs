@@ -40,12 +40,38 @@ namespace MasterBot.SubBot
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
-            if (cmd == "test")
+            switch(cmd)
             {
-                if (cmdSource is Player)
-                    blockPlayers.Add(((Player)cmdSource).Id);
-                else
-                    cmdSource.Reply("You are not a player.");
+                case "test":
+                    {
+                        if (cmdSource is IPlayer)
+                            blockPlayers.Add(((Player)cmdSource).Id);
+                        else
+                            cmdSource.Reply("You are not a player.");
+                        break;
+                    }
+                case "testf":
+                case "testb":
+                    {
+                        int layer = 0; ;
+                        if (cmd == "testb")
+                            layer = 1;
+
+                        if (cmdSource is IPlayer)
+                        {
+                            IPlayer player = (IPlayer)cmdSource;
+                            int x = player.BlockX;
+                            int y = player.BlockY;
+                            IBlock block = bot.Room.getBlock(layer, x, y);
+                            if (block != null)
+                                player.Reply("ID:" + block.Id + " X:" + x + " Y:" + y + " Placer:" + block.Placer != null ? block.Placer.Name : "undefined");
+                            else
+                                player.Reply("That is a null block, not good!");
+                        }
+                        else
+                            cmdSource.Reply("You are not a player.");
+                        break;
+                    }
             }
         }
 
