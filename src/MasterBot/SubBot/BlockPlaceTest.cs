@@ -64,7 +64,7 @@ namespace MasterBot.SubBot
                             int y = player.BlockY;
                             IBlock block = bot.Room.getBlock(layer, x, y);
                             if (block != null)
-                                player.Reply("ID:" + block.Id + " X:" + x + " Y:" + y + " Placer:" + block.Placer != null ? block.Placer.Name : "undefined");
+                                player.Reply("ID:" + block.Id + " X:" + x + " Y:" + y + " Placer:" + (block.Placer != null ? block.Placer.Name : "undefined"));
                             else
                                 player.Reply("That is a null block, not good!");
                         }
