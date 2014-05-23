@@ -304,7 +304,10 @@ namespace MasterBot.SubBot.WorldEdit
                                 int index = (int)player.GetMetadata("worldedithistoryindex");
                                 if (index <= history.Count - 1 && (index != history.Count - 1 || !history[index].IsRedone))
                                 {
-                                    history[index + 1].Redo(blockDrawer);
+                                    if (history.Count - 1 >= index + 1)
+                                        history[index + 1].Redo(blockDrawer);
+                                    else
+                                        history[index].Redo(blockDrawer);
                                     if (index + 1 <= history.Count - 1)
                                         player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
                                 }
