@@ -11,5 +11,7 @@ namespace MasterBot.SubBot.WorldEdit.Change
     {
         void Undo(IBlockDrawer drawer);
         void Redo(IBlockDrawer drawer);
+        bool IsUndone { get; }
+        bool IsRedone { get; }
     }
 }

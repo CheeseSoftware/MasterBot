@@ -283,10 +283,10 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
                                 int index = (int)player.GetMetadata("worldedithistoryindex");
-                                if (index - 1 >= 0)
+                                if (index >= 0 && index >= history.Count - 1 && !history[index].IsUndone)
                                 {
                                     history[index].Undo(blockDrawer);
-                                    if (index - 1 >= 0)
+                                    if (index - 1 >= 0 && index - 1 >= history.Count - 1)
                                         player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) - 1);
                                 }
                                 else
@@ -302,9 +302,9 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
                                 int index = (int)player.GetMetadata("worldedithistoryindex");
-                                if (index < history.Count - 1)
+                                if (index <= history.Count - 1 && !history[index].IsRedone)
                                 {
-                                    history[index + 1].Redo(blockDrawer);
+                                    history[index].Redo(blockDrawer);
                                     if (index + 1 <= history.Count - 1)
                                         player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
                                 }

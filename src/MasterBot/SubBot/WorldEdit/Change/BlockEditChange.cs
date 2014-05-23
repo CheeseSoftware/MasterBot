@@ -12,6 +12,7 @@ namespace MasterBot.SubBot.WorldEdit.Change
     {
         BlockWithPos newBlock;
         BlockWithPos oldBlock;
+        bool undone = false;
 
         public BlockEditChange(BlockWithPos newBlock, BlockWithPos oldBlock)
         {
@@ -22,11 +23,23 @@ namespace MasterBot.SubBot.WorldEdit.Change
         public void Undo(IBlockDrawer drawer)
         {
             drawer.PlaceBlock(oldBlock);
+            undone = true;
         }
 
         public void Redo(IBlockDrawer drawer)
         {
             drawer.PlaceBlock(newBlock);
+            undone = false;
+        }
+
+        public bool IsUndone
+        {
+            get { return undone; }
+        }
+
+        public bool IsRedone
+        {
+            get { return !undone; }
         }
     }
 }
