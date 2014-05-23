@@ -9,13 +9,18 @@
 *.zip
 *.cache
 *.FileListAbsolute.txt
-*obj/
+*.exe.config
 
+
+*obj/
 [Pp]lugins/
 [Cc]onfused/
 
 
 [Ll]ogin.txt
+[Rr]elease/image.png
+[Rr]elease/image0.png
+[Rr]elease/image1.png
 
 
 #################
@@ -65,7 +70,6 @@ local.properties
 [Dd]ebug/
 x64/
 build/
-[Bb]in/
 [Oo]bj/
 
 # MSTest test Results
