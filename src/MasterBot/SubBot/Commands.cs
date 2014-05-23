@@ -102,7 +102,7 @@ namespace MasterBot
 
         public override bool HasTab
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override string SubBotName

@@ -203,33 +203,36 @@ namespace MasterBot.SubBot.WorldEdit
             int bigletterspacey = 0;
             int bigletterspaceyup = 0;
 
-            string attskriva1 = File.ReadAllText(@"write/" + filename);
-            string[] attskriva = new string[100];
-            attskriva = attskriva1.Split(',');
-            int valdsak = 0;
-            if (filename == @"@")
-                bigletterspacex = 4;
-            if (filename == @"apskfpasFIXTHISFY" || filename == @"w" || filename == @"#" || filename == @"&")
-                bigletterspacex = 2;
-            if (filename == @"n" || filename == @"%" || filename == @"doth" || filename == @"doti")
-                bigletterspacex = 1;
-            if (filename == @"," || filename == @"&" || filename == @"@")
-                bigletterspacey = 1;
-            if (filename == @"$")
-                bigletterspacey = 2;
-
-            for (int localwy = 0 - bigletterspaceyup; localwy < 5 + bigletterspacey; localwy++)
+            if (File.Exists(@"write/" + filename))
             {
-                for (int localwx = 0; localwx <= 2 + bigletterspacex; localwx++)
+                string attskriva1 = File.ReadAllText(@"write/" + filename);
+                string[] attskriva = new string[100];
+                attskriva = attskriva1.Split(',');
+                int valdsak = 0;
+                if (filename == @"@")
+                    bigletterspacex = 4;
+                if (filename == @"apskfpasFIXTHISFY" || filename == @"w" || filename == @"#" || filename == @"&")
+                    bigletterspacex = 2;
+                if (filename == @"n" || filename == @"%" || filename == @"doth" || filename == @"doti")
+                    bigletterspacex = 1;
+                if (filename == @"," || filename == @"&" || filename == @"@")
+                    bigletterspacey = 1;
+                if (filename == @"$")
+                    bigletterspacey = 2;
+
+                for (int localwy = 0 - bigletterspaceyup; localwy < 5 + bigletterspacey; localwy++)
                 {
-                    int sendx = spacing + localwx + x;
-                    int sendy = localwy + y;
-                    if (Convert.ToInt32(attskriva[valdsak]) == 1)
-                        RecordSetBlock(sendx, sendy, block);
-                    valdsak++;
+                    for (int localwx = 0; localwx <= 2 + bigletterspacex; localwx++)
+                    {
+                        int sendx = spacing + localwx + x;
+                        int sendy = localwy + y;
+                        if (Convert.ToInt32(attskriva[valdsak]) == 1)
+                            RecordSetBlock(sendx, sendy, block);
+                        valdsak++;
+                    }
                 }
+                valdsak = 0;
             }
-            valdsak = 0;
         }
 
         public double RawDistance(Point first, Point second)
@@ -348,11 +351,10 @@ namespace MasterBot.SubBot.WorldEdit
                         {
                             if (region.Set)
                             {
-                                if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]))
+                                int blockToReplace;
+                                int blockToReplaceWith;
+                                if (args.Length >= 2 && int.TryParse(args[0], out blockToReplace) && int.TryParse(args[1], out blockToReplaceWith))
                                 {
-                                    int blockToReplace = int.Parse(args[0]);
-                                    int blockToReplaceWith = int.Parse(args[1]);
-
                                     SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                                 }
                                 else
@@ -364,18 +366,18 @@ namespace MasterBot.SubBot.WorldEdit
                         }
                     case "replacenear":
                         {
-                            if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]) && !string.IsNullOrEmpty(args[2]))
+                            int range;
+                            int blockToReplace;
+                            int blockToReplaceWith;
+                            if (args.Length >= 3 && int.TryParse(args[0], out range) && int.TryParse(args[1], out blockToReplace) && int.TryParse(args[2], out blockToReplaceWith))
                             {
-                                int range = int.Parse(args[0]);
-                                int blockToReplace = int.Parse(args[1]);
-                                int blockToReplaceWith = int.Parse(args[2]);
                                 EditRegion closeRegion = new EditRegion();
                                 closeRegion.FirstCorner = new Point(player.BlockX - range, player.BlockY - range);
                                 closeRegion.SecondCorner = new Point(player.BlockX + range, player.BlockY + range);
                                 SetRegion(bot, closeRegion, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                             }
                             else
-                                bot.Connection.Send("say", player.Name + ": Usage: !replace <from> <to>");
+                                bot.Connection.Send("say", player.Name + ": Usage: !replacenear <range> <from> <to>");
                             break;
                         }
                     case "copy":
@@ -422,7 +424,7 @@ namespace MasterBot.SubBot.WorldEdit
                     case "line":
                         {
                             int tempBlock;
-                            if (!string.IsNullOrEmpty(args[0]) && int.TryParse(args[0], out tempBlock))
+                            if (args.Length >= 1 && int.TryParse(args[0], out tempBlock))
                             {
                                 if (region.Set)
                                     DrawLine(region.FirstCorner.X, region.FirstCorner.Y, region.SecondCorner.X, region.SecondCorner.Y, new NormalBlock(tempBlock, tempBlock >= 500 ? 1 : 0));
@@ -430,7 +432,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     player.Reply("You have to set a region.");
                             }
                             else
-                                player.Reply("Usage: !line <blockid>");
+                                player.Reply("Usage: !line <block>");
                             break;
                         }
                     case "circle":
@@ -467,7 +469,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     }
                                 }
                                 else
-                                    player.Send("Usage: !circle <radius> <block>");
+                                    player.Send("Usage: !square <radius> <block>");
                             }
                             else
                                 player.Send("You have to place a region block.");
@@ -540,12 +542,17 @@ namespace MasterBot.SubBot.WorldEdit
                             blockDrawer.Start();
                             break;
                         }
+                    case "clearrepairblocks":
+                        {
+                            //TODO: add function to blockdrawer
+                            break;
+                        }
                     case "write":
                         {
                             if (region.FirstCornerSet)
                             {
                                 int drawBlock = 0;
-                                if (args.Length > 1 && int.TryParse(args[0], out drawBlock))
+                                if (args.Length >= 2 && int.TryParse(args[0], out drawBlock))
                                 {
                                     List<char[]> letters = new List<char[]>();
                                     foreach (string str in args.Skip(1))
@@ -592,7 +599,7 @@ namespace MasterBot.SubBot.WorldEdit
                         {
                             int thickness;
                             int block;
-                            if (args.Length > 1 && int.TryParse(args[0], out thickness) && int.TryParse(args[1], out block))
+                            if (args.Length >= 2 && int.TryParse(args[0], out thickness) && int.TryParse(args[1], out block))
                             {
                                 IBlock baseBlock =
                                     (bot.Room.getBlock(1, player.BlockX, player.BlockY).Id == 0 ?
@@ -711,7 +718,7 @@ namespace MasterBot.SubBot.WorldEdit
 
         public override bool HasTab
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override string SubBotName
