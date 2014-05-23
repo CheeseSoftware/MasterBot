@@ -60,7 +60,7 @@ namespace MasterBot
                                 if(args != null && args.Length > 0)
                                 {
                                     for (int i = 0; i < args.Length; i++)
-                                        name += args[i];
+                                        name += args[i] + " ";
                                 }
                                 bot.Connection.Send("name", name);
                             }

@@ -484,7 +484,7 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 if (!int.TryParse(args[0], out toReplaceWith))
                                 {
-                                    bot.Connection.Send("say", "Usage: !fillexpand <from id=0> <to id>");
+                                    player.Reply("Usage: !fillexpand <from=0> <to>");
                                     return;
                                 }
                             }
@@ -492,9 +492,14 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 if (!int.TryParse(args[1], out toReplaceWith) || !int.TryParse(args[0], out toReplace))
                                 {
-                                    bot.Connection.Send("say", "Usage: !fillexpand <from id=0> <to id>");
+                                    player.Reply("Usage: !fillexpand <from=0> <to>");
                                     return;
                                 }
+                            }
+                            else
+                            {
+                                player.Reply("Usage: !fillexpand <from=0> <to>");
+                                break;
                             }
                             if (toReplace >= 500)
                                 toReplaceLayer = 1;
