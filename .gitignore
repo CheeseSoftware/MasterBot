@@ -63,7 +63,6 @@ local.properties
 # Build results
 
 [Dd]ebug/
-[Rr]elease_DISABLED/
 x64/
 build/
 [Bb]in/
