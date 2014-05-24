@@ -15,9 +15,22 @@ namespace MasterBot
         [STAThread]
         static void Main()
         {
+#if DEBUG
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             bot = new MasterBot();
+#else
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                bot = new MasterBot();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error: " + e.ToString());
+            }
+#endif
         }
     }
 }
