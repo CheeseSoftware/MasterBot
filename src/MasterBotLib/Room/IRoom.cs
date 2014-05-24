@@ -17,6 +17,7 @@ namespace MasterBot.Room
         int Woots { get; }
         int TotalWoots { get; }
         string WorldKey { get; }
+        int BotId { get; }
         bool IsOwner { get; }
         int Width { get; }
         int Height { get; }

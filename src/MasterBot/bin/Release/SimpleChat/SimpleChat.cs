@@ -173,7 +173,8 @@ namespace SimpleChat
             if (e.KeyCode == System.Windows.Forms.Keys.Enter
                 && chatStopWatch.ElapsedMilliseconds >= 1000)
             {
-                bot.Connection.Send(PlayerIOClient.Message.Create("say", tbChatInput.Text));
+                // Use bot.Say. It queues the messages so they won't be blocked by anti-spam.
+                bot.Say(tbChatInput.Text);
                 this.rtcChatBox.WriteLine("%B(You): %b" + tbChatInput.Text);
                 tbChatInput.Text = "";
                 chatStopWatch.Restart();

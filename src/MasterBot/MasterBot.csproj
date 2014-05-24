@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug2\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACmdSource.cs" />
+    <Compile Include="ChatSayer.cs" />
     <Compile Include="ConsoleCmdSource.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\Minimap.cs">

@@ -8,44 +8,49 @@ using MasterBot.Room.Block;
 using MasterBot.Movement;
 using System.Timers;
 using System.Threading;
+using System.Diagnostics;
 
 namespace MasterBot.Room
 {
     public class Room : ASubBot, IRoom
     {
-        private BlockMap blockMap;
-        private SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
-        private SafeDictionary<string, List<IPlayer>> namePlayers = new SafeDictionary<string, List<IPlayer>>();
-        private SafeDictionary<string, List<IPlayer>> disconnectedPlayers = new SafeDictionary<string, List<IPlayer>>();
-        private MicroTimer playerTickTimer = new MicroTimer();
-        private Minimap.Minimap minimap = null;
-        private IBlockDrawerPool blockDrawerPool;
-        private IBlockDrawer blockDrawer;
+        BlockMap blockMap;
+        SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
+        SafeDictionary<string, List<IPlayer>> namePlayers = new SafeDictionary<string, List<IPlayer>>();
+        SafeDictionary<string, List<IPlayer>> disconnectedPlayers = new SafeDictionary<string, List<IPlayer>>();
+        Stopwatch playerTickTimer = new Stopwatch();
+        Minimap.Minimap minimap = null;
+        IBlockDrawerPool blockDrawerPool;
+        IBlockDrawer blockDrawer;
+
+        IPlayer botPlayer = null;
 
         #region EE_Variables
-        private string owner = "";
-        private string title = "";
-        private int plays = 0;
-        private int woots = 0;
-        private int totalWoots = 0;
-        private string worldKey = "";
-        private bool isOwner = false;
-        private int width = 0;
-        private int height = 0;
-        private bool isTutorialRoom = false;
-        private float gravity = 0.0F;
-        private bool potionsAllowed = false;
-        private bool hasAccess = false;
-        private bool hideRed = false;
-        private bool hideGreen = false;
-        private bool hideBlue = false;
-        private System.Windows.Forms.Label labelBlocksToRepair;
-        private System.Windows.Forms.NumericUpDown numericUpDownBlocksToRepair;
-        private System.Windows.Forms.Label labelBlocksToPlace;
-        private System.Windows.Forms.NumericUpDown numericUpDownBlocksToPlace;
-        private System.Windows.Forms.Label labelWaitingBlocks;
-        private System.Windows.Forms.NumericUpDown numericUpDownWaitingBlocks;
-        private bool hideTimeDoor = false;
+        string owner = "";
+        string title = "";
+        int plays = 0;
+        int woots = 0;
+        int totalWoots = 0;
+        string worldKey = "";
+        int botId;
+
+        bool isOwner = false;
+        int width = 0;
+        int height = 0;
+        bool isTutorialRoom = false;
+        float gravity = 0.0F;
+        bool potionsAllowed = false;
+        bool hasAccess = false;
+        bool hideRed = false;
+        bool hideGreen = false;
+        bool hideBlue = false;
+        System.Windows.Forms.Label labelBlocksToRepair;
+        System.Windows.Forms.NumericUpDown numericUpDownBlocksToRepair;
+        System.Windows.Forms.Label labelBlocksToPlace;
+        System.Windows.Forms.NumericUpDown numericUpDownBlocksToPlace;
+        System.Windows.Forms.Label labelWaitingBlocks;
+        System.Windows.Forms.NumericUpDown numericUpDownWaitingBlocks;
+        bool hideTimeDoor = false;
         #endregion
 
         public Room(IBot bot)
@@ -56,11 +61,151 @@ namespace MasterBot.Room
             this.blockDrawerPool = new BlockDrawerPool(bot, this);
             this.blockDrawer = blockDrawerPool.CreateBlockDrawer(15);
             this.blockDrawer.Start();
-            playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
-            playerTickTimer.MicroTimerElapsed += UpdatePhysics;
+            //playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
+            //playerTickTimer.MicroTimerElapsed += UpdatePhysics;
+            //playerTickTimer.Start();
             playerTickTimer.Start();
             EnableTick(50);
         }
+
+        #region properties
+        public string Owner
+        {
+            get { return owner; }
+        }
+
+        public string Title
+        {
+            get { return title; }
+        }
+
+        public int Plays
+        {
+            get { return plays; }
+        }
+
+        public int Woots
+        {
+            get { return woots; }
+        }
+
+        public int TotalWoots
+        {
+            get { return totalWoots; }
+        }
+
+        public string WorldKey
+        {
+            get { return worldKey; }
+        }
+
+        public int BotId
+        {
+            get { return botId; }
+        }
+
+        public bool IsOwner
+        {
+            get { return isOwner; }
+        }
+
+        public int Width
+        {
+            get { return width; }
+        }
+
+        public int Height
+        {
+            get { return height; }
+        }
+
+        public bool TutorialRoom
+        {
+            get { return TutorialRoom; }
+        }
+
+        public float Gravity
+        {
+            get { return gravity; }
+        }
+
+        public bool PotionsAllowed
+        {
+            get { return potionsAllowed; }
+        }
+
+        public bool HasCode
+        {
+            get { return isOwner || hasAccess; }
+        }
+
+        public bool HideRed
+        {
+            get { return hideRed; }
+        }
+
+        public bool HideGreen
+        {
+            get { return hideGreen; }
+        }
+
+        public bool HideBlue
+        {
+            get { return hideBlue; }
+        }
+
+        public bool HideTimeDoor
+        {
+            get { return hideTimeDoor; }
+        }
+
+        public ICollection<IPlayer> Players
+        {
+            get { return players.Values; }
+        }
+
+        public BlockMap BlockMap
+        {
+            get { return blockMap; }
+        }
+
+        public override bool HasTab
+        {
+            get { return true; }
+        }
+
+        public override string SubBotName
+        {
+            get { return "Room"; }
+        }
+
+        public IBlockDrawerPool BlockDrawerPool
+        {
+            get { return blockDrawerPool; }
+        }
+
+        public IBlockDrawer BlockDrawer
+        {
+            get { return blockDrawer; }
+        }
+
+        public IPlayer getPlayer(string name)
+        {
+            if (namePlayers.ContainsKey(name))
+            {
+                List<IPlayer> players = namePlayers[name];
+                if (players != null && players.Count > 0)
+                    return players.First();
+            }
+            else if (disconnectedPlayers.ContainsKey(name))
+            {
+                List<IPlayer> players = disconnectedPlayers[name];
+                if (players != null && players.Count > 0)
+                    return players.First();
+            }
+            return null;
+        }
+#endregion
 
         private void UpdatePhysics(object sender, EventArgs e)
         {
@@ -298,6 +443,7 @@ namespace MasterBot.Room
             woots = m.GetInt(3);
             totalWoots = m.GetInt(4);
             worldKey = rot13(m.GetString(5));
+            botId = m.GetInt(6);
 
             //irrelevant information
             /*int myId = m.GetInt(6);
@@ -315,6 +461,7 @@ namespace MasterBot.Room
 
             uint we = LoadWorld(m, 17, width, height);
 
+            botPlayer = new Player(bot, botId, "[bot]", 0, 0, 0, false, false, true, 0, false, true, 0);
             //potions start "ps"
             //not implemented
             //potions end "pe"
@@ -716,137 +863,7 @@ namespace MasterBot.Room
             }
         }
 
-        public string Owner
-        {
-            get { return owner; }
-        }
 
-        public string Title
-        {
-            get { return title; }
-        }
-
-        public int Plays
-        {
-            get { return plays; }
-        }
-
-        public int Woots
-        {
-            get { return woots; }
-        }
-
-        public int TotalWoots
-        {
-            get { return totalWoots; }
-        }
-
-        public string WorldKey
-        {
-            get { return worldKey; }
-        }
-
-        public bool IsOwner
-        {
-            get { return isOwner; }
-        }
-
-        public int Width
-        {
-            get { return width; }
-        }
-
-        public int Height
-        {
-            get { return height; }
-        }
-
-        public bool TutorialRoom
-        {
-            get { return TutorialRoom; }
-        }
-
-        public float Gravity
-        {
-            get { return gravity; }
-        }
-
-        public bool PotionsAllowed
-        {
-            get { return potionsAllowed; }
-        }
-
-        public bool HasCode
-        {
-            get { return isOwner || hasAccess; }
-        }
-
-        public bool HideRed
-        {
-            get { return hideRed; }
-        }
-
-        public bool HideGreen
-        {
-            get { return hideGreen; }
-        }
-
-        public bool HideBlue
-        {
-            get { return hideBlue; }
-        }
-
-        public bool HideTimeDoor
-        {
-            get { return hideTimeDoor; }
-        }
-
-        public ICollection<IPlayer> Players
-        {
-            get { return players.Values; }
-        }
-
-        public BlockMap BlockMap
-        {
-            get { return blockMap; }
-        }
-
-        public override bool HasTab
-        {
-            get { return true; }
-        }
-
-        public override string SubBotName
-        {
-            get { return "Room"; }
-        }
-
-        public IBlockDrawerPool BlockDrawerPool
-        {
-            get { return blockDrawerPool; }
-        }
-
-        public IBlockDrawer BlockDrawer
-        {
-            get { return blockDrawer; }
-        }
-
-        public IPlayer getPlayer(string name)
-        {
-            if (namePlayers.ContainsKey(name))
-            {
-                List<IPlayer> players = namePlayers[name];
-                if (players != null && players.Count > 0)
-                    return players.First();
-            }
-            else if (disconnectedPlayers.ContainsKey(name))
-            {
-                List<IPlayer> players = disconnectedPlayers[name];
-                if (players != null && players.Count > 0)
-                    return players.First();
-            }
-            return null;
-        }
 
         public List<IPlayer> getPlayers(string name)
         {
@@ -859,7 +876,9 @@ namespace MasterBot.Room
 
         public IPlayer getPlayer(int id)
         {
-            if (players.ContainsKey(id))
+            if (id == botId)
+                return botPlayer;
+            else if (players.ContainsKey(id))
                 return players[id];
             return null;
         }

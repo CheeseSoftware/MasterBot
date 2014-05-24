@@ -338,10 +338,10 @@ namespace MasterBot.SubBot.WorldEdit
                                         SetRegion(bot, region, new NormalBlock(id, layer));
                                     }
                                     else
-                                        bot.Connection.Send("say", player.Name + ": Invalid ID.");
+                                        bot.Say(player.Name + ": Invalid ID.");
                                 }
                                 else
-                                    bot.Connection.Send("say", player.Name + ": Usage: !set <id>");
+                                    bot.Say(player.Name + ": Usage: !set <id>");
                             }
                             else
                                 player.Send("You have to set a region.");
@@ -358,7 +358,7 @@ namespace MasterBot.SubBot.WorldEdit
                                     SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                                 }
                                 else
-                                    bot.Connection.Send("say", player.Name + ": Usage: !replace <from> <to>");
+                                    bot.Say(player.Name + ": Usage: !replace <from> <to>");
                             }
                             else
                                 player.Send("You have to set a region.");
@@ -377,7 +377,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 SetRegion(bot, closeRegion, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
                             }
                             else
-                                bot.Connection.Send("say", player.Name + ": Usage: !replacenear <range> <from> <to>");
+                                bot.Say(player.Name + ": Usage: !replacenear <range> <from> <to>");
                             break;
                         }
                     case "copy":
@@ -526,7 +526,7 @@ namespace MasterBot.SubBot.WorldEdit
                                         }
                                     }
                                 }
-                                bot.Connection.Send("say", "total blocks: " + total + ". Filling..");
+                                bot.Say("total blocks: " + total + ". Filling..");
                                 int layer = 0;
                                 if (toReplaceWith >= 500)
                                     layer = 1;
@@ -711,7 +711,7 @@ namespace MasterBot.SubBot.WorldEdit
                         RecordSetBlock(region.FirstCorner.X, region.FirstCorner.Y, oldBlock);
                         output = "First corner set";
                     }
-                    bot.Connection.Send("say", player.Name + ": " + output + " " + new Random().Next(10));
+                    bot.Say(player.Name + ": " + output + " " + new Random().Next(10));
                 }
             }
         }

@@ -24,6 +24,7 @@ namespace MasterBot
         private Client client;
         private Connection connection;
         private IRoom room;
+        private ChatSayer chatSayer = null;
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
@@ -159,8 +160,15 @@ namespace MasterBot
                         connection.Send("init");
                         connection.AddOnDisconnect(new DisconnectEventHandler(onDisconnect));
                         connection.AddOnMessage(new MessageReceivedEventHandler(onMessage));
-                        SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(true); }));
+
+                        chatSayer = new ChatSayer(this);
+
                         subBotHandler.onConnect();
+                        
+                        //this fails!
+                        SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(true); }));
+                        
+
                     },
                     delegate(PlayerIOError tempError)
                     {
@@ -177,6 +185,11 @@ namespace MasterBot
             if (Connected)
                 connection.Disconnect();
             subBotHandler.onDisconnect(reason);
+            lock (chatSayer)
+            {
+                chatSayer.onDisconnect();
+                chatSayer = null;
+            }
         }
 
         public ISubBotHandler SubBotHandler
@@ -202,6 +215,15 @@ namespace MasterBot
         public IRoom Room
         {
             get { return room; }
+        }
+
+        public void Say(string message)
+        {
+            lock (chatSayer)
+            {
+                if (chatSayer != null)
+                    chatSayer.Say(message);
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace MasterBot
 
         public void Send(string message)
         {
-            bot.Connection.Send("say", Name + ": " + message);
+            bot.Say(Name + ": " + message);
         }
 
         public void SetMetadata(string key, object value)
@@ -60,6 +60,11 @@ namespace MasterBot
             if (metadata.ContainsKey(key))
                 return metadata[key];
             return null;
+        }
+
+        public bool IsBot
+        {
+            get { return this.id == bot.Room.BotId; }
         }
 
         public bool IsOp

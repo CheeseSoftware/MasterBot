@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Movement
 {
+    //Detta mäter hur bra en cpu är, fast den mäter inte så mycket. Det är iallfall inte en timer.
+    /*
     public class MicroStopwatch : System.Diagnostics.Stopwatch
     {
         double m_dMicroSecPerTick = 1000000D / Frequency;
@@ -164,5 +166,5 @@ namespace MasterBot.Movement
             TimerLateBy = lTimerLateBy;
             CallbackFunctionExecutionTime = lCallbackFunctionExecutionTime;
         }
-    }
+    }*/
 }

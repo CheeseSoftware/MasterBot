@@ -9,7 +9,7 @@ using MasterBot.Room;
 
 namespace MasterBot
 {
-    public interface IBot
+    public interface IBot : IChatSayer
     {
         bool LoggedIn { get; }
         bool Connected { get; }
