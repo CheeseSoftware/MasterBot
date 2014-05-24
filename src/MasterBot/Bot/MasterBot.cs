@@ -187,10 +187,13 @@ namespace MasterBot
             if (Connected)
                 connection.Disconnect();
             subBotHandler.onDisconnect(reason);
-            lock (chatSayer)
+            if (chatSayer != null)
             {
-                chatSayer.onDisconnect();
-                chatSayer = null;
+                lock (chatSayer)
+                {
+                    chatSayer.onDisconnect();
+                    chatSayer = null;
+                }
             }
         }
 
