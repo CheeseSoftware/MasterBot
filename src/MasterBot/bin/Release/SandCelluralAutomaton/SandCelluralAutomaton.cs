@@ -1,7 +1,9 @@
 ﻿using MasterBot;
+using MasterBot.Room;
 using MasterBot.Room.Block;
 using MasterBot.SubBot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +13,10 @@ namespace SandCelluralAutomaton
 {
     public class SandCelluralAutomaton : ASubBot, IPlugin
     {
-        Dictionary<BlockPos, IBlock> updateList = new Dictionary<BlockPos, IBlock>();
+        ISet<BlockPos> updateSet = new HashSet<BlockPos>();
+        Dictionary<BlockPos, IBlock> blocks = new Dictionary<BlockPos, IBlock>();
         Dictionary<BlockPos, IBlock> coveredBlocks = new Dictionary<BlockPos, IBlock>();
+        IBlockDrawer blockDrawer;
 
         #region properties
         public override bool HasTab
@@ -39,6 +43,12 @@ namespace SandCelluralAutomaton
             // This is enables tick with a interval of 500ms.
             this.EnableTick(500);
 
+            // A BlockDrawer allows parallel drawing of blocks. This one has 31(+1) as priority, the default one has 15(+1).
+            this.blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(31);
+
+            // Important line!
+            this.blockDrawer.Start();
+
             // This initializes GUI.
             this.InitializeComponent();
 
@@ -48,7 +58,19 @@ namespace SandCelluralAutomaton
 
         public override void onBlockChange(int x, int y, MasterBot.Room.Block.IBlock newBlock, MasterBot.Room.Block.IBlock oldBlock)
         {
-            NotifyNeighbors(x, y);
+            if (!newBlock.Placer.IsBot)
+            {
+                lock (blocks)
+                {
+                    BlockPos blockPos = new BlockPos(0, x, y);
+                    if (blocks.ContainsKey(blockPos))
+                        blocks[blockPos] = newBlock;
+                    else
+                        blocks.Add(blockPos, newBlock);
+                }
+                //if (!newBlock.Placer.IsBot)
+                NotifyNeighbors(x, y);
+            }
         }
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
@@ -79,8 +101,13 @@ namespace SandCelluralAutomaton
         {
             Random random = new Random();
             //List<BlockPos> blocksToUpdate = new List<BlockPos>(updateSet);
-            var blocksToUpdate = updateSet.OrderBy(item => random.Next());
-            updateSet = new HashSet<BlockPos>();
+            IOrderedEnumerable<BlockPos> blocksToUpdate;
+            
+            lock (updateSet)
+            {
+                blocksToUpdate = updateSet.OrderBy(item => random.Next());
+                updateSet = new HashSet<BlockPos>();
+            }
 
             // We should randomize the the list to avoid order and uggly patterns:
             
@@ -98,7 +125,7 @@ namespace SandCelluralAutomaton
         {
             // Local block is required. Room.getBlock returns what the bot got from the block messages.
             // getLocalBlock does not wait on any messages and is therefore required in cellural automaton and maze generators.
-            IBlock block = bot.Room.getLocalBlock(0, x, y);
+            IBlock block = getBlock2(0, x, y);
             IBlock coveredBlock;
             BlockPos blockPos = new BlockPos(0, x, y);
 
@@ -135,7 +162,7 @@ namespace SandCelluralAutomaton
                         }
 
                         // Do physics!
-                        if (!IsSolid(bot.Room.getLocalBlock(0, x2, y2)))
+                        if (!IsSolid(getBlock2(0, x2, y2)))
                             MoveBlock(x, y, x2, y2);
 
                     }
@@ -158,8 +185,11 @@ namespace SandCelluralAutomaton
             {
                 BlockPos blockPos = new BlockPos(0, x, y);
 
-                if (!updateSet.Contains(blockPos))
-                    updateSet.Add(blockPos);
+                lock (updateSet)
+                {
+                    if (!updateSet.Contains(blockPos))
+                        updateSet.Add(blockPos);
+                }
             }
         }
 
@@ -172,8 +202,8 @@ namespace SandCelluralAutomaton
         /// <param name="y2">destination y</param>
         void MoveBlock(int x1, int y1, int x2, int y2)
         {
-            IBlock block = bot.Room.getLocalBlock(0, x1, y1);
-            IBlock destinationBlock = bot.Room.getLocalBlock(0, x2, y2);
+            IBlock block = getBlock2(0, x1, y1);
+            IBlock destinationBlock = getBlock2(0, x2, y2);
             IBlock coveredBlock = null;
             BlockPos pos1 = new BlockPos(0, x1, y1);
             BlockPos pos2 = new BlockPos(0, x2, y2);
@@ -191,7 +221,7 @@ namespace SandCelluralAutomaton
             if (IsSolid(destinationBlock))
             {
                 // Swap!
-                bot.Room.setBlock(x1, y1, destinationBlock);
+                setBlock2(x1, y1, destinationBlock);
             }
             else
             {
@@ -199,9 +229,9 @@ namespace SandCelluralAutomaton
 
                 // Place the covered block. If it is null/doesn't exist it is 0/air.
                 if (coveredBlock != null)
-                    bot.Room.setBlock(x1, y1, coveredBlock);
+                    setBlock2(x1, y1, coveredBlock);
                 else
-                    bot.Room.setBlock(x1, y1, new NormalBlock(0));
+                    setBlock2(x1, y1, new NormalBlock(0));
 
                 // If there is a block in the destionation we must save so we can put it back later.
                 if (destinationBlock != null)
@@ -218,7 +248,7 @@ namespace SandCelluralAutomaton
             }
 
             // Moves the block to the destionation.
-            bot.Room.setBlock(x2, y2, block);
+            setBlock2(x2, y2, block);
 
             NotifyNeighbors(x1, y1);
             NotifyNeighbors(x2, y2);
@@ -236,6 +266,60 @@ namespace SandCelluralAutomaton
                     return false;
                 default:
                     return true;
+            }
+        }
+
+        void setBlock2(int x, int y, IBlock block)
+        {
+            BlockPos blockPos = new BlockPos(0, x, y);
+
+            lock (blocks)
+            {
+                if (block.Id == 59)
+                {
+                    if (blocks.ContainsKey(blockPos))
+                        blocks[blockPos] = block;
+                    else
+                        blocks.Add(blockPos, block);
+                }
+                else
+                {
+                    if (blocks.ContainsKey(blockPos))
+                        blocks.Remove(blockPos);
+                }
+            }
+
+            blockDrawer.PlaceBlock(new BlockWithPos(x, y, block));
+        }
+
+        IBlock getBlock2(int layer, int x, int y)
+        {
+            BlockPos blockPos = new BlockPos(0, x, y);
+
+            lock (blocks)
+            {
+                if (blocks.ContainsKey(blockPos))
+                {
+                    return blocks[blockPos];
+                }
+                else
+                {
+                    IBlock block = bot.Room.getLocalBlock(0, x, y);
+                    if (block.Id != 59)
+                        return block;
+
+                    Stack<IBlock> stack = bot.Room.getBlockHistory(0, x, y);
+
+                    while (stack.Count > 0)
+                    {
+                        block = stack.Pop();
+
+                        if (block.Id != 59)
+                            return block;
+                    }
+
+                    return new NormalBlock(0);
+                }
             }
         }
 
