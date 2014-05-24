@@ -94,7 +94,7 @@ namespace MasterBot.Movement
                           IgnoreEventIfLateBy, ref m_bStopTimer);
                   };
                 m_threadTimer = new System.Threading.Thread(threadStart);
-                m_threadTimer.Priority = System.Threading.ThreadPriority.Highest;
+                m_threadTimer.Priority = System.Threading.ThreadPriority.Normal;
                 m_threadTimer.Start();
             }
         }

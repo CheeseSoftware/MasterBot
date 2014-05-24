@@ -28,7 +28,7 @@ namespace MasterBot
                 Player player = (Player)sender;
                 switch (cmd)
                 {
-                    case "clear":
+                    case "clearworld":
                         {
                             if (bot.Room.IsOwner && player.IsOp)
                                 bot.Connection.Send("clear");
@@ -36,7 +36,7 @@ namespace MasterBot
                                 sender.Reply("You are not the owner.");
                             break;
                         }
-                    case "load":
+                    case "loadworld":
                         {
                             if (bot.Room.IsOwner && player.IsOp)
                                 bot.Say("/loadlevel");
@@ -44,7 +44,7 @@ namespace MasterBot
                                 sender.Reply("You are not the owner.");
                             break;
                         }
-                    case "save":
+                    case "saveworld":
                         {
                             if (bot.Room.IsOwner && player.IsOp)
                                 bot.Connection.Send("save");

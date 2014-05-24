@@ -58,7 +58,9 @@ namespace MasterBot
                     {
                         if (Path.GetFileName(pluginFiles[j]).EndsWith(".dll")
                             && Path.GetFileName(pluginFiles[j]) != "PlayerIOClient.dll"
-                            && Path.GetFileName(pluginFiles[j]) != "MasterBotLib.dll")
+                            && Path.GetFileName(pluginFiles[j]) != "MasterBotLib.dll"
+                            && Path.GetFileName(pluginFiles[j]) != "Skylight.dll"
+                            && Path.GetFileName(pluginFiles[j]) != "libnoise.dll")
                         {
                             Assembly.LoadFrom(Path.GetFullPath(pluginFiles[j]));
 
