@@ -665,7 +665,7 @@ namespace MasterBot.SubBot.WorldEdit
                             {
                                 for (int x = 0; x < bot.Room.Width; x++)
                                 {
-                                    for (int y = 0; y < bot.Room.Width; y++)
+                                    for (int y = 0; y < bot.Room.Height; y++)
                                     {
                                         if (bot.Room.BlockMap.isOnBorder(x, y))
                                             RecordSetBlock(x, y, new NormalBlock(block));
