@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using MasterBot.SubBot;
 using MasterBot.Room.Block;
 using MasterBot.Movement;
-using System.Timers;
 using System.Threading;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace MasterBot.Room
 {
@@ -18,7 +18,9 @@ namespace MasterBot.Room
         SafeDictionary<int, IPlayer> players = new SafeDictionary<int, IPlayer>();
         SafeDictionary<string, List<IPlayer>> namePlayers = new SafeDictionary<string, List<IPlayer>>();
         SafeDictionary<string, List<IPlayer>> disconnectedPlayers = new SafeDictionary<string, List<IPlayer>>();
-        Stopwatch playerTickTimer = new Stopwatch();
+        Stopwatch playerTickStopwatch = new Stopwatch();
+        SafeThread playerTickThread;
+        //System.Timers.Timer playerTickTimer = new System.Timers.Timer();
         Minimap.Minimap minimap = null;
         IBlockDrawerPool blockDrawerPool;
         IBlockDrawer blockDrawer;
@@ -61,10 +63,8 @@ namespace MasterBot.Room
             this.blockDrawerPool = new BlockDrawerPool(bot, this);
             this.blockDrawer = blockDrawerPool.CreateBlockDrawer(15);
             this.blockDrawer.Start();
-            //playerTickTimer.Interval = 1000 * Config.physics_ms_per_tick;
-            //playerTickTimer.MicroTimerElapsed += UpdatePhysics;
-            //playerTickTimer.Start();
-            playerTickTimer.Start();
+
+            playerTickThread = new SafeThread(UpdatePhysics);
             EnableTick(50);
         }
 
@@ -207,15 +207,22 @@ namespace MasterBot.Room
         }
 #endregion
 
-        private void UpdatePhysics(object sender, EventArgs e)
+        private void UpdatePhysics()
         {
-            //Dictionary<int, Player> tempPlayers = new Dictionary<int, Player>(players);
-            foreach (Player player in players.Values)
+            long elapsed = playerTickStopwatch.ElapsedMilliseconds;
+            if (elapsed >= Config.physics_ms_per_tick)
             {
-                if (player.Moved && minimap != null)
-                    minimap.DrawPlayer(player);
-                player.tick();
+                playerTickStopwatch.Restart();
+                foreach (Player player in players.Values)
+                {
+                    if (player.Moved && minimap != null)
+                        minimap.DrawPlayer(player);
+                    player.tick();
+                }
+                Thread.Sleep(9);
             }
+            else if (elapsed > 2)
+                Thread.Sleep((int)(Config.physics_ms_per_tick - elapsed) - 1);
         }
 
         private void HandleBlockPlace(PlayerIOClient.Message m)
@@ -537,13 +544,14 @@ namespace MasterBot.Room
         public override void onConnect()
         {
             blockDrawerPool.Start();
-            playerTickTimer.Start();
+            playerTickThread.Start();
+            playerTickStopwatch.Start();
         }
 
         public override void onDisconnect(string reason)
         {
             blockDrawerPool.Stop();
-            playerTickTimer.Stop();
+            playerTickThread.Stop();
             if (minimap != null)
                 minimap.onDisconnect(reason);
             if (blockMap != null)
@@ -820,6 +828,7 @@ namespace MasterBot.Room
                         break;
                     }
                 case "saved":
+                    bot.Say("World saved.");
                     break;
             }
         }

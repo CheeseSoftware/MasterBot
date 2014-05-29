@@ -9,13 +9,12 @@ namespace MasterBot.Room
 {
     public class BlockDrawer : IBlockDrawer
     {
-        IBlockDrawerPool blockDrawerPool;
-        IBot bot;
-        byte priority;
-        bool running = false;
-
-        Queue<BlockWithPos> blocksToDraw = new Queue<BlockWithPos>();
-        Queue<BlockWithPos> blocksToRepair = new Queue<BlockWithPos>();
+        private IBlockDrawerPool blockDrawerPool;
+        private IBot bot;
+        private byte priority;
+        private bool running = false;
+        private Queue<BlockWithPos> blocksToDraw = new Queue<BlockWithPos>();
+        private Queue<BlockWithPos> blocksToRepair = new Queue<BlockWithPos>();
 
         public BlockDrawer(IBlockDrawerPool blockDrawerPool, IBot bot, byte priority = 0)
         {
@@ -77,6 +76,8 @@ namespace MasterBot.Room
 
         public bool DrawBlock()
         {
+            if (blocksToDraw.Count <= 0 && blocksToRepair.Count <= 0)
+                return false;
             BlockWithPos blockWithPos = null;
 
             lock (blocksToDraw)
@@ -121,6 +122,11 @@ namespace MasterBot.Room
         public int BlocksToRepairSize
         {
             get { return blocksToRepair.Count; }
+        }
+
+        public bool HasWork
+        {
+            get { return blocksToRepair.Count > 0 || blocksToDraw.Count > 0; }
         }
     }
 }

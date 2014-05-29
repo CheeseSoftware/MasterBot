@@ -11,29 +11,33 @@ namespace MasterBot
     {
         public static void Invoke(this Control uiElement, Action updater, bool forceSynchronous = true)
         {
-            if (uiElement == null)
+            try
             {
-                throw new ArgumentNullException("uiElement");
-            }
-
-            if (uiElement.InvokeRequired)
-            {
-                if (forceSynchronous)
+                if (uiElement == null)
                 {
-                    uiElement.Invoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
+                    throw new ArgumentNullException("uiElement");
+                }
+
+                if (uiElement.InvokeRequired)
+                {
+                    if (forceSynchronous)
+                    {
+                        uiElement.Invoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
+                    }
+                    else
+                    {
+                        uiElement.BeginInvoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
+                    }
                 }
                 else
                 {
-                    uiElement.BeginInvoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
+                    if (!uiElement.IsDisposed)
+                    {
+                        updater();
+                    }
                 }
             }
-            else
-            {
-                if (!uiElement.IsDisposed)
-                {
-                    updater();
-                }
-            }
+            catch { }
         }
     }
 }

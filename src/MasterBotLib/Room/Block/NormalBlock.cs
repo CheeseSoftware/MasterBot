@@ -90,6 +90,7 @@ namespace MasterBot.Room.Block
         public virtual void OnSend(IBot bot, int x, int y)
         {
             dateSent = DateTime.Now;
+            timesSent++;
         }
 
         public virtual void OnReceive(IBot bot, int x, int y)

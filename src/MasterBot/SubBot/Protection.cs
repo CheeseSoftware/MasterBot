@@ -85,13 +85,13 @@ namespace MasterBot.SubBot
             if (cmdSource is IPlayer)
             {
                 IPlayer player = (IPlayer)cmdSource;
-                if (player.Name != "ostkaka" && player.Name != "gustav9797" && player.Name != "botost" && player.Name != "gbot" && player.Name != bot.Room.Owner)
+                if (!player.IsOp)
                     return;
             }
             IPlayer arg = null;
-            if (args.Length >= 1 && bot.Room.getPlayer(args[0]) != null)
+            if (args.Length >= 1 && bot.Room.getPlayer(args[0].Trim().ToLower()) != null)
             {
-                arg = bot.Room.getPlayer(args[0]);
+                arg = bot.Room.getPlayer(args[0].Trim().ToLower());
             }
             if (arg != null)
             {
@@ -162,10 +162,21 @@ namespace MasterBot.SubBot
                             return false;
                         });
                         break;
+                    case "repair":
+                        Rollback(bot, (IBlock block, IBlock oldBlock) =>
+                        {
+                            if(oldBlock != null && block.Placer != oldBlock.Placer)
+                            {
+                                if (oldBlock.Placer != null && oldBlock.Placer.Name == arg.Name)
+                                    return true;
+                            }
+                            return false;
+                        });
+                        break;
                 }
             }
             //else
-              //  cmdSource.Reply("Could not find player");
+            //  cmdSource.Reply("Could not find player");
 
             switch (cmd)
             {

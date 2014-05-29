@@ -12,6 +12,7 @@ namespace MasterBot.Room
         byte Priority { get; }
         int BlocksToDrawSize { get; }
         int BlocksToRepairSize { get; }
+        bool HasWork { get; }
 
         void Start();
         void Stop();

@@ -17,7 +17,7 @@ namespace MasterBot.Minimap
         private int width;
         private int height;
         private Bitmap bitmap;
-        private Thread updateThread;
+        private SafeThread updateThread;
         private Queue<KeyValuePair<Point, Color>> pixelsToSet = new Queue<KeyValuePair<Point, Color>>();
         private Stopwatch minimapUpdateStopwatch = new Stopwatch();
         private int minimapUpdateDelay = 20;
@@ -29,31 +29,28 @@ namespace MasterBot.Minimap
             this.width = width;
             this.height = height;
             this.bitmap = new Bitmap(width, height);
-            updateThread = new Thread(UpdateMinimap);
+            updateThread = new SafeThread(UpdateMinimap);
             updateThread.Start();
         }
 
         private void UpdateMinimap()
         {
             minimapUpdateStopwatch.Start();
-            while (true)
+            while (pixelsToSet.Count > 0)
             {
-                while (pixelsToSet.Count > 0)
+                lock (pixelsToSet)
                 {
-                    lock (pixelsToSet)
-                    {
-                        KeyValuePair<Point, Color> pixel = pixelsToSet.Dequeue();
-                        //if (bot.Room.BlockMap.isWithinMap(pixel.Key.X, pixel.Key.Y))
-                        bitmap.SetPixel(pixel.Key.X, pixel.Key.Y, pixel.Value);
-                    }
+                    KeyValuePair<Point, Color> pixel = pixelsToSet.Dequeue();
+                    //if (bot.Room.BlockMap.isWithinMap(pixel.Key.X, pixel.Key.Y))
+                    bitmap.SetPixel(pixel.Key.X, pixel.Key.Y, pixel.Value);
                 }
-                if (minimapUpdateStopwatch.ElapsedMilliseconds >= minimapUpdateDelay)
-                {
-                    bot.MainForm.UpdateMinimap(bitmap);
-                    minimapUpdateStopwatch.Restart();
-                }
-                Thread.Sleep(5);
             }
+            if (minimapUpdateStopwatch.ElapsedMilliseconds >= minimapUpdateDelay)
+            {
+                bot.MainForm.UpdateMinimap(bitmap);
+                minimapUpdateStopwatch.Restart();
+            }
+            Thread.Sleep(5);
         }
 
         public void DrawPlayer(Player player)
@@ -68,7 +65,7 @@ namespace MasterBot.Minimap
 
         public void Die()
         {
-            updateThread.Abort();
+            updateThread.Stop();
             bitmap = new Bitmap(width, height);
             bot.MainForm.UpdateMinimap(bitmap);
         }
@@ -84,7 +81,6 @@ namespace MasterBot.Minimap
 
         public override void onConnect()
         {
-            updateThread = new Thread(UpdateMinimap);
             updateThread.Start();
         }
 

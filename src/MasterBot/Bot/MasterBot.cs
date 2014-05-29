@@ -25,6 +25,7 @@ namespace MasterBot
         private Connection connection;
         private IRoom room;
         private ChatSayer chatSayer = null;
+        private SafeThread mainThread;
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
@@ -37,8 +38,10 @@ namespace MasterBot
             mainForm.FormClosing += delegate
             {
                 Disconnect("Form Closing");
+                mainThread.Stop();
             };
-            new Thread(() => { Application.Run(mainForm); }).Start();
+            mainThread = new SafeThread(() => { Application.Run(mainForm); });
+            mainThread.Start();
 
             subBotHandler = new SubBotHandler(this, mainForm.BotTabPage);
             subBotHandler.AddSubBot((ASubBot)(room = new Room.Room(this)));

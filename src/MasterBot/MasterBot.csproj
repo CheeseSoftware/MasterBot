@@ -73,6 +73,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SafeInvoke.cs" />
+    <Compile Include="SafeThread.cs" />
     <Compile Include="SubBot\BlockPlaceTest.cs">
       <SubType>Component</SubType>
     </Compile>

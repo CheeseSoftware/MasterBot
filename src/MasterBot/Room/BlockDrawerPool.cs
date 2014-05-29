@@ -13,7 +13,8 @@ namespace MasterBot.Room
         IBot bot;
         IRoom room;
         SafeList<IBlockDrawer> queuedBlockdrawers = new SafeList<IBlockDrawer>();
-        Thread drawerThread;
+        SafeThread drawerThread;
+        int i = 0;
 
         // Blocks that are not placed yet...
         Dictionary<BlockPos, IBlock> waitingBlocks = new Dictionary<BlockPos, IBlock>();
@@ -22,24 +23,31 @@ namespace MasterBot.Room
         {
             this.bot = bot;
             this.room = room;
-
-            drawerThread = new Thread(Draw);
+            drawerThread = new SafeThread(Draw);
         }
 
         private void Draw()
         {
-            int i = 0;
-
-            while (bot.Connected)
+            if (bot.Room.HasCode)
             {
-                while (bot.Connected && bot.Room.HasCode)
+                bool hasWork = false;
+                foreach (IBlockDrawer blockDrawer in queuedBlockdrawers)
+                {
+                    if (blockDrawer.HasWork)
+                    {
+                        hasWork = true;
+                        break;
+                    }
+                }
+
+                if (hasWork)
                 {
                     bool success;
 
                     lock (queuedBlockdrawers)
                     {
                         IBlockDrawer blockDrawer;
-                        i = (i+1)%queuedBlockdrawers.Count;
+                        i = (i + 1) % queuedBlockdrawers.Count;
                         blockDrawer = queuedBlockdrawers[i];
 
                         success = blockDrawer.DrawBlock();
@@ -50,7 +58,8 @@ namespace MasterBot.Room
                         Thread.Sleep(10);
                     }
                 }
-                Thread.Sleep(100);
+                else
+                    Thread.Sleep(1);
             }
         }
         public IBlockDrawer CreateBlockDrawer(byte priority)
@@ -62,7 +71,7 @@ namespace MasterBot.Room
         {
             for (int i = 0; i <= blockDrawer.Priority; i++)
             {
-                int j = queuedBlockdrawers.Count * i / (blockDrawer.Priority+1);
+                int j = queuedBlockdrawers.Count * i / (blockDrawer.Priority + 1);
                 queuedBlockdrawers.Insert(j, blockDrawer);
             }
         }
@@ -85,31 +94,29 @@ namespace MasterBot.Room
                 {
                     if (blockWithPos.Block.Equals(waitingBlocks[blockPos]))
                         waitingBlocks.Remove(blockPos);
-                } 
+                }
             }
         }
 
         public void Start()
         {
-            drawerThread = new Thread(Draw);
             drawerThread.Start();
         }
 
         public void Stop()
         {
-            if (drawerThread != null)
-                drawerThread.Abort();
+            drawerThread.Stop();
 
             lock (waitingBlocks)
-	        {
+            {
                 waitingBlocks.Clear();
-	        }
+            }
         }
 
         public void AddWaitingBlock(BlockWithPos blockWithPos)
         {
             lock (waitingBlocks)
-	        {
+            {
                 BlockPos blockPos = new BlockPos(blockWithPos.Block.Layer, blockWithPos.X, blockWithPos.Y);
                 if (waitingBlocks.ContainsKey(blockPos))
                 {
@@ -119,7 +126,7 @@ namespace MasterBot.Room
                     waitingBlocks.Remove(blockPos);
                 }
                 waitingBlocks.Add(blockPos, blockWithPos.Block);
-	        }
+            }
         }
 
         public IBlock getWaitingBlock(BlockPos blockPos)
@@ -129,7 +136,7 @@ namespace MasterBot.Room
                 if (waitingBlocks.ContainsKey(blockPos))
                     return waitingBlocks[blockPos];
                 else
-                    return null; 
+                    return null;
             }
         }
 

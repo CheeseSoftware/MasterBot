@@ -12,16 +12,16 @@ namespace MasterBot
     {
         const int interval = 500;
         IBot bot;
-        Thread chatThread;
+        SafeThread chatThread;
         Queue<string> messages = new Queue<string>();
 
         public ChatSayer(IBot bot)
         {
             this.bot = bot;
 
-            chatThread = new Thread(() =>
+            chatThread = new SafeThread(() =>
                 {
-                    while (bot.Connected)
+                    if (bot.Connected)
                     {
                         string message;
                         lock (messages)
@@ -65,13 +65,7 @@ namespace MasterBot
 
         public void onDisconnect()
         {
-            if (chatThread.ThreadState == ThreadState.Background
-                || chatThread.ThreadState == ThreadState.Running
-                || chatThread.ThreadState == ThreadState.WaitSleepJoin)
-            {
-                this.chatThread.Abort();
-
-            }
+            chatThread.Stop();
         }
     }
 }
