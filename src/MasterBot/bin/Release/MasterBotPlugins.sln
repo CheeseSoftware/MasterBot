@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiGodEdit", "AntiGodEdit\AntiGodEdit.csproj", "{30A311EE-0255-48D5-BD4E-6AF479EA5597}"
 EndProject
 Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "MasterBot", "MasterBot.exe", "{E11DCFEF-D2ED-49B1-8062-434EE2105EB9}"
@@ -11,6 +13,7 @@ Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "MasterBot", "MasterBot.exe"
 		StartingDirectory = C:\Users\gayboy\Documents\GitHub\MasterBot\src\MasterBot\bin\Release
 		Environment = Default
 		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
 		LaunchSQLEngine = No
 		AttachLaunchAction = No
 	EndProjectSection
@@ -22,6 +25,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandCelluralAutomaton", "SandCelluralAutomaton\SandCelluralAutomaton.csproj", "{0CF96D57-9B42-4A67-824F-6277A8E119DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginTemplate", "PluginTemplate\PluginTemplate.csproj", "{62C02A1C-0D11-404D-AE93-74C3D0076571}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zombiePlugin", "..\zombiePlugin\zombiePlugin.csproj", "{93601B1B-A221-45AF-86F2-6DA399389219}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +94,16 @@ Global
 		{62C02A1C-0D11-404D-AE93-74C3D0076571}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{62C02A1C-0D11-404D-AE93-74C3D0076571}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{62C02A1C-0D11-404D-AE93-74C3D0076571}.Release|x86.ActiveCfg = Release|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{93601B1B-A221-45AF-86F2-6DA399389219}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
