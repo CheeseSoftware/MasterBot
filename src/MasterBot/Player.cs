@@ -125,6 +125,12 @@ namespace MasterBot
         {
             physicsPlayer.tick();
         }
+
+        public void Respawn()
+        {
+            physicsPlayer.respawn();
+        }
 #endregion
+
     }
 }

@@ -45,6 +45,7 @@ namespace MasterBot
         int OldBlockY { get; }
         int OldBlockX { get; }
 
+        void Respawn();
         void tick();
         #endregion
 

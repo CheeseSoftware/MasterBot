@@ -13,8 +13,6 @@ namespace MasterBot.SubBot.WorldEdit
 {
     class WorldEdit : ASubBot
     {
-        //List<IEditChange> history = new List<IEditChange>();
-
         private IBlockDrawer blockDrawer;
         private IPlayer recordingPlayer;
 

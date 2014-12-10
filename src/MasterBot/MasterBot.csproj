@@ -105,6 +105,13 @@
     <Compile Include="SubBot\WorldEdit\WorldEdit.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SubBot\Zombies\Monster.cs" />
+    <Compile Include="SubBot\Zombies\Pathfinding.cs" />
+    <Compile Include="SubBot\Zombies\PathHeap.cs" />
+    <Compile Include="SubBot\Zombies\Zombie.cs" />
+    <Compile Include="SubBot\Zombies\Zombies.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

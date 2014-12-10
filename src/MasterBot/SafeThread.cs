@@ -24,11 +24,7 @@ namespace MasterBot
         
         public void Start()
         {
-            if (!stopped)
-            {
-                Stop();
-                while (!stopped || thread.ThreadState == ThreadState.Running) { }
-            }
+            thread = new Thread(Work);
             thread.Start();
             stopped = false;
         }

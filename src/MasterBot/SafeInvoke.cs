@@ -37,7 +37,7 @@ namespace MasterBot
                     }
                 }
             }
-            catch { }
+            catch(Exception e) { }
         }
     }
 }

@@ -582,8 +582,8 @@ namespace MasterBot.Room
                         int id = m.GetInt(0);
                         if (!players.ContainsKey(id))
                         {
-                            Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(9), m.GetInt(11));
-                            player.IsClubMember = m.GetBoolean(12);
+                            Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(11), m.GetInt(9));
+                            player.IsClubMember = m.GetBoolean(14);
                             players.Add(id, player);
                             if (!namePlayers.ContainsKey(player.Name))
                                 namePlayers.Add(new KeyValuePair<string, List<IPlayer>>(player.Name, new List<IPlayer>()));
@@ -669,7 +669,10 @@ namespace MasterBot.Room
                     {
                         int id = m.GetInt(0);
                         if (players.ContainsKey(id))
+                        {
+                            players[id].Respawn();
                             players[id].IsGod = m.GetBoolean(1);
+                        }
                         break;
                     }
                 case "mod":
