@@ -280,90 +280,107 @@ namespace MasterBot.SubBot.WorldEdit
                 BeginRecord(player);
                 switch (cmd)
                 {
-                    case "undo":
-                        {
-                            if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
+                    case "fill":
+                            if (args.Length >= 1)
                             {
-                                List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
-                                int index = (int)player.GetMetadata("worldedithistoryindex");
-                                if (index >= 0 && index <= history.Count - 1 && (index != 0 || !history[index].IsUndone))
-                                {
-                                    history[index].Undo(blockDrawer);
-                                    if (index - 1 >= 0)
-                                        player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) - 1);
-                                }
-                                else
-                                    player.Reply("Nothing left to undo.");
-                            }
-                            else
-                                player.Reply("No history.");
-                            break;
-                        }
-                    case "redo":
-                        {
-                            if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
-                            {
-                                List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
-                                int index = (int)player.GetMetadata("worldedithistoryindex");
-                                if (index <= history.Count - 1 && (index != history.Count - 1 || !history[index].IsRedone))
-                                {
-                                    if (history.Count - 1 >= index + 1)
-                                        history[index + 1].Redo(blockDrawer);
-                                    else
-                                        history[index].Redo(blockDrawer);
-                                    if (index + 1 <= history.Count - 1)
-                                        player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
-                                }
-                                else
-                                    player.Reply("Nothing left to redo.");
-                            }
-                            else
-                                player.Reply("No history.");
-                            break;
-                        }
-                    case "set":
-                        {
-                            if (region.Set)
-                            {
-                                if (args.Length >= 1)
-                                {
-                                    int id = -1;
-                                    int.TryParse(args[0], out id);
-                                    if (id != -1)
-                                    {
-                                        int layer = id >= 500 || id == 1337 ? 1 : 0;
-                                        if (id == 1337)
-                                            id = 0;
+                                int id = -1;
+                                int layer = 0;
 
-                                        SetRegion(bot, region, new NormalBlock(id, layer));
-                                    }
-                                    else
-                                        bot.Say(player.Name + ": Invalid ID.");
-                                }
-                                else
-                                    bot.Say(player.Name + ": Usage: !set <id>");
-                            }
-                            else
-                                player.Send("You have to set a region.");
-                            break;
-                        }
-                    case "replace":
-                        {
-                            if (region.Set)
-                            {
-                                int blockToReplace;
-                                int blockToReplaceWith;
-                                if (args.Length >= 2 && int.TryParse(args[0], out blockToReplace) && int.TryParse(args[1], out blockToReplaceWith))
+                                int.TryParse(args[0], out id);
+                                if (args.Length >= 2)
+                                    int.TryParse(args[1], out layer);
+
+                                if (id != -1)
                                 {
-                                    SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
+                                    layer = id >= 500 ? 1 : layer;
+
+                                    EditRegion region2 = new EditRegion();
+                                    region2.FirstCorner = new Point(1, 1);
+                                    region2.SecondCorner = new Point(bot.Room.Width - 2, bot.Room.Height - 2);
+                                    SetRegion(bot, region2, new NormalBlock(id, layer));
                                 }
                                 else
-                                    bot.Say(player.Name + ": Usage: !replace <from> <to>");
+                                    bot.Say(player.Name + ": Invalid ID.");
                             }
                             else
-                                player.Send("You have to set a region.");
-                            break;
+                                bot.Say(player.Name + ": Usage: !fill <id> [layer]");
+                        break;
+                    case "undo":
+                        if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
+                        {
+                            List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
+                            int index = (int)player.GetMetadata("worldedithistoryindex");
+                            if (index >= 0 && index <= history.Count - 1 && (index != 0 || !history[index].IsUndone))
+                            {
+                                history[index].Undo(blockDrawer);
+                                if (index - 1 >= 0)
+                                    player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) - 1);
+                            }
+                            else
+                                player.Reply("Nothing left to undo.");
                         }
+                        else
+                            player.Reply("No history.");
+                        break;
+                    case "redo":
+                        if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
+                        {
+                            List<IEditChange> history = (List<IEditChange>)player.GetMetadata("worldedithistory");
+                            int index = (int)player.GetMetadata("worldedithistoryindex");
+                            if (index <= history.Count - 1 && (index != history.Count - 1 || !history[index].IsRedone))
+                            {
+                                if (history.Count - 1 >= index + 1)
+                                    history[index + 1].Redo(blockDrawer);
+                                else
+                                    history[index].Redo(blockDrawer);
+                                if (index + 1 <= history.Count - 1)
+                                    player.SetMetadata("worldedithistoryindex", ((int)player.GetMetadata("worldedithistoryindex")) + 1);
+                            }
+                            else
+                                player.Reply("Nothing left to redo.");
+                        }
+                        else
+                            player.Reply("No history.");
+                        break;
+                    case "set":
+                        if (region.Set)
+                        {
+                            if (args.Length >= 1)
+                            {
+                                int id = -1;
+                                int.TryParse(args[0], out id);
+                                if (id != -1)
+                                {
+                                    int layer = id >= 500 || id == 1337 ? 1 : 0;
+                                    if (id == 1337)
+                                        id = 0;
+
+                                    SetRegion(bot, region, new NormalBlock(id, layer));
+                                }
+                                else
+                                    bot.Say(player.Name + ": Invalid ID.");
+                            }
+                            else
+                                bot.Say(player.Name + ": Usage: !set <id>");
+                        }
+                        else
+                            player.Send("You have to set a region.");
+                        break;
+                    case "replace":
+                        if (region.Set)
+                        {
+                            int blockToReplace;
+                            int blockToReplaceWith;
+                            if (args.Length >= 2 && int.TryParse(args[0], out blockToReplace) && int.TryParse(args[1], out blockToReplaceWith))
+                            {
+                                SetRegion(bot, region, new NormalBlock(blockToReplaceWith), new NormalBlock(blockToReplace));
+                            }
+                            else
+                                bot.Say(player.Name + ": Usage: !replace <from> <to>");
+                        }
+                        else
+                            player.Send("You have to set a region.");
+                        break;
                     case "replacenear":
                         {
                             int range;
@@ -378,49 +395,45 @@ namespace MasterBot.SubBot.WorldEdit
                             }
                             else
                                 bot.Say(player.Name + ": Usage: !replacenear <range> <from> <to>");
-                            break;
                         }
+                        break;
                     case "copy":
+                        if (region.FirstCornerSet)
                         {
-                            if (region.FirstCornerSet)
+                            BlockMap selection = new BlockMap(bot, region.Width, region.Height);
+                            foreach (Point pos in region)
                             {
-                                BlockMap selection = new BlockMap(bot, region.Width, region.Height);
-                                foreach (Point pos in region)
-                                {
-                                    selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(1, pos.X, pos.Y));
-                                    selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(0, pos.X, pos.Y));
-                                }
-                                player.SetMetadata("selection", selection);
+                                selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(1, pos.X, pos.Y));
+                                selection.setBlock(pos.X - region.FirstCorner.X, pos.Y - region.FirstCorner.Y, bot.Room.getBlock(0, pos.X, pos.Y));
                             }
-                            else
-                                player.Send("You have to place a region block.");
-                            break;
+                            player.SetMetadata("selection", selection);
                         }
+                        else
+                            player.Send("You have to place a region block.");
+                        break;
                     case "paste":
+                        if (region.FirstCornerSet)
                         {
-                            if (region.FirstCornerSet)
+                            BlockMap selection = (BlockMap)player.GetMetadata("selection");
+                            if (selection != null)
                             {
-                                BlockMap selection = (BlockMap)player.GetMetadata("selection");
-                                if (selection != null)
+                                for (int x = 0; x < selection.Width; x++)
                                 {
-                                    for (int x = 0; x < selection.Width; x++)
+                                    for (int y = 0; y < selection.Height; y++)
                                     {
-                                        for (int y = 0; y < selection.Height; y++)
-                                        {
-                                            int blax = x + region.FirstCorner.X;
-                                            int blay = y + region.FirstCorner.Y;
-                                            RecordSetBlock(blax, blay, selection.getBackgroundBlock(x, y));
-                                            RecordSetBlock(blax, blay, selection.getForegroundBlock(x, y));
-                                        }
+                                        int blax = x + region.FirstCorner.X;
+                                        int blay = y + region.FirstCorner.Y;
+                                        RecordSetBlock(blax, blay, selection.getBackgroundBlock(x, y));
+                                        RecordSetBlock(blax, blay, selection.getForegroundBlock(x, y));
                                     }
                                 }
-                                else
-                                    player.Send("You have to copy first.");
                             }
                             else
-                                player.Send("You have to place a region block.");
-                            break;
+                                player.Send("You have to copy first.");
                         }
+                        else
+                            player.Send("You have to place a region block.");
+                        break;
                     case "line":
                         {
                             int tempBlock;
@@ -433,48 +446,44 @@ namespace MasterBot.SubBot.WorldEdit
                             }
                             else
                                 player.Reply("Usage: !line <block>");
-                            break;
                         }
+                        break;
                     case "circle":
+                        if (region.FirstCornerSet)
                         {
-                            if (region.FirstCornerSet)
+                            int radius;
+                            int block;
+                            if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
                             {
-                                int radius;
-                                int block;
-                                if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
-                                {
-                                    DrawCircle(region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
-                                }
-                                else
-                                    player.Send("Usage: !circle <radius> <block>");
+                                DrawCircle(region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
                             }
                             else
-                                player.Send("You have to place a region block.");
-                            break;
+                                player.Send("Usage: !circle <radius> <block>");
                         }
+                        else
+                            player.Send("You have to place a region block.");
+                        break;
                     case "square":
+                        if (region.FirstCornerSet)
                         {
-                            if (region.FirstCornerSet)
+                            int radius;
+                            int block;
+                            if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
                             {
-                                int radius;
-                                int block;
-                                if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
+                                for (int x = region.FirstCorner.X - radius; x <= region.FirstCorner.X + radius; x++)
                                 {
-                                    for (int x = region.FirstCorner.X - radius; x <= region.FirstCorner.X + radius; x++)
+                                    for (int y = region.FirstCorner.Y - radius; y <= region.FirstCorner.Y + radius; y++)
                                     {
-                                        for (int y = region.FirstCorner.Y - radius; y <= region.FirstCorner.Y + radius; y++)
-                                        {
-                                            RecordSetBlock(x, y, new NormalBlock(block, block >= 500 ? 1 : 0));
-                                        }
+                                        RecordSetBlock(x, y, new NormalBlock(block, block >= 500 ? 1 : 0));
                                     }
                                 }
-                                else
-                                    player.Send("Usage: !square <radius> <block>");
                             }
                             else
-                                player.Send("You have to place a region block.");
-                            break;
+                                player.Send("Usage: !square <radius> <block>");
                         }
+                        else
+                            player.Send("You have to place a region block.");
+                        break;
                     case "fillexpand":
                         {
                             int toReplace = 0;
@@ -535,71 +544,71 @@ namespace MasterBot.SubBot.WorldEdit
                                     RecordSetBlock((int)p.X, (int)p.Y, new NormalBlock(toReplaceWith, layer));
                                 }
                             }
-                            break;
                         }
+                        break;
                     case "stop":
-                        {
-                            blockDrawer.Stop();
-                            break;
-                        }
+
+                        blockDrawer.Stop();
+                        break;
+
                     case "start":
-                        {
-                            blockDrawer.Start();
-                            break;
-                        }
+
+                        blockDrawer.Start();
+                        break;
+
                     case "clearrepairblocks":
-                        {
-                            //TODO: add function to blockdrawer
-                            break;
-                        }
+
+                        //TODO: add function to blockdrawer
+                        break;
+
                     case "write":
+
+                        if (region.FirstCornerSet)
                         {
-                            if (region.FirstCornerSet)
+                            int drawBlock = 0;
+                            if (args.Length >= 2 && int.TryParse(args[0], out drawBlock))
                             {
-                                int drawBlock = 0;
-                                if (args.Length >= 2 && int.TryParse(args[0], out drawBlock))
+                                List<char[]> letters = new List<char[]>();
+                                foreach (string str in args.Skip(1))
+                                    letters.Add(str.ToLower().ToCharArray());
+
+                                int spacing = 0;
+                                foreach (char[] array in letters)
                                 {
-                                    List<char[]> letters = new List<char[]>();
-                                    foreach (string str in args.Skip(1))
-                                        letters.Add(str.ToLower().ToCharArray());
-
-                                    int spacing = 0;
-                                    foreach (char[] array in letters)
+                                    for (int letterindex = 0; letterindex < array.Length; letterindex++)
                                     {
-                                        for (int letterindex = 0; letterindex < array.Length; letterindex++)
+                                        string l = array[letterindex].ToString();
+                                        if (l != "_")
                                         {
-                                            string l = array[letterindex].ToString();
-                                            if (l != "_")
-                                            {
-                                                WriteLetter(spacing, l, region.FirstCorner.X, region.FirstCorner.Y, new NormalBlock(drawBlock, drawBlock >= 500 ? 1 : 0));
-                                            }
-                                            if (l == @"@")
-                                                spacing += 4;
-                                            else if (l == "m" || l == "w" || l == "#" || l == "&")
-                                                spacing += 2;
-                                            else if (l == "n" || l == "%" || l == @"/" || l == @"\")
-                                                spacing += 1;
-
-                                            if (l == "|" || l == "." || l == "," || l == "'" || l == "!")
-                                            {
-                                                spacing -= 2;
-                                            }
-                                            else if (l == ",")
-                                            {
-                                                spacing -= 1;
-                                            }
-                                            spacing += 4;
+                                            WriteLetter(spacing, l, region.FirstCorner.X, region.FirstCorner.Y, new NormalBlock(drawBlock, drawBlock >= 500 ? 1 : 0));
                                         }
-                                        spacing += array.Length;
+                                        if (l == @"@")
+                                            spacing += 4;
+                                        else if (l == "m" || l == "w" || l == "#" || l == "&")
+                                            spacing += 2;
+                                        else if (l == "n" || l == "%" || l == @"/" || l == @"\")
+                                            spacing += 1;
+
+                                        if (l == "|" || l == "." || l == "," || l == "'" || l == "!")
+                                        {
+                                            spacing -= 2;
+                                        }
+                                        else if (l == ",")
+                                        {
+                                            spacing -= 1;
+                                        }
+                                        spacing += 4;
                                     }
+                                    spacing += array.Length;
                                 }
-                                else
-                                    player.Reply("Usage: !write <block> <text..>");
                             }
                             else
-                                player.Reply("You have to set the first corner.");
-                            break;
+                                player.Reply("Usage: !write <block> <text..>");
                         }
+                        else
+                            player.Reply("You have to set the first corner.");
+                        break;
+
                     case "border":
                         {
                             int thickness;
@@ -656,8 +665,9 @@ namespace MasterBot.SubBot.WorldEdit
                             }
                             else
                                 player.Reply("Usage: !border <thickness> <block>");
-                            break;
                         }
+                        break;
+
                     case "worldborder":
                         {
                             int block;
@@ -674,12 +684,12 @@ namespace MasterBot.SubBot.WorldEdit
                             }
                             else
                                 player.Reply("Usage: !worldborder <block>");
-                            break;
                         }
+                        break;
                     default:
-                        {
-                            return;
-                        }
+
+                        return;
+
                 }
                 EndRecord(player);
             }
