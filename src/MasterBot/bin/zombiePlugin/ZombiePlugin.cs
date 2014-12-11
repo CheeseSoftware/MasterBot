@@ -80,22 +80,26 @@ namespace zombiePlugin
                         IPlayer player = bot.Room.getPlayer(playerId);
                         if (player != null)
                         {
-                            if (isZombieFace(faceId))
+                            if (!isZombieFace(faceId))
                             {
-                                object isZombie = player.GetMetadata("isZombie");
-                                if (!isZombie.Equals(true))
+                                if (player.HasMetadata("isZombie"))
                                 {
-                                    makeZombie(player);
+                                    if (player.GetMetadata("isZombie").Equals(false))
+                                        force(player);
                                 }
                             }
 
-                            if (player.GetMetadata("isZombie").Equals(true))
+                            if (player.HasMetadata("isZombie"))
                             {
-                                if (player.GetMetadata("isForcing").Equals(true))
-                                    break;
+                                if (player.GetMetadata("isZombie").Equals(true))
+                                {
+                                    if (player.GetMetadata("isForcing").Equals(true))
+                                        break;
 
-                                forceToZombie(player);
+                                    forceToZombie(player);
+                                }
                             }
+
                             
                         }
                     }
@@ -107,19 +111,20 @@ namespace zombiePlugin
         {
             foreach(var zombie in bot.Room.Players)
             {
-                if (!zombie.HasMetadata("ost.isZombie"))
+                if (zombie.HasMetadata("ost.isZombie"))
                 {
-                    zombie.SetMetadata("ost.isZombie", false);
-                    continue;
+                    if (zombie.GetMetadata("ost.isZombie").Equals(false))
+                        continue;
                 }
-
-                if (!zombie.GetMetadata("ost.isZombie").Equals(true))
-                    continue;
+                else continue;
 
                 foreach(var human in bot.Room.Players)
                 {
-                    if (human.GetMetadata("ost.isZombie").Equals(true))
-                        continue;
+                    if (human.HasMetadata("ost.isZombie"))
+                    {
+                        if (human.GetMetadata("ost.isZombie").Equals(true))
+                            continue;
+                    }
 
                     if (intersects(zombie, human))
                     {
@@ -181,7 +186,7 @@ namespace zombiePlugin
 
                 System.Threading.Thread.Sleep(500);
                 bot.Say("/kill " + human.Name);
-                bot.Say("/teleport " + human.Name + " " + oldX + " " + oldY);
+                bot.Say("/teleport " + human.Name + " " + oldX + " " + oldY);  
                 System.Threading.Thread.Sleep(500);
                 bot.Say("/teleport " + human.Name + " " + oldX + " " + oldY);
                 
