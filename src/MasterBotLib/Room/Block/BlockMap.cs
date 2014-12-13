@@ -13,6 +13,7 @@ namespace MasterBot.Room.Block
     {
         private Stack<IBlock>[,] backgroundMap = null;
         private Stack<IBlock>[,] foregroundMap = null;
+        private int[,] currentForegroundMap = null;
         private int width;
         private int height;
         private object resetLockObject = new object();
@@ -24,6 +25,7 @@ namespace MasterBot.Room.Block
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
+            currentForegroundMap = new int[width + 1, height + 1];
             this.width = width;
             this.height = height;
             Reset();
@@ -37,6 +39,7 @@ namespace MasterBot.Room.Block
                 {
                     backgroundMap[x, y] = new Stack<IBlock>();
                     foregroundMap[x, y] = new Stack<IBlock>();
+                    currentForegroundMap[x, y] = 0;
                 }
             }
         }
@@ -85,6 +88,7 @@ namespace MasterBot.Room.Block
         {
             backgroundMap = new Stack<IBlock>[width + 1, height + 1];
             foregroundMap = new Stack<IBlock>[width + 1, height + 1];
+            currentForegroundMap = new int[width + 1, height + 1];
             this.width = width;
             this.height = height;
         }
@@ -96,7 +100,10 @@ namespace MasterBot.Room.Block
             if (isWithinMap(x, y))
             {
                 if (block.Layer == 0)
+                {
                     foregroundMap[x, y].Push(block);
+                    currentForegroundMap[x, y] = block.Id;
+                }
                 else if (block.Layer == 1)
                     backgroundMap[x, y].Push(block);
             }
@@ -123,13 +130,18 @@ namespace MasterBot.Room.Block
             return new NormalBlock(0, layer);
         }
 
+        public int getForegroundBlockIdFast(int x, int y)
+        {
+            return currentForegroundMap[x, y];
+        }
+
         public IBlock getForegroundBlock(int x, int y)
         {
-            lock (resetLockObject)
-            {
+            //lock (resetLockObject)
+            //{
                 if (isWithinMap(x, y) && foregroundMap[x, y] != null && foregroundMap[x, y].Count > 0)
                     return foregroundMap[x, y].Peek();
-            }
+            //}
             return new NormalBlock(0, 0); ;
         }
 

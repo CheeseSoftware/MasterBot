@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot.Zombies
 {
-    class PathHeap : List<Node>
+    class LowHPathHeap : List<Node>
     {
         //List<Node> data = new List<Node>();
         //Dictionary<Node, int> nodeFinder = new Dictionary<Node, int>();
 
-        public PathHeap()
+        public LowHPathHeap()
         {
             base.Add(null);
         }
@@ -68,18 +68,16 @@ namespace MasterBot.SubBot.Zombies
         private void HeapUp(int old)
         {
             /*int current = old / 2;
-            Console.WriteLine("heap input " + old + " divide " + current);
-            if (current != 0 && base[old].F < base[current].F)
+            if (current != 0 && base[old].H < base[current].H)
             {
-                Console.WriteLine("swapped");
                 Node buffer = base[current];
                 base[current] = base[old];
                 base[old] = buffer;
                 HeapUp(current);
             }*/
-
-            /*int current = old / 2;
-            while(current >= 1 && base[old].F < base[current].F)
+            /*
+            int current = old / 2;
+            while (current >= 1 && base[old].H < base[current].H)
             {
                 Node buffer = base[current];
                 base[current] = base[old];
@@ -87,7 +85,7 @@ namespace MasterBot.SubBot.Zombies
                 current = old / 2;
             }*/
             int current = old / 2;
-            if (current != 0 && base[old].F < base[current].F)
+            if (current != 0 && base[old].H < base[current].H)
             {
                 Node buffer = base[current];
                 base[current] = base[old];
@@ -108,12 +106,12 @@ namespace MasterBot.SubBot.Zombies
 
                 int minIndex = old;
 
-                if (oldData.F > firstchildData.F)
+                if (oldData.H > firstchildData.H)
                 {
                     minIndex = firstchild;
                 }
 
-                if ((secondchild < base.Count) && (base[minIndex].F > base[secondchild].F))
+                if ((secondchild < base.Count) && (base[minIndex].H > base[secondchild].H))
                 {
                     minIndex = secondchild;
                 }

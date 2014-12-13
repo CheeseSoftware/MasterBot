@@ -1,110 +1,159 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MasterBot.Room;
 using MasterBot.Room.Block;
+using System.Threading;
+using System.Diagnostics;
+using MasterBot.SubBot;
 
-namespace MasterBot
+namespace MasterBot.SubBot.Zombies
 {
-    public class Zombie : Monster
+    class Zombie
     {
-        PathFinding pathFinding = new PathFinding();
-        IBlock zombieBlock = null;
-        IBlock zombieOldBlock = null;
-        IPlayer targetBotPlayer = null;
-        Stopwatch updateTimer = new Stopwatch();
-        Stopwatch lagTimer = new Stopwatch();
-        Stack<Node> pathToGo = null;
-        IBot bot;
+        public static int searchRange = 10;
 
-        public Zombie(IBot bot, int x, int y)
-            : base(x, y)
+        private IBot bot;
+        public int x, y;
+        private int oldx, oldy;
+        private int ticksToNextSearch = 0;
+        private int ticksBetweenNewPath = 0;
+        private IPlayer target = null;
+        private PathFinding pathFinding;
+        private Stack<Node> currentPath = null;
+        private static int msPerTick = 200;
+        private Stopwatch playerTickStopwatch = new Stopwatch();
+        private ZombiesSubbot zombies;
+
+        public Zombie(ZombiesSubbot owner, int x, int y, IBot bot)
         {
+            this.zombies = owner;
             this.bot = bot;
+            this.x = x;
+            this.y = y;
+            this.oldx = 0;
+            this.oldy = 0;
+            pathFinding = new PathFinding();
+
+            System.Timers.Timer updateTimer = new System.Timers.Timer();
+            updateTimer.Elapsed += delegate { Tick(); };
+            playerTickStopwatch.Start();
             updateTimer.Start();
-            lagTimer.Start();
-            zombieBlock = new NormalBlock(32); // Block.CreateBlock(0, xBlock, yBlock, 32, 0);
         }
 
-        public static double GetDistanceBetween(IPlayer player, int targetX, int targetY)
+        public void Tick()
         {
-            double a = player.BlockX - targetX;
-            double b = player.BlockY - targetY;
-            double distance = Math.Sqrt(a * a + b * b);
-            return distance;
-        }
-
-        public override void Update()
-        {
-            if (updateTimer.ElapsedMilliseconds >= 1000)
+            long elapsed = playerTickStopwatch.ElapsedMilliseconds;
+            if (elapsed >= msPerTick)
             {
-                updateTimer.Restart();
-                double lowestDistance = 0;
-                IPlayer lowestDistancePlayer = null;
-                lock (bot.Room.Players)
+                playerTickStopwatch.Restart();
+                ticksToNextSearch--;
+                if (ticksToNextSearch <= 0)
                 {
-                    foreach (IPlayer player in bot.Room.Players)
+                    //Find a target
+                    IPlayer target = GetNearestPlayer(searchRange);
+                    if (target != null)
                     {
-                        if (player.IsGod)
-                            continue;
-                        double currentDistance = GetDistanceBetween(player, xBlock, yBlock);
-                        if (currentDistance < lowestDistance || lowestDistance == 0)
+                        this.target = target;
+                    }
+                    ticksToNextSearch = 5;
+                }
+
+                //Generate path
+                ticksBetweenNewPath--;
+                if (ticksBetweenNewPath <= 0 || currentPath == null || currentPath.Count <= 0)
+                {
+                    if (target != null && !(x == target.BlockX && y == target.BlockY))
+                    {
+                        pathFinding = new PathFinding();
+                        int xx = target.BlockX;
+                        int yy = target.BlockY;
+                        DateTime first = DateTime.Now;
+                        currentPath = pathFinding.FindPath(x, y, xx, yy, new List<Zombie>(zombies.zombies), bot);
+                        DateTime second = DateTime.Now;
+                        Console.WriteLine("Pahtfinding took " + (second - first).TotalMilliseconds);
+                        ticksBetweenNewPath = 1;
+                    }
+                    else
+                        ticksBetweenNewPath = 2;
+                }
+
+                //Walk with path
+                if (currentPath != null && currentPath.Count > 0)
+                {
+                    //bot.Room.setBlock(oldx, oldy, new NormalBlock(0));
+                    Node next = currentPath.Pop();
+                    oldx = x;
+                    oldy = y;
+                    x = next.x;
+                    y = next.y;
+                    while (x == oldx && y == oldy && currentPath.Count > 0)
+                    {
+                        next = currentPath.Pop();
+                        oldx = x;
+                        oldy = y;
+                        x = next.x;
+                        y = next.y;
+                    }
+
+
+                    //Console.WriteLine("Moving to x:" + x + " y:" + y);
+
+                    //bot.Room.setBlock(oldx, oldy, new NormalBlock(0, 0));
+                    //bot.Room.setBlock(x, y, new NormalBlock(32, 0));
+                    //bot.Room.setBlock(oldx, oldy, new NormalBlock(0));
+                    if (!(x == oldx && y == oldy))
+                    {
+                        if (target != null && !target.IsGod && target.BlockX == x && target.BlockY == y)
                         {
-                            lowestDistance = currentDistance;
-                            lowestDistancePlayer = player;
+                            KillPlayer(target);
+                            target = null;
                         }
-                    }
-                }
-                if (lowestDistancePlayer != null)
-                {
-                    targetBotPlayer = lowestDistancePlayer;
 
-                }
-            }
-
-            if (targetBotPlayer != null && xBlock != targetBotPlayer.X && yBlock != targetBotPlayer.Y)
-            {
-                //pathFinding = null;
-                pathFinding = new PathFinding();
-                //lagTimer.Restart();
-                pathToGo = pathFinding.FindPath(xBlock, yBlock, targetBotPlayer.BlockX, targetBotPlayer.BlockY, bot.Room);
-                //Console.WriteLine("elapsed shitlagtime " + lagTimer.ElapsedMilliseconds + "MS");
-
-                if (pathToGo != null && pathToGo.Count != 0)
-                {
-                    Node temp;
-                    if (pathToGo.Count >= 2)
-                        temp = pathToGo.Pop();
-                    Node next = pathToGo.Pop();
-                    xBlock = next.x;
-                    yBlock = next.y;
-                    zombieBlock = new NormalBlock(32); // Block.CreateBlock(0, xBlock, yBlock, 32, -1);
-                    zombieOldBlock = new NormalBlock(0, 0); // Block.CreateBlock(0, xOldBlock, yOldBlock, 4, -1);
-                    bot.Room.setBlock(xOldBlock, yOldBlock, zombieOldBlock);
-                    System.Threading.Thread.Sleep(500);
-                    bot.Room.setBlock(xBlock, yBlock, zombieBlock);
-
-                }
-
-                if (targetBotPlayer != null)
-                {
-                    if (!/*player isdead*/false && GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1 && !targetBotPlayer.IsGod)
-                    {
-                        //targetBotPlayer.killPlayer();
-                        bot.Connection.Send("say", "/kill " + targetBotPlayer.Name);
+                        bot.Connection.Send(bot.Room.WorldKey, 0, x, y, 32);
+                        bot.Connection.Send(bot.Room.WorldKey, 0, oldx, oldy, 0);
                     }
                 }
             }
-            base.Update();
+            else if (elapsed > 2)
+                Thread.Sleep((int)(msPerTick - elapsed) - 1);
         }
 
-        public override void Draw()
+        private void KillPlayer(IPlayer player)
         {
-            base.Draw();
+            bot.Connection.Send("say", "Player " + player.Name + " was brutally murdered!");
+            bot.Say("/kill " + player.Name);
+            bot.Say("/teleport " + player.Name + " " + 1 + " " + 1);
+        }
+
+        private IPlayer GetNearestPlayer(int range)
+        {
+            ICollection<IPlayer> players = bot.Room.Players;
+            //Queue<IPlayer> closePlayers = new Queue<IPlayer>();
+            //SortedList<IPlayer, int> closePlayers = new SortedList<IPlayer, int>();
+            Dictionary<IPlayer, int> closePlayers = new Dictionary<IPlayer, int>();
+
+            if (players.Count > 0)
+            {
+                foreach (IPlayer player in players)
+                {
+                    if (!player.IsGod)
+                    {
+                        double distance = Math.Sqrt(Math.Abs((x - player.BlockX) ^ 2 + (y - player.BlockY) ^ 2));
+                        closePlayers.Add(player, (int)distance);
+                    }
+                }
+
+                List<KeyValuePair<IPlayer, int>> myList = closePlayers.ToList();
+                myList.Sort((firstPair, nextPair) =>
+                {
+                    return firstPair.Value.CompareTo(nextPair.Value);
+                }
+                );
+                return myList.Count > 0 ? myList.First().Key : null;
+            }
+            return null;
         }
     }
 }

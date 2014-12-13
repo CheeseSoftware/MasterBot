@@ -105,7 +105,8 @@
     <Compile Include="SubBot\WorldEdit\WorldEdit.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SubBot\Zombies\Monster.cs" />
+    <Compile Include="SubBot\Zombies\BinaryHeap.cs" />
+    <Compile Include="SubBot\Zombies\LowHPathHeap.cs" />
     <Compile Include="SubBot\Zombies\Pathfinding.cs" />
     <Compile Include="SubBot\Zombies\PathHeap.cs" />
     <Compile Include="SubBot\Zombies\Zombie.cs" />

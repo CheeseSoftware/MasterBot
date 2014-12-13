@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,33 +6,36 @@ using System.Threading.Tasks;
 
 namespace MasterBot.SubBot.Zombies
 {
-    class PathHeap : List<Node>
+    class BinaryHeap : List<int>
     {
         //List<Node> data = new List<Node>();
         //Dictionary<Node, int> nodeFinder = new Dictionary<Node, int>();
 
-        public PathHeap()
+        public BinaryHeap()
         {
-            base.Add(null);
+            base.Add(-1);
         }
 
-        public void Add(Node node)
+        public new void Add(int item)
         {
-            base.Add(node);
-            HeapUp(Count - 1);
+            if (item != null)
+            {
+                base.Add(item);
+                HeapUp(Count - 1);
+            }
         }
 
-        public Node GetRemoveFirst()
+        public int GetRemoveFirst()
         {
             if (Count > 1)
             {
-                Node result = base[1];
+                int result = base[1];
                 base[1] = base[base.Count - 1];
                 base.RemoveAt(base.Count - 1);
                 HeapDown(1);
                 return result;
             }
-            return null;
+            return -1;
         }
 
         /*public bool HasNode(Node node)
@@ -44,19 +46,11 @@ namespace MasterBot.SubBot.Zombies
             return false;
         }*/
 
-        public Node GetNode(int x, int y)
-        {
-            for (int i = 1; i < base.Count; i++)
-                if (base[i].x == x && base[i].y == y)
-                    return base[i];
-            return null;
-        }
-
         public override string ToString()
         {
             string s = "";
             for (int i = 1; i < base.Count; i++)
-                s += base[i].F + " ";
+                s += base[i] + " ";
             return s;
         }
 
@@ -67,29 +61,10 @@ namespace MasterBot.SubBot.Zombies
 
         private void HeapUp(int old)
         {
-            /*int current = old / 2;
-            Console.WriteLine("heap input " + old + " divide " + current);
-            if (current != 0 && base[old].F < base[current].F)
-            {
-                Console.WriteLine("swapped");
-                Node buffer = base[current];
-                base[current] = base[old];
-                base[old] = buffer;
-                HeapUp(current);
-            }*/
-
-            /*int current = old / 2;
-            while(current >= 1 && base[old].F < base[current].F)
-            {
-                Node buffer = base[current];
-                base[current] = base[old];
-                base[old] = buffer;
-                current = old / 2;
-            }*/
             int current = old / 2;
-            if (current != 0 && base[old].F < base[current].F)
+            if (current != 0 && base[old] < base[current])
             {
-                Node buffer = base[current];
+                int buffer = base[current];
                 base[current] = base[old];
                 base[old] = buffer;
                 HeapUp(current);
@@ -101,26 +76,26 @@ namespace MasterBot.SubBot.Zombies
             int firstchild = old * 2;
             int secondchild = old * 2 + 1;
 
-            if (firstchild < base.Count)
+            if (firstchild < base.Count && firstchild > 0)
             {
-                Node firstchildData = base[firstchild];
-                Node oldData = base[old];
+                int firstchildData = base[firstchild];
+                int oldData = base[old];
 
                 int minIndex = old;
 
-                if (oldData.F > firstchildData.F)
+                if (oldData > firstchildData)
                 {
                     minIndex = firstchild;
                 }
 
-                if ((secondchild < base.Count) && (base[minIndex].F > base[secondchild].F))
+                if ((secondchild < base.Count) && (base[minIndex] > base[secondchild]))
                 {
                     minIndex = secondchild;
                 }
 
                 if (minIndex != old)
                 {
-                    Node temp = oldData;
+                    int temp = oldData;
                     base[old] = base[minIndex];
                     base[minIndex] = temp;
                     HeapDown(minIndex);

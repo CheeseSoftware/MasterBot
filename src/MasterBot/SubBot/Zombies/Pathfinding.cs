@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MasterBot.Room;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MasterBot.Room;
 
-namespace MasterBot
+namespace MasterBot.SubBot.Zombies
 {
     public struct Position
     {
@@ -21,7 +21,7 @@ namespace MasterBot
         }
     }
 
-    class Node
+    class Node : IComparable
     {
         public int x;
         public int y;
@@ -50,7 +50,7 @@ namespace MasterBot
 
         public override int GetHashCode()
         {
-            Int32 temp = x | (y<<16);
+            Int32 temp = x | (y << 16);
             return temp.GetHashCode();
         }
 
@@ -58,10 +58,17 @@ namespace MasterBot
         public int H { get { return h; } set { h = value; } }
         public int G { get { return g; } set { g = value; } }
         public Node Mother { get { return mother; } set { mother = value; } }
+
+        public int CompareTo(object obj)
+        {
+            return (F < ((Node)obj).F ? 1 : 0);
+        }
     }
 
     class PathFinding
     {
+        //public static int wallCost = 10000;
+
         private Position[] adjacentNodes = new Position[8] { 
         new Position(1, 1, 14), 
         new Position(-1, 1, 14), 
@@ -73,41 +80,59 @@ namespace MasterBot
         new Position(0, -1, 10)};
 
         private PathHeap open = new PathHeap();
+        private LowHPathHeap search = new LowHPathHeap();
+        //private SortedSet<Node> open = new SortedSet<Node>();
+
+
         //private HashSet<Node> closed = new HashSet<Node>();
-        private bool[,] isOpen = new bool[64, 64];
-        private bool[,] isClosed = new bool[64, 64];
-        private int[,] gValues = new int[64, 64];
+        private bool[,] isOpen;
+        private bool[,] isClosed;
+        private int[,] gValues;
 
         public Queue<Node> debug = new Queue<Node>();
 
-        public Stack<Node> FindPath(int xs, int ys, int xt, int yt, IRoom room)
+        public Stack<Node> FindPath(int xs, int ys, int xt, int yt, ICollection<Zombie> zombies, IBot bot)
         {
-            isOpen = new bool[64, 64];
-            isClosed = new bool[64, 64];
+            int maxSearch = 2560;
+            int currentSearch = 0;
+            bool isStartingSquare = true;
+
+            isOpen = new bool[bot.Room.Width, bot.Room.Height];
+            isClosed = new bool[bot.Room.Width, bot.Room.Height];
+            gValues = new int[bot.Room.Width, bot.Room.Height];
 
             debug = new Queue<Node>();
             open = new PathHeap();
+            search = new LowHPathHeap();
+            //open = new SortedSet<Node>();
+
             //closed = new HashSet<Node>();
             Node start = new Node(xs, ys);
+            start.H = Heuristic(xs, ys, xt, yt);
             Node target = new Node(xt, yt);
             isOpen[start.x, start.y] = true;
             open.Add(start);
+            search.Add(start);
 
-            while (!open.IsEmpty())
+            while (!open.IsEmpty() && currentSearch < maxSearch)
+            //while (open.Count > 0)
             {
                 Node current = open.GetRemoveFirst();
+                //Node current = open.First();
+                //open.Remove(current);
                 isOpen[current.x, current.y] = false;
                 isClosed[current.x, current.y] = true;
                 if (current.Equals(target))
-                    return GetPath(current);
+                    return GetPath(current, bot);
                 for (int i = 4; i < 8; i++)
                 {
                     int x = adjacentNodes[i].x + current.x;
                     int y = adjacentNodes[i].y + current.y;
                     //Console.WriteLine("X:" + x + " Y:" + y + " " + room.GetMapBlock(x, y));
-                    if (x >= 0 && x <= 63 && y >= 0 && y <= 63)
+                    int id = bot.Room.BlockMap.getForegroundBlockIdFast(x, y);
+                    if (x >= 0 && x <= bot.Room.Width - 1 && y >= 0 && y <= bot.Room.Height - 1 && (id == 0 || id == 32) && (isStartingSquare ? !isZombie(x, y, zombies): true))
                     {
-                        int totalAddCost = adjacentNodes[i].cost + (room.getBlock(0, x, y).Id != 0 ? 50000 : 0);
+                        int totalAddCost = adjacentNodes[i].cost;// + (room.GetMapBlock(x, y) != 0 ? wallCost : 0);
                         Node baby = new Node(x, y);
                         if (isClosed[baby.x, baby.y])
                             continue;
@@ -116,11 +141,15 @@ namespace MasterBot
                             int addg = totalAddCost;
                             baby.G = current.G + addg;
                             gValues[baby.x, baby.y] = baby.G;
-                            baby.H = Heuristic(x, y, target.x, target.y);
+                            baby.H = Heuristic(baby.x, baby.y, target.x, target.y);
                             baby.Mother = current;
                             open.Add(baby);
+                            //bot.Connection.Send(bot.Room.WorldKey, 0, baby.x, baby.y, 9);
+                            //System.Threading.Thread.Sleep(10);
                             isOpen[baby.x, baby.y] = true;
-                            debug.Enqueue(baby);
+                            //debug.Enqueue(baby);
+                            search.Add(baby);
+                            ++currentSearch;
                         }
                         else
                         {
@@ -133,20 +162,37 @@ namespace MasterBot
                         }
                     }
                 }
+                isStartingSquare = false;
 
             }
-            //Target was not found.
+            //Target was not found, use closest search node
+            if (!search.IsEmpty())
+                return GetPath(search.GetRemoveFirst(), bot);
             return null;
-
         }
 
-        private Stack<Node> GetPath(Node target)
+        private Boolean isZombie(int x, int y, ICollection<Zombie> zombies)
         {
+            foreach(Zombie zombie in zombies)
+            {
+                if(zombie.x == x && zombie.y == y)
+                    return true;
+            }
+            return false;
+        }
+
+        private Stack<Node> GetPath(Node target, IBot bot)
+        {
+            //bot.Connection.Send(bot.Room.WorldKey, 0, target.x, target.y, 9);
+            //System.Threading.Thread.Sleep(10);
+            //room.DrawSquare(target.x, target.y, System.Drawing.Color.Black);
             Stack<Node> result = new Stack<Node>();
             Node current = target;
             result.Push(current);
             while (current.Mother != null)
             {
+                /*if (current.F >= wallCost)
+                    result.Clear();*/
                 result.Push(current.Mother);
                 current = current.Mother;
             }
@@ -170,7 +216,15 @@ namespace MasterBot
 
         private int Heuristic(int currentX, int currentY, int targetX, int targetY)
         {
-            return 10 * (Math.Abs(currentX - targetX) + Math.Abs(currentY - targetY));
+            //return 10 * (Math.Abs(targetX - currentX) + Math.Abs(targetY - currentY));
+            int H;
+            int xDistance = Math.Abs(currentX-targetX);
+            int yDistance = Math.Abs(currentY - targetY);
+            if (xDistance > yDistance)
+                 H = 14*yDistance + 10*(xDistance-yDistance);
+            else
+                 H = 14*xDistance + 10*(yDistance-xDistance);
+            return H;
         }
     }
 

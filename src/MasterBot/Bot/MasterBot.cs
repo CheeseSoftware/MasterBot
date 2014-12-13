@@ -49,7 +49,7 @@ namespace MasterBot
             subBotHandler.AddSubBot(new Commands(this));
             subBotHandler.AddSubBot(new WorldEdit(this));
             subBotHandler.AddSubBot(new Protection(this));
-            subBotHandler.AddSubBot(new Zombies(this));
+            subBotHandler.AddSubBot(new ZombiesSubbot(this));
 
 
             //////////////////////////////////////

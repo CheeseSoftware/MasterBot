@@ -465,8 +465,10 @@ namespace MasterBot.Room
             isTutorialRoom = m.GetBoolean(14);
             gravity = m.GetFloat(15);
             potionsAllowed = m.GetBoolean(16);
+            int unknownValue = m.GetInt(17);
+            bool unknownBoolean = m.GetBoolean(18);
 
-            uint we = LoadWorld(m, 17, width, height);
+            uint we = LoadWorld(m, 19, width, height);
 
             botPlayer = new Player(bot, botId, "[bot]", 0, 0, 0, false, false, true, 0, false, true, 0);
             //potions start "ps"
