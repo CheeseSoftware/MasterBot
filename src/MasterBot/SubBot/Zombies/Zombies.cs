@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MasterBot.SubBot.Zombies;
+using System.Drawing;
 
 namespace MasterBot
 {
@@ -69,6 +70,11 @@ namespace MasterBot
                 IPlayer player = (IPlayer)cmdSource;
                 switch (cmd)
                 {
+                    case "maze":
+                        {
+                            GenMaze();
+                            break;
+                        }
                     case "setcake":
                         {
                             cake = new BlockWithPos(player.BlockX, player.BlockY, new NormalBlock(337, 0));
@@ -293,6 +299,92 @@ namespace MasterBot
         private bool Intersects(Zombie a, IPlayer b)
         {
             return (IntersectsWithDistance(a, b) != float.NaN);
+        }
+
+        private void GenMaze()
+        {
+            Random random = new Random();
+            Point[] moves = new Point[] { new Point(-1, 0), new Point(1, 0), new Point(0, -1), new Point(0, 1) };
+            Point startingSquare = new Point(1, 1);
+            Point exitSquare = new Point(bot.Room.Width - 1, bot.Room.Height - 1);
+            List<Point> points = new List<Point>();
+
+
+            points.Add(moves[random.Next(moves.Length)]);
+            points.Add(new Point(startingSquare.X, startingSquare.Y));
+
+            int pathBlock = 4;
+            //int pathMaxLength = 5;
+            int randomFactor = 8;
+
+            while (points.Count > 0)
+            {
+                Point point;
+                Point move;
+
+
+                if (random.Next(randomFactor) == 1)
+                {// like prim's algorithm
+                    int i = random.Next(points.Count) >> 1 << 1;
+
+                    point = points[i + 1];
+                    move = points[i];
+
+                    points.RemoveAt(i + 1);
+                    points.RemoveAt(i);
+                }
+                else
+                {// like depth search
+                    point = points.Last();
+                    points.RemoveAt(points.Count - 1);
+
+                    move = points.Last();
+                    points.RemoveAt(points.Count - 1);
+                }
+
+                Point wall = new Point(point.X, point.Y);
+
+                point.X += 2 * move.X;
+                point.Y += 2 * move.Y;
+
+                wall.X += move.X;
+                wall.Y += move.Y;
+
+                for (int i = 0; i * i < random.Next(randomFactor) + 1; i++)
+                {
+                    if (point.X >= 1 && point.Y >= 1 && point.X < bot.Room.Width - 2 && point.Y < bot.Room.Height - 1)
+                    {
+                        IBlock b = bot.Room.getBlock(0, point.X, point.Y);
+                        if (b.Id != pathBlock)
+                        {
+                            bot.Room.setBlock(wall.X, wall.Y, new NormalBlock(pathBlock));
+                            bot.Room.setBlock(point.X, point.Y, new NormalBlock(pathBlock));
+
+                            List<Point> newpoints = new List<Point>();
+                            newpoints.AddRange(moves);
+
+                            while (newpoints.Count > 0)
+                            {
+                                int index = random.Next(newpoints.Count);
+
+                                points.Add(newpoints[index]);
+                                points.Add(new Point(point.X, point.Y));
+
+                                newpoints.RemoveAt(index);
+                            }
+                        }
+                        else break;
+                    }
+                    else break;
+
+                    point.X += 2 * move.X;
+                    point.Y += 2 * move.Y;
+
+                    wall.X += 2 * move.X;
+                    wall.Y += 2 * move.Y;
+                }
+            }
+            Console.WriteLine("Done");
         }
     }
 }
