@@ -88,11 +88,11 @@ namespace MasterBot.Room
 
             if (blockWithPos == null)
             {
-                //lock (blocksToRepair)
-                //{
-                //    if (blocksToRepair.Count > 0)
-                //        blockWithPos = blocksToRepair.Dequeue();
-                //}
+                lock (blocksToRepair)
+                {
+                    if (blocksToRepair.Count > 0)
+                        blockWithPos = blocksToRepair.Dequeue();
+                }
             }
 
             if (blockWithPos != null)
@@ -101,11 +101,11 @@ namespace MasterBot.Room
                 {
                     blockWithPos.Block.Send(bot, blockWithPos.X, blockWithPos.Y);
 
-                    //lock (blocksToRepair)
-                    //{
-                    //    if (!blocksToRepair.Contains(blockWithPos))
-                    //        blocksToRepair.Enqueue(blockWithPos);
-                    //}
+                    lock (blocksToRepair)
+                    {
+                        if (!blocksToRepair.Contains(blockWithPos))
+                            blocksToRepair.Enqueue(blockWithPos);
+                    }
                     return true;
                 }
                 return false;
