@@ -9,14 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using MasterBot.SubBot.Zombies;
 using System.Drawing;
+using System.IO;
 
 namespace MasterBot
 {
     class ZombiesSubbot : ASubBot
     {
-        private BlockWithPos cake = null;
-        private BlockWithPos hologram = null;
-        public List<Zombie> zombies = new List<Zombie>();
+        private int zombieTime = 30; //seconds before zombie turns to human
+        private BlockWithPos cake = new BlockWithPos(3, 5, new NormalBlock(337));
+        private BlockWithPos hologram = new BlockWithPos(1, 5, new NormalBlock(397));
+        public List<Zombie> zombies = new List<Zombie>(); //computer zombies
 
         public override bool HasTab
         {
@@ -79,12 +81,14 @@ namespace MasterBot
                         {
                             cake = new BlockWithPos(player.BlockX, player.BlockY, new NormalBlock(337, 0));
                             bot.Room.setBlock(player.BlockX, player.BlockY, new NormalBlock(337, 0));
+                            SaveData();
                         }
                         break;
                     case "sethologram":
                         {
-                            hologram = new BlockWithPos(player.BlockX, player.BlockY, new NormalBlock(337, 0));
-                            bot.Room.setBlock(player.BlockX, player.BlockY, new NormalBlock(337, 0));
+                            hologram = new BlockWithPos(player.BlockX, player.BlockY, new NormalBlock(397, 0));
+                            bot.Room.setBlock(player.BlockX, player.BlockY, new NormalBlock(397, 0));
+                            SaveData();
                         }
                         break;
                     case "eatme":
@@ -105,31 +109,27 @@ namespace MasterBot
                     {
                         int playerId = m.GetInt(0);
                         int faceId = m.GetInt(1);
+                        Console.WriteLine(faceId);
 
                         IPlayer player = bot.Room.getPlayer(playerId);
-                        if (player != null)
+                        if (player != null && !player.HasMetadata("forcing"))
                         {
-                            //If player changed to zombie smiley but isn't zombie, put on cake
+                            //If player changed to other than zombie smiley but is zombie, put on hologram
                             if (!isZombieFace(faceId))
                             {
-                                if (player.HasMetadata("isZombie"))
+                                if (player.HasMetadata("ost.isZombie") && !player.HasMetadata("zombieForcing"))
                                 {
-                                    if (player.GetMetadata("isZombie").Equals(false))
-                                        ForceToNormal(player);
+                                    ForceToZombie(player);
+                                    player.Send("You're not allowed to change smiley!");
                                 }
                             }
                             else
                             {
-                                //If player changed to other than zombie smiley but is zombie, put on hologram
-                                if (player.HasMetadata("isZombie"))
+                                //If player changed to zombie smiley but isn't zombie, put on cake
+                                if (!player.HasMetadata("ost.isZombie") && !player.HasMetadata("humanForcing"))
                                 {
-                                    if (player.GetMetadata("isZombie").Equals(true))
-                                    {
-                                        if (player.HasMetadata("forcing"))
-                                            break;
-
-                                        ForceToZombie(player);
-                                    }
+                                    ForceToNormal(player);
+                                    player.Send("You're not allowed to change smiley!");
                                 }
                             }
 
@@ -141,65 +141,95 @@ namespace MasterBot
 
         public override void onTick()
         {
-            /*//foreach (var zombie in bot.Room.Players)
-            foreach (Zombie zombie in zombies)
+            foreach (var zombie in bot.Room.Players)
             {
-                /*if (zombie.HasMetadata("ost.isZombie"))
+                if (!zombie.HasMetadata("ost.isZombie"))
+                    continue;
+                else if (zombie.HasMetadata("ost.zombieCreationTime") && DateTime.Now - ((DateTime)zombie.GetMetadata("ost.zombieCreationTime")) > new TimeSpan(0, zombieTime / 60, zombieTime % 60))
                 {
-                    if (zombie.GetMetadata("ost.isZombie").Equals(false))
-                        continue;
+                    zombie.Send("You're now alive again after " + zombieTime + " seconds!");
+                    ForceToNormal(zombie);
+                    continue;
                 }
-                else continue;*/
 
-               /* foreach (var human in bot.Room.Players)
+                foreach (var human in bot.Room.Players)
                 {
-                    /*if (human.HasMetadata("ost.isZombie"))
-                    {
-                        if (human.GetMetadata("ost.isZombie").Equals(true))
-                            continue;
-                    }*/
+                    if (human.HasMetadata("ost.isZombie"))
+                        continue;
 
-                    /*if (Intersects(zombie, human))
+                    if (Intersects(zombie, human))
                     {
+                        if (human.HasMetadata("ost.zombieAttackTime"))
+                        {
+                            TimeSpan hitTime = (DateTime.Now - (DateTime)human.GetMetadata("ost.zombieAttackTime"));
+                            if (hitTime < new TimeSpan(0, 0, 2))
+                                continue;
+                        }
+
+                        human.SetMetadata("ost.zombieAttackTime", DateTime.Now);
                         float health = 100;
 
                         if (human.HasMetadata("ost.health"))
                             health = (float)human.GetMetadata("ost.health");
 
-                        health -= 3;
+                        health -= 20;
                         if (health < 0)
                             health = 0;
 
                         human.SetMetadata("ost.health", health);
+                        if (health > 0)
+                        {
+                            human.Send("You were hit by " + zombie.Name + "!");
+                            human.Send("Your HP is now " + health + ".");
+                        }
+                        else
+                            human.Send("You were mashed to death by " + zombie.Name);
 
                         if (health == 0)
                         {
-                            human.SetMetadata("ost.isZombie", true);
-                            human.SetMetadata("ost.health", (float)100);
                             MakeZombie(human);
                         }
                     }
                 }
-            }*/
-            //foreach (Zombie zombie in zombies)
-              //  zombie.Tick();
+            }
         }
 
         /***************************************************
          * private functions:
          * 
          ********************************************************/
+
+        private void SaveData()
+        {
+            //TODO: Fix data save!
+            /* string fileName = "ZombieData";
+             try
+             {
+                 if (!File.Exists(fileName))
+                     File.Create(fileName);
+                 FileStream stream = File.OpenWrite(fileName);
+                 stream.writ
+             }
+             catch (Exception e)
+             {
+
+             }*/
+        }
+
         private void MakeZombie(IPlayer human)
         {
-            human.SetMetadata("isZombie", "true");
+            human.SetMetadata("ost.zombieCreationTime", DateTime.Now);
             bot.Say(human.Name + " has turned into a zombie! Run!!!");
             ForceToZombie(human);
         }
 
         private void ForceToZombie(IPlayer human)
         {
-            human.SetMetadata("zombieForcing", true);
             human.SetMetadata("forcing", true);
+            human.SetMetadata("zombieForcing", true);
+
+            human.SetMetadata("ost.isZombie", true);
+            human.SetMetadata("ost.health", (float)100);
 
             System.Threading.Tasks.Task task = new System.Threading.Tasks.Task(delegate
             {
@@ -215,6 +245,7 @@ namespace MasterBot
                 System.Threading.Thread.Sleep(1000);
                 bot.Say("/teleport " + human.Name + " " + oldX + " " + oldY);
 
+                System.Threading.Thread.Sleep(1000);
                 human.RemoveMetadata("zombieForcing");
                 human.RemoveMetadata("forcing");
             });
@@ -223,8 +254,12 @@ namespace MasterBot
 
         private void ForceToNormal(IPlayer zombie)
         {
-            zombie.SetMetadata("humanForcing", true);
             zombie.SetMetadata("forcing", true);
+            zombie.SetMetadata("humanForcing", true);
+
+            zombie.RemoveMetadata("ost.isZombie");
+            zombie.RemoveMetadata("ost.zombieCreationTime");
+            zombie.SetMetadata("ost.health", (float)100);
 
             System.Threading.Tasks.Task task = new System.Threading.Tasks.Task(delegate
             {
@@ -232,7 +267,7 @@ namespace MasterBot
                 double oldY = zombie.Y;
 
                 if (this.cake != null)
-                    bot.Say("/teleport " + zombie.Name + " " + cake.X + " " + cake.Y);
+                    bot.Say("/teleport " + zombie.Name + " " + (int)(cake.X + 1) + " " + (int)(cake.Y - 1));
 
                 System.Threading.Thread.Sleep(500);
                 bot.Say("/kill " + zombie.Name);
@@ -240,6 +275,7 @@ namespace MasterBot
                 System.Threading.Thread.Sleep(500);
                 bot.Say("/teleport " + zombie.Name + " " + oldX + " " + oldY);
 
+                System.Threading.Thread.Sleep(1000);
                 zombie.RemoveMetadata("humanForcing");
                 zombie.RemoveMetadata("forcing");
             });
@@ -248,28 +284,14 @@ namespace MasterBot
 
         private bool isZombieFace(int faceId)
         {
-            return (faceId == 87 ||
+            return faceId == 100;/*(faceId == 87 ||
                 (faceId >= 72 && faceId <= 75) ||
-                faceId == 100);
+                faceId == 100);*/
         }
 
         private float IntersectsWithDistance(IPlayer a, IPlayer b)
-        {
-            if (a.X < b.X - 16)
-                return float.NaN;
-            if (a.X > b.X + 16)
-                return float.NaN;
-
-            if (a.Y < b.Y - 16)
-                return float.NaN;
-            if (a.Y > b.Y + 16)
-                return float.NaN;
-
-            double distance = (a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y);
-            if (distance <= 16)
-                return (float)distance;
-
-            return float.NaN;
+        { 
+            return (float)Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
         }
 
         private float IntersectsWithDistance(Zombie a, IPlayer b)
@@ -293,7 +315,7 @@ namespace MasterBot
 
         private bool Intersects(IPlayer a, IPlayer b)
         {
-            return (IntersectsWithDistance(a, b) != float.NaN);
+            return (IntersectsWithDistance(a, b) <= 16);
         }
 
         private bool Intersects(Zombie a, IPlayer b)

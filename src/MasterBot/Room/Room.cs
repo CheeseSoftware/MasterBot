@@ -585,7 +585,7 @@ namespace MasterBot.Room
                         if (!players.ContainsKey(id))
                         {
                             Player player = new Player(bot, id, m.GetString(1), m.GetInt(2), m.GetDouble(3), m.GetDouble(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), m.GetBoolean(10), m.GetBoolean(11), m.GetInt(9));
-                            player.IsClubMember = m.GetBoolean(14);
+                            //player.IsClubMember = m.GetBoolean(14);
                             players.Add(id, player);
                             if (!namePlayers.ContainsKey(player.Name))
                                 namePlayers.Add(new KeyValuePair<string, List<IPlayer>>(player.Name, new List<IPlayer>()));
@@ -627,7 +627,7 @@ namespace MasterBot.Room
                             players[id].Vertical = m.GetInt(8);
                             players[id].Coins = m.GetInt(9);
                             players[id].Purple = m.GetBoolean(10);
-                            players[id].Levitation = m.GetBoolean(11);
+                            //players[id].Levitation = m.GetBoolean(11);
                         }
                         break;
                     }
