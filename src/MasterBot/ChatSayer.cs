@@ -48,9 +48,24 @@ namespace MasterBot
 
             chatThread.Start();
         }
+        
 
-        public void Say(string message)
+        public void Say(IPlayer receiver, string message)
         {
+            if (message != null)
+            {
+                if (message != "")
+                {
+                    lock (messages)
+                    {
+                        messages.Enqueue("/pm " + receiver.Name + " " + message);
+                    }
+                }
+            }
+        }
+
+         public void Say(string message)
+         {
             if (message != null)
             {
                 if (message != "")
@@ -61,7 +76,7 @@ namespace MasterBot
                     }
                 }
             }
-        }
+         }
 
         public void onDisconnect()
         {

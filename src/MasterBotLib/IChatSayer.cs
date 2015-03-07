@@ -9,5 +9,6 @@ namespace MasterBot
     public interface IChatSayer
     {
         void Say(string message);
+        void Say(IPlayer receiver, string message);
     }
 }

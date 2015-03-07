@@ -34,7 +34,7 @@ namespace MasterBot
 
         public void Send(string message)
         {
-            bot.Say(Name + ": " + message);
+            bot.Say(this, message);
         }
 
         public void SetMetadata(string key, object value)

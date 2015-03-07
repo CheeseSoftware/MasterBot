@@ -131,10 +131,17 @@ namespace MasterBot.Room
 
         public IBlock getWaitingBlock(BlockPos blockPos)
         {
-            if (waitingBlocks.ContainsKey(blockPos))
-                return waitingBlocks[blockPos];
-            else
+            try
+            {
+                if (waitingBlocks.ContainsKey(blockPos))
+                    return waitingBlocks[blockPos];
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
                 return null;
+            }
         }
 
         public Dictionary<BlockPos, IBlock> WaitingBlocks

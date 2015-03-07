@@ -234,5 +234,14 @@ namespace MasterBot
                     chatSayer.Say(message);
             }
         }
+
+        public void Say(IPlayer receiver, string message)
+        {
+            lock (chatSayer)
+            {
+                if (chatSayer != null)
+                    chatSayer.Say(receiver, message);
+            }
+        }
     }
 }
