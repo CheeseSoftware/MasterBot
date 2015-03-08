@@ -864,6 +864,19 @@ namespace MasterBot.Room
                                 player.Reply("Usage: !setcode <code>");
                         }
                         break;
+                    case "title":
+                        {
+                            if (args.Length > 0)
+                            {
+                                string title = "";
+                                foreach (string s in args)
+                                    title += s + " ";
+                                bot.Connection.Send("name", title);
+                            }
+                            else
+                                player.Reply("Usage: !title <title>");
+                        }
+                        break;
                 }
             }
         }
