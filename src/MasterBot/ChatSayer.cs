@@ -10,9 +10,8 @@ namespace MasterBot
 {
     public class ChatSayer : IChatSayer
     {
-        char character = 'A';
-        char minCharacter = 'A';
-        char maxCharacter = 'Z';
+        char[] characters = new char[] { '\'', ',', '-', '.'};
+        int character = 0;
         const int interval = 1000;
         IBot bot;
         SafeThread chatThread;
@@ -61,10 +60,10 @@ namespace MasterBot
                 {
                     lock (messages)
                     {
-                        messages.Enqueue("/pm " + receiver.Name + " " + message + "  " + character);
+                        messages.Enqueue("/pm " + receiver.Name + " " + message + "  " + characters[character]);
                         character++;
-                        if (character > maxCharacter)
-                            character = minCharacter;
+                        if (character > characters.Length - 1)
+                            character = 0;
                     }
                 }
             }
@@ -78,11 +77,11 @@ namespace MasterBot
                 {
                     lock (messages)
                     {
-                        messages.Enqueue(message + "  " + character);
+                        messages.Enqueue(message + "  " + characters[character]);
 
                         character++;
-                        if (character > maxCharacter)
-                            character = minCharacter;
+                        if (character > characters.Length - 1)
+                            character = 0;
                     }
                 }
             }
