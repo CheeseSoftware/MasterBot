@@ -50,6 +50,7 @@ namespace MasterBot
             subBotHandler.AddSubBot(new WorldEdit(this));
             subBotHandler.AddSubBot(new Protection(this));
             subBotHandler.AddSubBot(new ZombiesSubbot(this));
+            subBotHandler.AddSubBot(new HouseBuilding(this));
 
 
             //////////////////////////////////////

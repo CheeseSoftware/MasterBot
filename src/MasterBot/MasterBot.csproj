@@ -77,6 +77,10 @@
     <Compile Include="SubBot\BlockPlaceTest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SubBot\Houses\HouseManager.cs" />
+    <Compile Include="SubBot\Houses\HouseBuilding.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\Commands.cs">
       <SubType>Component</SubType>
     </Compile>

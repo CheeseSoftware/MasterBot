@@ -21,7 +21,8 @@ namespace MasterBot.SubBot
             this.InitializeComponent();
             this.bot = bot;
             this.updateTimer = new System.Timers.Timer();
-            updateTimer.Elapsed += delegate { onTick(); };
+            updateTimer.Elapsed += delegate { 
+                onTick(); };
         }
 
         public abstract void onEnable();
