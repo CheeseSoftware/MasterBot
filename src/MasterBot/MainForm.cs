@@ -65,7 +65,7 @@ namespace MasterBot
             try
             {
                 if (!File.Exists(file))
-                    File.Create(file);
+                    File.Create(file).Close();
 
                 StreamReader reader = new StreamReader(file);
                 string line = "";

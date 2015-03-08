@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterBot", "MasterBot\MasterBot.csproj", "{EC40C252-5811-4A80-8D66-4B493557B342}"
-	ProjectSection(ProjectDependencies) = postProject
-		{AC3F530D-FA55-450B-A0F9-B853E8638604} = {AC3F530D-FA55-450B-A0F9-B853E8638604}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterBotLib", "MasterBotLib\MasterBotLib.csproj", "{4B4A35F9-1A51-4C7B-8777-67C58130B76C}"
 EndProject

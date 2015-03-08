@@ -26,12 +26,16 @@ namespace MasterBot
         private IRoom room;
         private ChatSayer chatSayer = null;
         private SafeThread mainThread;
+        private static List<Assembly> plugins = new List<Assembly>();
 
         public bool LoggedIn { get { return client != null; } }
         public bool Connected { get { return connection != null && connection.Connected; } }
 
         public MasterBot()
         {
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyResolve += new ResolveEventHandler(MyResolveEventHandler);
+
             MinimapColors.CreateColorCodes();
 
             mainForm = new MainForm(this);
@@ -78,6 +82,7 @@ namespace MasterBot
                                     {
                                         try
                                         {
+                                            plugins.Add(a);
                                             IPlugin pluginclass = Activator.CreateInstance(t) as IPlugin;
                                             pluginclass.PerformAction(this);
                                             break;
@@ -124,6 +129,16 @@ namespace MasterBot
                 lambda(Directory.GetFiles(pluginDirectories[i]));
             }
 
+        }
+
+        private static Assembly MyResolveEventHandler(object sender, ResolveEventArgs args)
+        {
+            foreach(Assembly a in plugins)
+            {
+                if (a.FullName.Equals(args.Name))
+                    return a;
+            }
+            return null;
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)

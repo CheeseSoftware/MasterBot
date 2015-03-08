@@ -205,7 +205,7 @@ namespace MasterBot.Room
             }
             return null;
         }
-#endregion
+        #endregion
 
         private void UpdatePhysics()
         {
@@ -843,7 +843,7 @@ namespace MasterBot.Room
             if (cmdSource is Player && ((Player)cmdSource).IsOp)
             {
                 Player player = (Player)cmdSource;
-                switch(cmd)
+                switch (cmd)
                 {
                     case "reset":
                         bot.Connection.Send("say", "/reset");
@@ -875,6 +875,26 @@ namespace MasterBot.Room
                             }
                             else
                                 player.Reply("Usage: !title <title>");
+                        }
+                        break;
+                    case "visible":
+                        {
+                            if (args.Length > 0)
+                            {
+                                bot.Connection.Send("say", "/visible " + args[0]);
+                            }
+                            else
+                                player.Reply("Usage: !visible <true/false>");
+                        }
+                        break;
+                    case "kick":
+                        {
+                            if (args.Length > 0)
+                            {
+                                bot.Connection.Send("say", "/kick " + args[0]);
+                            }
+                            else
+                                player.Reply("Usage: !kick <player>");
                         }
                         break;
                 }
