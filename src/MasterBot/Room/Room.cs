@@ -840,7 +840,32 @@ namespace MasterBot.Room
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
-
+            if (cmdSource is Player && ((Player)cmdSource).IsOp)
+            {
+                Player player = (Player)cmdSource;
+                switch(cmd)
+                {
+                    case "reset":
+                        bot.Connection.Send("say", "/reset");
+                        break;
+                    case "clear":
+                        bot.Connection.Send("clear");
+                        break;
+                    case "load":
+                        bot.Connection.Send("say", "/loadlevel");
+                        break;
+                    case "setcode":
+                        {
+                            if (args.Length > 0)
+                            {
+                                bot.Connection.Send("key", args[0]);
+                            }
+                            else
+                                player.Reply("Usage: !setcode <code>");
+                        }
+                        break;
+                }
+            }
         }
 
         public override void onTick()

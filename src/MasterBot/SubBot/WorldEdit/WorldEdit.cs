@@ -279,29 +279,29 @@ namespace MasterBot.SubBot.WorldEdit
                 switch (cmd)
                 {
                     case "fill":
-                            if (args.Length >= 1)
+                        if (args.Length >= 1)
+                        {
+                            int id = -1;
+                            int layer = 0;
+
+                            int.TryParse(args[0], out id);
+                            if (args.Length >= 2)
+                                int.TryParse(args[1], out layer);
+
+                            if (id != -1)
                             {
-                                int id = -1;
-                                int layer = 0;
+                                layer = id >= 500 ? 1 : layer;
 
-                                int.TryParse(args[0], out id);
-                                if (args.Length >= 2)
-                                    int.TryParse(args[1], out layer);
-
-                                if (id != -1)
-                                {
-                                    layer = id >= 500 ? 1 : layer;
-
-                                    EditRegion region2 = new EditRegion();
-                                    region2.FirstCorner = new Point(1, 1);
-                                    region2.SecondCorner = new Point(bot.Room.Width - 2, bot.Room.Height - 2);
-                                    SetRegion(bot, region2, new NormalBlock(id, layer));
-                                }
-                                else
-                                    bot.Say(player.Name + ": Invalid ID.");
+                                EditRegion region2 = new EditRegion();
+                                region2.FirstCorner = new Point(1, 1);
+                                region2.SecondCorner = new Point(bot.Room.Width - 2, bot.Room.Height - 2);
+                                SetRegion(bot, region2, new NormalBlock(id, layer));
                             }
                             else
-                                bot.Say(player.Name + ": Usage: !fill <id> [layer]");
+                                bot.Say(player.Name + ": Invalid ID.");
+                        }
+                        else
+                            bot.Say(player.Name + ": Usage: !fill <id> [layer]");
                         break;
                     case "undo":
                         if (player.HasMetadata("worldedithistory") && player.HasMetadata("worldedithistoryindex"))
@@ -545,22 +545,15 @@ namespace MasterBot.SubBot.WorldEdit
                         }
                         break;
                     case "stop":
-
                         blockDrawer.Stop();
                         break;
-
                     case "start":
-
                         blockDrawer.Start();
                         break;
-
                     case "clearrepairblocks":
-
                         //TODO: add function to blockdrawer
                         break;
-
                     case "write":
-
                         if (region.FirstCornerSet)
                         {
                             int drawBlock = 0;
