@@ -127,7 +127,7 @@ namespace MasterBot.SubBot.Houses
         IBot bot = null;
         public delegate bool isValidPosDelegate(House house);
         List<isValidPosDelegate> isValidPosEvent = new List<isValidPosDelegate>();
-        Dictionary<string, HouseType> houseTypes;
+        Dictionary<string, HouseType> houseTypes = new Dictionary<string,HouseType>();
 
 
         public HouseManager(IBot bot)
@@ -155,30 +155,37 @@ namespace MasterBot.SubBot.Houses
 
             if (!houseTypes.ContainsKey(houseTypeStr))
             {
-                builder.Reply("There is no building called '" + houseTypeStr"'!")
-                
-                List<string> houseTypes;
+                builder.Reply("There is no building called '" + houseTypeStr + "'!");
 
-                foreach(HouseType h in houseTypes)
-                    houseTypes.Add(h);
+                List<string> houseTypeNames = new List<string>();
 
-                string text = "";
+                foreach(HouseType h in houseTypes.Values)
+                    houseTypeNames.Add(h.Name);
 
-                //for (int i = 0; i < houseTypes.Count-1; ++i) {
-                //    text += houseTypes[i] + ", ";
+                string text = "You can build this: ";
 
-                //    if (i%4 == 0) {
-                //        builder.Reply(text);
-                //        text = "";
-                //    }
-                //}
+                for (int i = 0; i < houseTypeNames.Count; ++i)
+                {
+                    if (i == houseTypeNames.Count - 1)
+                        text += houseTypeNames[i];
+                    else
+                        text += houseTypeNames[i] + ", ";
+
+                    if (i % 4 == 3 || i == 2 || i == houseTypeNames.Count - 1)
+                    {
+                        builder.Reply(text);
+                        text = "";
+                    }
+                }
 
                 return false;
             }
 
-            houseType = houseTypes[houseType];
+            houseType = houseTypes[houseTypeStr];
+            int x = builder.BlockX - houseType.Width/2;
+            int y = builder.BlockY - houseType.Height/2;
 
-            House house = new House(HouseState.Building, builder, x, y, width, height);
+            House house = new House(houseType, builder, x, y, houseType.Width, houseType.Height, HouseState.Building);
 
             if (!isValidHousePosition(house))
                 return false;
@@ -186,32 +193,36 @@ namespace MasterBot.SubBot.Houses
             buildingHouses.Add(builder, house);
             houses.Add(house);
 
-            for (int xx = 0; xx < width; ++xx)
+            for (int xx = 0; xx < houseType.Width; ++xx)
             {
-                for (int yy = 0; yy < height; ++yy)
+                for (int yy = 0; yy < houseType.Height; ++yy)
                 {
                     if (builder.BlockX == x + xx && builder.BlockY == y + yy)
                         continue;
 
-                    if (xx == 0 || xx == width - 1 || yy == 0 || yy == height - 1)
+                    int blockId = 22;
+                    int backgroundBlock = houseType.BackgroundBlock;
+
+                    if (xx == 0 || xx == houseType.Width - 1 || yy == 0 || yy == houseType.Height - 1)
                     {
-                        this.bot.Room.BlockDrawer.PlaceBlock(
-                            new Room.Block.BlockWithPos(xx + x, yy + y,
-                                new Room.Block.NormalBlock(45)));
+                        blockId = houseType.WallBlock;
                     }
                     else
                     {
-                        this.bot.Room.BlockDrawer.PlaceBlock(
-                            new Room.Block.BlockWithPos(xx + x, yy + y,
-                                new Room.Block.NormalBlock(93)));
-
+                        blockId = houseType.BaseBlock;
                     }
 
+                    this.bot.Room.BlockDrawer.PlaceBlock(
+                            new Room.Block.BlockWithPos(xx + x, yy + y,
+                                new Room.Block.NormalBlock(blockId)));
+
+                    this.bot.Room.BlockDrawer.PlaceBlock(
+                            new Room.Block.BlockWithPos(xx + x, yy + y,
+                                new Room.Block.NormalBlock(backgroundBlock)));
 
                 }
-                return true;
             }
-
+            return true;
         }
 
         public void OnPlayerMine(IPlayer player, int x1, int y1, int x2, int y2)
