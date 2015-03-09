@@ -290,7 +290,7 @@ namespace MasterBot.SubBot.WorldEdit
 
                             if (id != -1)
                             {
-                                layer = id >= 500 ? 1 : layer;
+                                layer = (id >= 500 && id < 1000) ? 1 : layer;
 
                                 EditRegion region2 = new EditRegion();
                                 region2.FirstCorner = new Point(1, 1);
@@ -349,7 +349,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 int.TryParse(args[0], out id);
                                 if (id != -1)
                                 {
-                                    int layer = id >= 500 || id == 1337 ? 1 : 0;
+                                    int layer = (id >= 500 && id < 1000) || id == 1337 ? 1 : 0;
                                     if (id == 1337)
                                         id = 0;
 
@@ -438,7 +438,7 @@ namespace MasterBot.SubBot.WorldEdit
                             if (args.Length >= 1 && int.TryParse(args[0], out tempBlock))
                             {
                                 if (region.Set)
-                                    DrawLine(region.FirstCorner.X, region.FirstCorner.Y, region.SecondCorner.X, region.SecondCorner.Y, new NormalBlock(tempBlock, tempBlock >= 500 ? 1 : 0));
+                                    DrawLine(region.FirstCorner.X, region.FirstCorner.Y, region.SecondCorner.X, region.SecondCorner.Y, new NormalBlock(tempBlock, (tempBlock >= 500 && tempBlock < 1000) ? 1 : 0));
                                 else
                                     player.Reply("You have to set a region.");
                             }
@@ -453,7 +453,7 @@ namespace MasterBot.SubBot.WorldEdit
                             int block;
                             if (args.Length >= 2 && int.TryParse(args[0], out radius) && int.TryParse(args[1], out block))
                             {
-                                DrawCircle(region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                DrawCircle(region.FirstCorner.X, region.FirstCorner.Y, radius, new NormalBlock(block, (block >= 500 && block < 1000) ? 1 : 0));
                             }
                             else
                                 player.Send("Usage: !circle <radius> <block>");
@@ -472,7 +472,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 {
                                     for (int y = region.FirstCorner.Y - radius; y <= region.FirstCorner.Y + radius; y++)
                                     {
-                                        RecordSetBlock(x, y, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                        RecordSetBlock(x, y, new NormalBlock(block, (block >= 500 && block < 1000) ? 1 : 0));
                                     }
                                 }
                             }
@@ -508,7 +508,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 player.Reply("Usage: !fillexpand <from=0> <to>");
                                 break;
                             }
-                            if (toReplace >= 500)
+                            if (toReplace >= 500 && toReplace < 1000)
                                 toReplaceLayer = 1;
                             IBlock startBlock = bot.Room.BlockMap.getBlock(toReplaceLayer, player.BlockX, player.BlockY);
                             if (startBlock.Id == toReplace)
@@ -535,7 +535,7 @@ namespace MasterBot.SubBot.WorldEdit
                                 }
                                 bot.Say("total blocks: " + total + ". Filling..");
                                 int layer = 0;
-                                if (toReplaceWith >= 500)
+                                if (toReplaceWith >= 500 && toReplaceWith < 1000)
                                     layer = 1;
                                 foreach (Point p in blocksToFill)
                                 {
@@ -571,7 +571,7 @@ namespace MasterBot.SubBot.WorldEdit
                                         string l = array[letterindex].ToString();
                                         if (l != "_")
                                         {
-                                            WriteLetter(spacing, l, region.FirstCorner.X, region.FirstCorner.Y, new NormalBlock(drawBlock, drawBlock >= 500 ? 1 : 0));
+                                            WriteLetter(spacing, l, region.FirstCorner.X, region.FirstCorner.Y, new NormalBlock(drawBlock, (drawBlock >= 500 && drawBlock < 1000) ? 1 : 0));
                                         }
                                         if (l == @"@")
                                             spacing += 4;
@@ -649,7 +649,7 @@ namespace MasterBot.SubBot.WorldEdit
 
                                     foreach (Point p in blocksToSet)
                                     {
-                                        RecordSetBlock(p.X, p.Y, new NormalBlock(block, block >= 500 ? 1 : 0));
+                                        RecordSetBlock(p.X, p.Y, new NormalBlock(block, (block >= 500 && block < 1000) ? 1 : 0));
                                         previouslySetBlocks.Add(p);
                                     }
                                 }

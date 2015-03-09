@@ -28,7 +28,7 @@ namespace MasterBot.Room.Block
         public NormalBlock(int id)
         {
             this.id = id;
-            this.layer = id >= 500 ? 1 : 0;
+            this.layer = (id >= 500 && id < 1000) ? 1 : 0;
         }
 
         public Color Color
@@ -55,7 +55,7 @@ namespace MasterBot.Room.Block
 
         public bool Background
         {
-            get { return id >= 500; }
+            get { return id >= 500 && id < 1000; }
         }
 
         public DateTime DatePlaced

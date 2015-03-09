@@ -134,9 +134,9 @@ namespace MasterBot.SubBot.Houses
         {
             this.bot = bot;
 
-            HouseType smallHouse = new HouseType("smallhouse", 13, 9);
-            HouseType mediumHouse = new HouseType("mediumhouse", 13, 21);
-            HouseType largeHouse = new HouseType("largehouse", 21, 35);
+            HouseType smallHouse = new HouseType("smallhouse", 9  , 7);
+            HouseType mediumHouse = new HouseType("mediumhouse", 13, 13, 1023, 1024);
+            HouseType largeHouse = new HouseType("largehouse", 21, 21);
 
             RegisterHouseType(smallHouse);
             RegisterHouseType(mediumHouse);
