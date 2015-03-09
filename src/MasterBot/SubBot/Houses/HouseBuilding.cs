@@ -86,16 +86,19 @@ namespace MasterBot.SubBot
         {
             switch (cmd)
             {
-                case "buildhouse":
-                    if (cmdSource is IPlayer) {
+                case "build":
+                    if (cmdSource is IPlayer && args.Count >= 1) {
                         int width = 12;
                         int height = 12;
                         IPlayer builder = cmdSource as IPlayer;
 
-                        int x = builder.BlockX-width/2;
-                        int y = builder.BlockY-height/2;
+                        int x = builder.BlockX-width;
+                        int y = builder.BlockY-height;
 
-                        houseManager.BuildHouse(builder, x, y, width, height);
+                        string houseType = args[0];
+
+
+                        houseManager.BuildHouse(builder, houseType, x, y);
                     }
                     break;
 

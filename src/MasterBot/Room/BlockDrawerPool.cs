@@ -8,6 +8,9 @@ using MasterBot.Room.Block;
 
 namespace MasterBot.Room
 {
+
+
+
     public class BlockDrawerPool : IBlockDrawerPool
     {
         IBot bot;
