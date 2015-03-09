@@ -898,6 +898,7 @@ namespace MasterBot.Movement
                     case ItemId.NINJA_LADDER:
                     case ItemId.WINE_H:
                     case ItemId.WINE_V:
+                    case 414:
                     case 4:
                         {
                             this.morx = 0;
@@ -960,6 +961,7 @@ namespace MasterBot.Movement
                     case ItemId.NINJA_LADDER:
                     case ItemId.WINE_H:
                     case ItemId.WINE_V:
+                    case 414:
                     case 4:
                         {
                             this.mox = 0;
