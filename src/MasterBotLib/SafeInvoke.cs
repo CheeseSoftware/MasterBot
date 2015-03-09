@@ -20,7 +20,11 @@ namespace MasterBot
             {
                 if (forceSynchronous)
                 {
-                    uiElement.Invoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
+                    try
+                    {
+                        uiElement.Invoke((Action)delegate { Invoke(uiElement, updater, forceSynchronous); });
+                    }
+                    catch (Exception e) { }
                 }
                 else
                 {
