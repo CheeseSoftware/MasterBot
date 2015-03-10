@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MasterBot
 {
-    public interface IPlugin : ICmdSource
+    public interface IPlugin
     {
         void PerformAction(IBot bot);
     }
