@@ -16,6 +16,8 @@ namespace MasterBot.IO
         public SaveFile(string path)
         {
             _path = path;
+            if (!File.Exists(_path))
+                File.Create(_path).Close();
         }
 
         protected void OpenWrite()
