@@ -288,6 +288,20 @@ namespace MasterBot.SubBot.Houses
                 }
             }
 
+            for (int x = 0; x < house.width; ++x)
+            {
+                for (int y = 0; y < house.height; ++y)
+                {
+                    int bx = house.x + x;
+                    int by = house.y + y;
+
+                    int blockId = bot.Room.getBlock(0, bx, by).Id;
+
+                    if (!house.houseType.isGroundBlockAllowed(blockId))
+                        house.builder.Reply("You must build the house on empty space without dirt and ores!");
+                }
+            }
+
             foreach (var isValidPos in isValidPosEvent)
             {
                 if (!isValidPos(house))
