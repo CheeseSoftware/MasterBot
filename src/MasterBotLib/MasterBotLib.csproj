@@ -52,6 +52,8 @@
     <Compile Include="IChatSayer.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />
+    <Compile Include="IO\NodeContainer.cs" />
+    <Compile Include="IO\NodePath.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Gui\IRichTextConsole.cs" />
@@ -78,6 +80,8 @@
     <Compile Include="SafeDictionary.cs" />
     <Compile Include="SafeInvoke.cs" />
     <Compile Include="SafeList.cs" />
+    <Compile Include="IO\Node.cs" />
+    <Compile Include="IO\SaveFile.cs" />
     <Compile Include="SubBot\ASubBot.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MasterBot.SubBot;
 using MasterBot.Room;
+using MasterBot.IO;
 using PlayerIOClient;
 using MasterBot.Movement;
 using MasterBot.Minimap;
@@ -33,6 +34,18 @@ namespace MasterBot
 
         public MasterBot()
         {
+            SaveFile saveFile = new SaveFile("file.test");
+            saveFile.Load();
+
+            //saveFile.AddNode(new NodePath("data.xp"), new Node("353"));
+            //saveFile.AddNode(new NodePath("data.inventory.stone"), new Node("5"));
+            //saveFile.AddNode(new NodePath("data.inventory.copper"), new Node("5"));
+            //saveFile.AddNode(new NodePath("data.inventory.iron"), new Node("5"));
+            saveFile.Save();
+
+
+
+
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.AssemblyResolve += new ResolveEventHandler(MyResolveEventHandler);
 
