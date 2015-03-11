@@ -99,6 +99,17 @@ namespace MasterBot.SubBot
 
 
                         houseManager.BuildHouse(builder, houseType);
+
+                        builder.Reply("say !finishhouse when you're done!");
+                    }
+                    break;
+
+                case "finishhouse":
+                    if (cmdSource is IPlayer)
+                    {
+                        IPlayer builder = cmdSource as IPlayer;
+
+                        houseManager.FinishHouse(builder);
                     }
                     break;
 

@@ -31,9 +31,9 @@ namespace MasterBot.SubBot.Houses
             }
             else
             {
-                alloweGroundBlocks = new HashSet<int>();
-                alloweGroundBlocks.Add(4);
-                alloweGroundBlocks.Add(414);
+                this.alloweGroundBlocks = new HashSet<int>();
+                this.alloweGroundBlocks.Add(4);
+                this.alloweGroundBlocks.Add(414);
             }
             
         }
@@ -197,8 +197,8 @@ namespace MasterBot.SubBot.Houses
             {
                 for (int yy = 0; yy < houseType.Height; ++yy)
                 {
-                    if (builder.BlockX == x + xx && builder.BlockY == y + yy)
-                        continue;
+                    
+                        
 
                     int blockId = 22;
                     int backgroundBlock = houseType.BackgroundBlock;
@@ -212,9 +212,12 @@ namespace MasterBot.SubBot.Houses
                         blockId = houseType.BaseBlock;
                     }
 
-                    this.bot.Room.BlockDrawer.PlaceBlock(
-                            new Room.Block.BlockWithPos(xx + x, yy + y,
-                                new Room.Block.NormalBlock(blockId)));
+                    if (builder.BlockX != x + xx || builder.BlockY != y + yy)
+                    {
+                        this.bot.Room.BlockDrawer.PlaceBlock(
+                                new Room.Block.BlockWithPos(xx + x, yy + y,
+                                    new Room.Block.NormalBlock(blockId)));
+                    }
 
                     this.bot.Room.BlockDrawer.PlaceBlock(
                             new Room.Block.BlockWithPos(xx + x, yy + y,
@@ -222,31 +225,59 @@ namespace MasterBot.SubBot.Houses
 
                 }
             }
+
+            bot.Say("/tp " + builder.Name + " " + builder.BlockX + " " + builder.BlockY);
+
             return true;
+        }
+
+        public void FinishHouse(IPlayer builder)
+        {
+            if (buildingHouses.ContainsKey(builder))
+            {
+                House house = buildingHouses[builder];
+                if (builder.BlockX < house.x || builder.BlockX >= house.x + house.width
+                    || builder.BlockY < house.y || builder.BlockY >= house.y + house.height)
+                {
+                    buildingHouses.Remove(builder);
+
+                    builder.Reply("You got a nice house there! :P");
+                }
+                else
+                {
+                    builder.Reply("You must go out from your house to finish it!");
+                }
+            }
+            else
+                builder.Reply("You are not building any house. Say '!build house' to build a house.");
         }
 
         public void OnPlayerMine(IPlayer player, int x1, int y1, int x2, int y2)
         {
-            if (buildingHouses.ContainsKey(player)) {
+            if (buildingHouses.ContainsKey(player))
+            {
                 House house = buildingHouses[player];
                 if (x2 >= house.x && y2 >= house.y && x2 < house.x + house.width && y2 < house.y + house.height)
                 {
                     CurrentMiningBlock currentMiningBLock = new CurrentMiningBlock(x2, y2);
 
-                    if (miningBlocks.ContainsKey(player)) {
+                    if (miningBlocks.ContainsKey(player))
+                    {
                         currentMiningBLock = miningBlocks[player];
 
                         if (currentMiningBLock.x != x2 || currentMiningBLock.y != y2)
                             currentMiningBLock = new CurrentMiningBlock(x2, y2);
                     }
-                    else {
+                    else
+                    {
                         miningBlocks.Add(player, currentMiningBLock);
                     }
 
                     currentMiningBLock.health--;
                     miningBlocks[player] = currentMiningBLock;
 
-                    if (currentMiningBLock.health == 0) {
+                    if (currentMiningBLock.health == 0)
+                    {
                         miningBlocks.Remove(player);
                         bot.Room.BlockDrawer.PlaceBlock(
                             new Room.Block.BlockWithPos(x2, y2,
@@ -256,6 +287,8 @@ namespace MasterBot.SubBot.Houses
 
                 }
             }
+            //else
+            //    furnitureManager.OnPlayerPush(x1, y1, x2, y2);
         }
 
         bool isValidHousePosition(House house)
@@ -297,8 +330,10 @@ namespace MasterBot.SubBot.Houses
 
                     int blockId = bot.Room.getBlock(0, bx, by).Id;
 
-                    if (!house.houseType.isGroundBlockAllowed(blockId))
+                    if (!house.houseType.isGroundBlockAllowed(blockId)) {
                         house.builder.Reply("You must build the house on empty space without dirt and ores!");
+                        return false;
+                    }
                 }
             }
 
