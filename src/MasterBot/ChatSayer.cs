@@ -77,11 +77,17 @@ namespace MasterBot
                 {
                     lock (messages)
                     {
-                        messages.Enqueue(message + "  " + characters[character]);
+                        if (message[0] == '/')
+                            messages.Enqueue(message);
+                        else
+                        {
 
-                        character++;
-                        if (character > characters.Length - 1)
-                            character = 0;
+                            messages.Enqueue(message + "  " + characters[character]);
+
+                            character++;
+                            if (character > characters.Length - 1)
+                                character = 0;
+                        }
                     }
                 }
             }

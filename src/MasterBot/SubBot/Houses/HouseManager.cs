@@ -57,7 +57,7 @@ namespace MasterBot.SubBot.Houses
         Painting,
         Finished
     }
-    public struct House
+    public class House
     {
         public HouseType houseType;
         public HouseState houseState;
@@ -129,6 +129,7 @@ namespace MasterBot.SubBot.Houses
         List<isValidPosDelegate> isValidPosEvent = new List<isValidPosDelegate>();
         Dictionary<string, HouseType> houseTypes = new Dictionary<string,HouseType>();
 
+        // TODO: Use lock(this)
 
         public HouseManager(IBot bot)
         {
@@ -145,8 +146,6 @@ namespace MasterBot.SubBot.Houses
 
         public bool BuildHouse(IPlayer builder, string houseTypeStr)
         {
-
-
             if (buildingHouses.ContainsKey(builder))
                 return false;
 
@@ -352,6 +351,19 @@ namespace MasterBot.SubBot.Houses
 
             houseTypes.Add(houseType.Name, houseType);
             return true;
+        }
+
+        public House FindHouse(int x, int y)
+        {
+            lock (this)
+            {
+                foreach (House house in houses)
+                {
+                    if (x >= house.x && x < house.x + house.width && y >= house.y && y < house.y + house.height)
+                        return house;
+                }
+            }
+            return null;
         }
 
     }

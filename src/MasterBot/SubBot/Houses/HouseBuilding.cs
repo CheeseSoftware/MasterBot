@@ -10,11 +10,13 @@ namespace MasterBot.SubBot
     class HouseBuilding : ASubBot
     {
         HouseManager houseManager;
+        FurnitureManager furnitureManager;
 
         public HouseBuilding(IBot bot)
             : base(bot)
         {
             this.houseManager = new HouseManager(bot);
+            this.furnitureManager = new FurnitureManager(bot, houseManager);
         }
 
 
@@ -73,7 +75,10 @@ namespace MasterBot.SubBot
                             int y2 = blockY + (int)vertical;
 
                             if (horizontal + vertical == 1 || horizontal + vertical == -1)
+                            {
                                 houseManager.OnPlayerMine(player, x1, y1, x2, y2);
+                                furnitureManager.OnPlayerPush(player, x1, y1, (int)horizontal, (int)vertical);
+                            }
                         }
                     }
                     break;
@@ -104,6 +109,16 @@ namespace MasterBot.SubBot
                     }
                     break;
 
+                case "place":
+                    if (cmdSource is IPlayer)
+                    {
+                        IPlayer builder = cmdSource as IPlayer;
+
+                        furnitureManager.PlaceFurniture(builder, new Door(builder.BlockX, builder.BlockY));
+                    }
+                    break;
+
+                case "finishouse":
                 case "finishhouse":
                     if (cmdSource is IPlayer)
                     {
