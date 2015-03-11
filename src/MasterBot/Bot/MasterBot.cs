@@ -186,8 +186,11 @@ namespace MasterBot
         {
             if (LoggedIn)
             {
-                client.Multiplayer.JoinRoom(
+                client.Multiplayer.CreateJoinRoom(
                     roomId,
+                    "Everybodyedits189",
+                    true,
+                    null,
                     null,
                     delegate(PlayerIOClient.Connection tempConnection)
                     {
@@ -200,7 +203,6 @@ namespace MasterBot
 
                         subBotHandler.onConnect();
                         
-                        //this fails!
                         SafeInvoke.Invoke(mainForm, new Action(() => { mainForm.onConnectFinished(true); }));
                         
 
