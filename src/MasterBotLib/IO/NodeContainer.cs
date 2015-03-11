@@ -60,9 +60,21 @@ namespace MasterBot.IO
         public Node GetNode(NodePath path)
         {
             string key = path.Dequeue();
-            if (nodes.ContainsKey(key))
-                return nodes[key].GetNode(path);
+            if (path.Path.Count > 0)
+            {
+                if (nodes.ContainsKey(key))
+                    return nodes[key].GetNode(path);
+            }
+            else
+            {
+                return (nodes[key] != null ? nodes[key] : null);
+            }
             return null;
+        }
+
+        public Node GetNode(string path)
+        {
+            return GetNode(new NodePath(path));
         }
 
         public bool HasNodes { get { return nodes.Count > 0; } }
