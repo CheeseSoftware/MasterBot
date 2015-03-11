@@ -77,7 +77,9 @@ namespace MasterBot.SubBot
                             if (horizontal + vertical == 1 || horizontal + vertical == -1)
                             {
                                 houseManager.OnPlayerMine(player, x1, y1, x2, y2);
-                                furnitureManager.OnPlayerPush(player, x1, y1, (int)horizontal, (int)vertical);
+
+                                if (speedX * horizontal == 0 && speedY * vertical == 0)
+                                    furnitureManager.OnPlayerPush(player, x1, y1, (int)horizontal, (int)vertical);
                             }
                         }
                     }

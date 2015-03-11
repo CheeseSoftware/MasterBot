@@ -117,5 +117,19 @@ namespace MasterBot.SubBot.Houses
             }
         }
 
+        public void OnBlockPlace(int x, int y, int layer, int blockId)
+        {
+            lock (this)
+            {
+                BlockPos pos = new BlockPos(layer, x, y);
+                if (this.furnitures.ContainsKey(pos))
+                {
+                    Furniture furniture = furnitures[pos];
+                    if (blockId != furniture.getBlockId())
+                        furnitures.Remove(pos);
+                }
+            }
+        }
+
     }
 }
