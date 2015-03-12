@@ -144,6 +144,23 @@ namespace MasterBot.SubBot.Houses
             RegisterHouseType(largeHouse);
         }
 
+        public void EditHouse(IPlayer builder)
+        {
+            bool editSuccess = false;
+            foreach (House house in houses)
+            {
+                if (house.builder.Name.Equals(builder.Name))
+                {
+                    buildingHouses.Add(builder, house);
+                    editSuccess = true;
+                }
+            }
+            if (editSuccess)
+                builder.Send("You are now able to edit your houses.");
+            else
+                builder.Send("You have no houses to edit.");
+        }
+
         public bool BuildHouse(IPlayer builder, string houseTypeStr)
         {
             if (buildingHouses.ContainsKey(builder))

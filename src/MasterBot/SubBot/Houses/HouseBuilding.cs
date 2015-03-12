@@ -64,10 +64,10 @@ namespace MasterBot.SubBot
                         if (player == null || player.IsGod || player.IsMod)
                             return;
 
-                       
+
 
                         int blockId = (bot.Room.getBlock(0, blockX + (int)horizontal, blockY + (int)vertical).Id);
-                        
+
                         {
                             int x1 = blockX;
                             int y1 = blockY;
@@ -106,14 +106,23 @@ namespace MasterBot.SubBot
         {
             switch (cmd)
             {
+                case "edithouse":
+                    if (cmdSource is IPlayer)
+                    {
+                        IPlayer builder = cmdSource as IPlayer;
+
+                        houseManager.EditHouse(builder);
+                    }
+                    break;
                 case "build":
-                    if (cmdSource is IPlayer && args.Count() >= 1) {
+                    if (cmdSource is IPlayer && args.Count() >= 1)
+                    {
                         int width = 12;
                         int height = 12;
                         IPlayer builder = cmdSource as IPlayer;
 
-                        int x = builder.BlockX-width;
-                        int y = builder.BlockY-height;
+                        int x = builder.BlockX - width;
+                        int y = builder.BlockY - height;
 
                         string houseType = args[0];
 
