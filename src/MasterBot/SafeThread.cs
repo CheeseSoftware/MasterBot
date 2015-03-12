@@ -24,6 +24,7 @@ namespace MasterBot
         
         public void Start()
         {
+            shouldStop = false;
             thread = new Thread(Work);
             thread.Start();
             stopped = false;

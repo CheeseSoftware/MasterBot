@@ -20,7 +20,6 @@ namespace MasterBot.SubBot.WorldEdit
             : base(bot)
         {
             blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(0);
-            blockDrawer.Start();
         }
 
         private void BeginRecord(IPlayer player)
@@ -257,10 +256,12 @@ namespace MasterBot.SubBot.WorldEdit
 
         public override void onConnect()
         {
+            blockDrawer.Start();
         }
 
         public override void onDisconnect(string reason)
         {
+            blockDrawer.Stop();
         }
 
         public override void onMessage(PlayerIOClient.Message m)

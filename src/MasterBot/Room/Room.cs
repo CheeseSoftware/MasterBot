@@ -65,6 +65,7 @@ namespace MasterBot.Room
             this.blockDrawer.Start();
 
             playerTickThread = new SafeThread(UpdatePhysics);
+
             EnableTick(50);
         }
 
@@ -545,13 +546,17 @@ namespace MasterBot.Room
 
         public override void onConnect()
         {
+            blockDrawer.Start();
             blockDrawerPool.Start();
+
             playerTickThread.Start();
+
             playerTickStopwatch.Start();
         }
 
         public override void onDisconnect(string reason)
         {
+            blockDrawer.Stop();
             blockDrawerPool.Stop();
             playerTickThread.Stop();
             if (minimap != null)
