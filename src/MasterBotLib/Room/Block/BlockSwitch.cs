@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace MasterBot.Room.Block
 {
-    public class BlockCoinGate : NormalBlock
+    public class BlockSwitch : NormalBlock
     {
-        public int coins;
+        public int switchId;
 
-        public BlockCoinGate(int coins)
-            : base(165, 0)
+        public BlockSwitch(int switchId)
+            : base(113, 0)
         {
-            this.coins = coins;
+            this.switchId = switchId;
         }
 
         public override void Send(IBot bot, int x, int y)
         {
-            bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id, coins);
+            bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id, switchId);
             OnSend(bot, x, y);
         }
     }

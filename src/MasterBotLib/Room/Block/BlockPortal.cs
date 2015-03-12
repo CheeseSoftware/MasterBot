@@ -22,7 +22,7 @@ namespace MasterBot.Room.Block
 
         public override void Send(IBot bot, int x, int y)
         {
-            bot.Connection.Send("b", bot.Room.WorldKey, Layer, x, y, Id, rotation, myId, destinationId);
+            bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id, rotation, myId, destinationId);
             OnSend(bot, x, y);
         }
     }

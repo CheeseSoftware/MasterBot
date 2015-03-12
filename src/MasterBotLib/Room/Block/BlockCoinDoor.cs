@@ -18,7 +18,7 @@ namespace MasterBot.Room.Block
 
         public override void Send(IBot bot, int x, int y)
         {
-            bot.Connection.Send("b", Layer, x, y, Id, coins);
+            bot.Connection.Send(bot.Room.WorldKey, Layer, x, y, Id, coins);
             OnSend(bot, x, y);
         }
     }

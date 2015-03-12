@@ -15,7 +15,7 @@ namespace MasterBot.SubBot.Houses
         protected int y;
 
         public abstract void OnPush(IBot bot, IPlayer player, int dx, int dy);
-        public abstract int getBlockId();
+        public abstract IBlock getBlock();
 
         public void setHouse(House house)
         {
@@ -27,9 +27,9 @@ namespace MasterBot.SubBot.Houses
         public House House { get { return house; } }
     }
 
-    class Door : Furniture
+    class LockedDoor : Furniture
     {
-        public Door(int x, int y)
+        public LockedDoor(int x, int y)
         {
             this.x = x;
             this.y = y;
@@ -46,15 +46,67 @@ namespace MasterBot.SubBot.Houses
                 string text = "/teleport " + player.Name + " " + xx + " " + yy;
                 if (player == house.builder)
                     bot.Say(text);
-                else
-                    player.Reply("The door is locked!");
             }
             
         }
 
-        public override int getBlockId()
+        public override IBlock getBlock()
         {
-            return 45;
+            return new NormalBlock(45);
+        }
+    }
+
+    class SwitchDoor : Furniture
+    {
+        int playerId;
+
+        public SwitchDoor(IPlayer placer, int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+            this.playerId = placer.Id;
+        }
+
+        public override void OnPush(IBot bot, IPlayer player, int dx, int dy)
+        {
+            int blockId = bot.Room.getBlock(0, x + dx, y + dy).Id;
+
+            if (blockId == 414 || blockId == 4)
+            {
+                int xx = x + dx + 1;
+                int yy = y + dy + 1;
+                string text = "/teleport " + player.Name + " " + xx + " " + yy;
+                if (player == house.builder)
+                    bot.Say(text);
+            }
+
+        }
+
+        public override IBlock getBlock()
+        {
+            return new BlockSwitchDoor(playerId%100);
+        }
+    }
+
+    class Switch : Furniture
+    {
+        int playerId;
+
+        public Switch(IPlayer placer, int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+            this.playerId = placer.Id;
+        }
+
+        public override void OnPush(IBot bot, IPlayer player, int dx, int dy)
+        {
+            return;
+        }
+
+        public override IBlock getBlock()
+        {
+            return new BlockSwitch(playerId%100);
         }
     }
 
@@ -94,7 +146,7 @@ namespace MasterBot.SubBot.Houses
                     return false;
                 }
 
-                bot.Room.setBlock(furniture.X, furniture.Y, new NormalBlock(furniture.getBlockId()));
+                bot.Room.setBlock(furniture.X, furniture.Y, furniture.getBlock());
 
                 furniture.setHouse(house);
                 furnitures.Add(new BlockPos(0, furniture.X, furniture.Y), furniture);
@@ -125,7 +177,7 @@ namespace MasterBot.SubBot.Houses
                 if (this.furnitures.ContainsKey(pos))
                 {
                     Furniture furniture = furnitures[pos];
-                    if (blockId != furniture.getBlockId())
+                    if (blockId != furniture.getBlock().Id)
                         furnitures.Remove(pos);
                 }
             }

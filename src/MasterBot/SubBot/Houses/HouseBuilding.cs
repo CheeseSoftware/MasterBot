@@ -84,6 +84,19 @@ namespace MasterBot.SubBot
                         }
                     }
                     break;
+
+
+                case "b":
+                    {
+                        int layer = m.GetInt(0);
+                        int blockId = m.GetInt(3);
+                        int x = m.GetInt(1);
+                        int y = m.GetInt(2);
+
+                        furnitureManager.OnBlockPlace(x, y, layer, blockId);
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -105,18 +118,40 @@ namespace MasterBot.SubBot
                         string houseType = args[0];
 
 
-                        houseManager.BuildHouse(builder, houseType);
-
-                        builder.Reply("say !finishhouse when you're done!");
+                        if (houseManager.BuildHouse(builder, houseType))
+                            builder.Reply("say !finishhouse when you're done!");
                     }
                     break;
 
                 case "place":
-                    if (cmdSource is IPlayer)
+                    if (cmdSource is IPlayer && args.Length >= 1)
                     {
+                        string furnitureType = args[0];
                         IPlayer builder = cmdSource as IPlayer;
+                        Furniture furniture = null;
 
-                        furnitureManager.PlaceFurniture(builder, new Door(builder.BlockX, builder.BlockY));
+                        switch (furnitureType)
+                        {
+                            case "door":
+                                furniture = new LockedDoor(builder.BlockX, builder.BlockY);
+                                break;
+
+                            case "switchdoor":
+                                furniture = new SwitchDoor(builder, builder.BlockX, builder.BlockY);
+                                break;
+
+                            case "switch":
+                                furniture = new Switch(builder, builder.BlockX, builder.BlockY);
+                                break;
+
+                            default:
+                                builder.Reply("You can place: door, switchdoor, switch");
+                                return;
+                        }
+
+                        
+
+                        furnitureManager.PlaceFurniture(builder, furniture );
                     }
                     break;
 

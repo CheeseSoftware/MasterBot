@@ -306,6 +306,8 @@ namespace MasterBot.Room
                             result = new BlockSign(text);
                             break;
                         }
+                    case "m": break;
+
                 }
             }
             if (result != null && blockMap != null)
@@ -840,7 +842,14 @@ namespace MasterBot.Room
                 case "saved":
                     bot.Say("World saved.");
                     break;
+
+
+                default:
+                    Console.WriteLine(m.Type);
+                    break;
             }
+
+
         }
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)

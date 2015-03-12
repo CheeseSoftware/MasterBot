@@ -60,6 +60,9 @@
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\MinimapColors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Room\Block\BlockSwitch.cs" />
+    <Compile Include="Room\Block\BlockSwitchGate.cs" />
+    <Compile Include="Room\Block\BlockSwitchDoor.cs" />
     <Compile Include="Room\Block\BlockCoinDoor.cs" />
     <Compile Include="Room\Block\BlockCoinGate.cs" />
     <Compile Include="Room\Block\BlockDrums.cs" />
