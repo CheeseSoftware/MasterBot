@@ -27,6 +27,7 @@ namespace MasterBot.SubBot
             HouseType hugeHouse = new HouseType("hugehouse", 17, 17, 196, 195, 618);
 
             HouseType weirdHouse = new HouseType("weirdhouse", 17, 5, 80, 82, 548);
+            HouseType strangeHouse = new HouseType("strangehouse", 3, 15, 50, 156, 575);
             HouseType candyHouse = new HouseType("candyhouse", 11, 11, 67, 60, 539);
             HouseType basicHouse = new HouseType("basichouse", 11, 11, 9, 10, 501);
             HouseType brickHouse = new HouseType("brickhouse", 11, 11, 1024, 1023, 647);
@@ -40,6 +41,7 @@ namespace MasterBot.SubBot
             this.houseManager.RegisterHouseType(hugeHouse);
 
             this.houseManager.RegisterHouseType(weirdHouse);
+            this.houseManager.RegisterHouseType(strangeHouse);
             this.houseManager.RegisterHouseType(candyHouse);
             this.houseManager.RegisterHouseType(basicHouse);
             this.houseManager.RegisterHouseType(brickHouse);
