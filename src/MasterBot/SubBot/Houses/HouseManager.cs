@@ -314,7 +314,7 @@ namespace MasterBot.SubBot.Houses
                     IPlayer builder = house.builder;
                     IPlayer neighbor = other.builder;
 
-                    builder.Reply("Your house would be too close to " + neighbor.Name + "'s house.");
+                    builder.Reply("Your house would be too close to " + neighbor.Name + "'s house. The house you are trying to build is " + house.width + "x" + house.height + " blocks big.");
 
                     return false;
                 }
@@ -330,7 +330,7 @@ namespace MasterBot.SubBot.Houses
                     int blockId = bot.Room.getBlock(0, bx, by).Id;
 
                     if (!house.houseType.isGroundBlockAllowed(blockId)) {
-                        house.builder.Reply("You must build the house on empty space without dirt and ores!");
+                        house.builder.Reply("You must build the house on empty space without dirt and ores! The house you are trying to build is " + house.width + "x" + house.height + " blocks big.");
                         return false;
                     }
                 }
