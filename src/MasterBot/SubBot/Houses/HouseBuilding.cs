@@ -17,6 +17,34 @@ namespace MasterBot.SubBot
         {
             this.houseManager = new HouseManager(bot);
             this.furnitureManager = new FurnitureManager(bot, houseManager);
+
+
+            HouseType tinyHouse = new HouseType("tinyhouse", 7, 7, 46, 48, 541);
+            HouseType smallHouse = new HouseType("smallhouse", 9, 9, 93, 93);
+            HouseType mediumHouse = new HouseType("mediumhouse", 11, 11, 1023, 1024);
+            HouseType largeHouse = new HouseType("largehouse", 13, 13, 14, 1018, 505);
+            HouseType veryLargeHouse = new HouseType("verylargehouse", 15, 15, 1021, 42);
+            HouseType hugeHouse = new HouseType("hugehouse", 17, 17, 196, 195, 618);
+
+            HouseType weirdHouse = new HouseType("weirdhouse", 17, 5, 80, 82, 548);
+            HouseType candyHouse = new HouseType("candyhouse", 11, 11, 67, 60, 539);
+            HouseType basicHouse = new HouseType("basichouse", 11, 11, 9, 10, 501);
+            HouseType brickHouse = new HouseType("brickhouse", 11, 11, 1024, 1023, 647);
+            HouseType coinHouse = new HouseType("coinhouse", 5, 5, 41, 100, 581);
+
+            this.houseManager.RegisterHouseType(tinyHouse);
+            this.houseManager.RegisterHouseType(smallHouse);
+            this.houseManager.RegisterHouseType(mediumHouse);
+            this.houseManager.RegisterHouseType(largeHouse);
+            this.houseManager.RegisterHouseType(veryLargeHouse);
+            this.houseManager.RegisterHouseType(hugeHouse);
+
+            this.houseManager.RegisterHouseType(weirdHouse);
+            this.houseManager.RegisterHouseType(candyHouse);
+            this.houseManager.RegisterHouseType(basicHouse);
+            this.houseManager.RegisterHouseType(brickHouse);
+            this.houseManager.RegisterHouseType(coinHouse);
+
         }
 
 
