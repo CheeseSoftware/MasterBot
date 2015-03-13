@@ -88,6 +88,9 @@
     <Compile Include="SubBot\Protection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SubBot\RunFromGods.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubBot\SubBotHandler.cs">
       <SubType>Component</SubType>
     </Compile>

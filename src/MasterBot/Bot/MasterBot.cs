@@ -68,6 +68,7 @@ namespace MasterBot
             subBotHandler.AddSubBot(new Protection(this));
             subBotHandler.AddSubBot(new ZombiesSubbot(this));
             subBotHandler.AddSubBot(new HouseBuilding(this));
+            subBotHandler.AddSubBot(new RunFromGods(this), false);
 
 
             //////////////////////////////////////
@@ -259,6 +260,9 @@ namespace MasterBot
 
         public void Say(string message)
         {
+            if (chatSayer == null)
+                return;
+
             lock (chatSayer)
             {
                 if (chatSayer != null)
