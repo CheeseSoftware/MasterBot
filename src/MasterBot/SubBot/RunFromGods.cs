@@ -80,9 +80,9 @@ namespace MasterBot.SubBot
                         if (random.Next(10) >= 8)
                             continue;
 
-                        int blockId = bot.Room.getBlock(0, xx, yy).Id;
+                        int otherId = bot.Room.getBlock(0, xx, yy).Id;
 
-                        if (blockId != 4 && blockId != 414)
+                        if (otherId != 4 && otherId != 414)
                             continue;
 
                         BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(this.blockId));
@@ -98,9 +98,9 @@ namespace MasterBot.SubBot
                         if (random.Next(10) >= 8)
                             continue;
 
-                        int blockId = bot.Room.getBlock(0, xx, yy).Id;
+                        int otherId = bot.Room.getBlock(0, xx, yy).Id;
 
-                        if (blockId != 4 && blockId != 414)
+                        if (otherId != 4 && otherId != 414)
                             continue;
 
                         BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(this.blockId));
@@ -320,6 +320,7 @@ namespace MasterBot.SubBot
 
                 bot.Say("/godon " + player.Name);
                 bot.Say(player.Name + " is god! RUN!!!");
+                player.Reply("You are a god, your goal is to block in the players!");
             }
         }
         private void InitEnd()
@@ -348,6 +349,37 @@ namespace MasterBot.SubBot
                 god.UpdatePosition();
                 god.DrawLine(this.bot, this.blockDrawer, this.random);
             }
+
+            List<IPlayer> playersThatDied = new List<IPlayer>();
+
+            foreach(IPlayer player in this.survivors)
+            {
+                for (int i = 0; i < 9; ++i)
+                {
+                    int x = i % 3;
+                    int y = i / 3;
+
+                    int blockId = bot.Room.getBlock(0, x, y).Id;
+
+                    if (blockId == 4 || blockId == 414)
+                        continue;
+
+                    playersThatDied.Add(player);
+                }
+            }
+
+            foreach(IPlayer player in playersThatDied)
+            {
+                survivors.Remove(player);
+                bot.Say("/kill " + player.Name);
+                player.Reply("You died! :P");
+            }
+
+            // Restart
+            if (survivors.Count == 0)
+                this.stateTime = 0;
+
+
         }
 
 
