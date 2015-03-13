@@ -37,7 +37,7 @@ namespace MasterBot.SubBot
             y = player.BlockY;
         }
 
-        public void DrawLine(IBlockDrawer blockDrawer, Random random) 
+        public void DrawLine(IBot bot, IBlockDrawer blockDrawer, Random random) 
         {
             int x1, x2, y1, y2;
             int sign = 1;
@@ -80,6 +80,11 @@ namespace MasterBot.SubBot
                         if (random.Next(10) >= 8)
                             continue;
 
+                        int blockId = bot.Room.getBlock(0, xx, yy).Id;
+
+                        if (blockId != 4 && blockId != 414)
+                            continue;
+
                         BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(this.blockId));
                         blockDrawer.PlaceBlock(block);
                     
@@ -91,6 +96,11 @@ namespace MasterBot.SubBot
                 {
                     int xx = x + sign*((dx *(yy-y))/dy);
                         if (random.Next(10) >= 8)
+                            continue;
+
+                        int blockId = bot.Room.getBlock(0, xx, yy).Id;
+
+                        if (blockId != 4 && blockId != 414)
                             continue;
 
                         BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(this.blockId));
@@ -111,6 +121,7 @@ namespace MasterBot.SubBot
     public class RunFromGods : ASubBot
     {
         Dictionary<IPlayer, GodPlayer> gods = new Dictionary<IPlayer,GodPlayer>();
+        List<IPlayer> survivors = new List<IPlayer>();
 
         enum State 
         {
@@ -148,6 +159,7 @@ namespace MasterBot.SubBot
             // 100ms is the player physics.
 
             this.blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(127);
+            
 
         }
 
@@ -157,11 +169,17 @@ namespace MasterBot.SubBot
             this.EnableTick(100);
 
             stateTimer.Start();
+            this.blockDrawer.Start();
         }
 
         public override void onDisable()
         {
-
+            this.DisableTick();
+            this.stateTimer.Stop();
+            this.stateTime = 1;
+            this.state = State.End;
+            this.blockDrawer.Stop();
+            this.InitEnd();
         }
 
         public override void onConnect()
@@ -239,7 +257,8 @@ namespace MasterBot.SubBot
                     case State.RunFromSpawn:
                         if (bot.Room.Players.Count < 3)
                         {
-                            this.bot.Say("There are not enough players! At least 5 players must be in the room.");
+                            this.bot.Say("There are not enough players");
+                            this.bot.Say("At least 5 players must be in the room.");
                             this.state = State.Start;
                         }
                         else
@@ -281,21 +300,20 @@ namespace MasterBot.SubBot
         }
         private void InitRunFromSpawn()
         {
-            this.bot.Connection.Send(bot.Room.WorldKey, "r");
+            //this.bot.Connection.Send(bot.Room.WorldKey, "r");
         }
         private void InitRunFromGods()
         {
-            List<IPlayer> playerList;
-            playerList = new List<IPlayer>();
+            survivors.Clear();
 
             foreach (IPlayer player in bot.Room.Players)
-                playerList.Add(player);
+                survivors.Add(player);
 
-            for (int i = 0; i < 5 && i < playerList.Count - 2; ++i )
+            for (int i = 0; i < 5 && i < survivors.Count - 2; ++i)
             {
-                int randomIndex = random.Next(playerList.Count);
-                IPlayer player = playerList[randomIndex];
-                playerList.RemoveAt(randomIndex);
+                int randomIndex = random.Next(survivors.Count);
+                IPlayer player = survivors[randomIndex];
+                survivors.RemoveAt(randomIndex);
 
                 GodPlayer godPlayer = new GodPlayer(player, player.BlockX, player.BlockY, random.Next(9, 21));
                 this.gods.Add(player, godPlayer);
@@ -311,6 +329,7 @@ namespace MasterBot.SubBot
                 bot.Say("/godoff " + god.Player.Name);
             }
             this.gods.Clear();
+            this.survivors.Clear();
             this.bot.Say("/reset");
         }
 
@@ -327,7 +346,7 @@ namespace MasterBot.SubBot
             foreach (GodPlayer god in this.gods.Values)
             {
                 god.UpdatePosition();
-                god.DrawLine(this.blockDrawer, this.random);
+                god.DrawLine(this.bot, this.blockDrawer, this.random);
             }
         }
 
