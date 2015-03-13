@@ -45,7 +45,7 @@ namespace MasterBot.SubBot
             y = player.BlockY;
         }
 
-        public void DrawLine(IBot bot, IBlockDrawer blockDrawer, Random random)
+        public void DrawLine(IBot bot, IBlockDrawer blockDrawer, Random random, List<BlockPos> blocksToRemove)
         {
             int x1, x2, y1, y2;
             int sign = 1;
@@ -95,6 +95,7 @@ namespace MasterBot.SubBot
 
                     BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(BlockId));
                     blockDrawer.PlaceBlock(block);
+                    blocksToRemove.Add(new BlockPos(0, xx, yy));
 
                 }
             }
@@ -113,6 +114,7 @@ namespace MasterBot.SubBot
 
                     BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(BlockId));
                     blockDrawer.PlaceBlock(block);
+                    blocksToRemove.Add(new BlockPos(0, xx, yy));
 
                 }
             }
@@ -130,6 +132,7 @@ namespace MasterBot.SubBot
     {
         Dictionary<IPlayer, GodPlayer> gods = new Dictionary<IPlayer, GodPlayer>();
         List<IPlayer> survivors = new List<IPlayer>();
+        List<BlockPos> blocksToRemove = new List<BlockPos>();
 
         enum State
         {
@@ -308,7 +311,7 @@ namespace MasterBot.SubBot
         }
         private void InitRunFromSpawn()
         {
-            //this.bot.Connection.Send(bot.Room.WorldKey, "r");
+            this.bot.Connection.Send(bot.Room.WorldKey + "r");
         }
         private void InitRunFromGods()
         {
@@ -340,6 +343,13 @@ namespace MasterBot.SubBot
             this.gods.Clear();
             this.survivors.Clear();
             this.bot.Say("/reset");
+
+
+            foreach(BlockPos blockPos in blocksToRemove)
+            {
+                this.blockDrawer.PlaceBlock(new BlockWithPos(blockPos.X, blockPos.Y, new NormalBlock(414)));
+            }
+            blocksToRemove.Clear();
         }
 
         private void TickStart()
@@ -355,25 +365,33 @@ namespace MasterBot.SubBot
             foreach (GodPlayer god in this.gods.Values)
             {
                 god.UpdatePosition();
-                god.DrawLine(this.bot, this.blockDrawer, this.random);
+                god.DrawLine(this.bot, this.blockDrawer, this.random, this.blocksToRemove);
             }
 
             List<IPlayer> playersThatDied = new List<IPlayer>();
 
             foreach(IPlayer player in this.survivors)
             {
+
+
+                bool dead = true;
+
                 for (int i = 0; i < 9; ++i)
                 {
-                    int x = i % 3;
-                    int y = i / 3;
+                    int x = i % 3 + player.BlockX - 1;
+                    int y = i / 3 + player.BlockY - 1;
+
+                    if (x == 1 && y == 1)
+                        continue;
 
                     int blockId = bot.Room.getBlock(0, x, y).Id;
 
                     if (blockId == 4 || blockId == 414)
-                        continue;
+                        dead = false;
 
-                    playersThatDied.Add(player);
                 }
+                if (dead || bot.Room.getPlayer(player.Id) == null)
+                    playersThatDied.Add(player);
             }
 
             foreach(IPlayer player in playersThatDied)
@@ -381,10 +399,12 @@ namespace MasterBot.SubBot
                 survivors.Remove(player);
                 bot.Say("/kill " + player.Name);
                 player.Reply("You died! :P");
+            
             }
+            playersThatDied.Clear();
 
             // Restart
-            if (survivors.Count == 0)
+            if (survivors.Count == 1)
                 this.stateTime = 0;
 
 
