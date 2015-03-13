@@ -763,6 +763,13 @@ namespace MasterBot.Room
                 case "allowpotions":
                     break;
                 case "wu":
+                    {
+                        int id = m.GetInt(0);
+                        if (isOwner && players.ContainsKey(id))
+                        {
+                            players[id].Reply("Thank you!");
+                        }
+                    }
                     break;
                 case "w":
                     break;
