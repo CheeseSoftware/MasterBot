@@ -239,3 +239,8 @@ pip-log.txt
 .mr.developer.cfg
 src/MasterBot/bin/Release/data/gustav9797
 src/MasterBot/bin/Release/data/ostkaka
+src/MasterBot.sln.ide/edbres00001.jrs
+*.jrs
+src/MasterBot.sln.ide/storage.ide
+*.chk
+src/MasterBot.sln.ide/tmp.edb

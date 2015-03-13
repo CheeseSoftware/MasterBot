@@ -9,6 +9,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 
 namespace MasterBot.Room
 {
@@ -573,6 +574,7 @@ namespace MasterBot.Room
 
         public override void onMessage(PlayerIOClient.Message m)
         {
+            //MessageBox.Show(m.ToString());
             switch (m.Type)
             {
                 case "init":
@@ -706,8 +708,6 @@ namespace MasterBot.Room
                     break;
                 case "p":
                     break;
-                case "write":
-                    break;
                 case "upgrade":
                     break;
                 case "b":
@@ -772,6 +772,34 @@ namespace MasterBot.Room
                         if (players.ContainsKey(id))
                         {
                             players[id].Level = m.GetInt(1);
+                        }
+                    }
+                    break;
+                case "write":
+                    {
+                        if (m.GetString(0).Contains(" > you"))
+                        {
+                            string[] split = m.GetString(0).Split(' ');
+                            if (split.Length > 1)
+                            {
+                                string senderName = split[1];
+                                if (namePlayers.ContainsKey(senderName))
+                                {
+                                    IPlayer sender = namePlayers[senderName].First();
+
+                                    string text = m.GetString(1);
+                                    if (text.Length > 0 && text[0].Equals('!'))
+                                    {
+                                        string textCommandCharRemoved = text.Remove(0, 1);
+                                        string[] textSplit = textCommandCharRemoved.Split(' ');
+                                        string cmd = textSplit[0];
+                                        string[] args = new string[textSplit.Length - 1];
+                                        if (textSplit.Length > 0)
+                                            Array.Copy(textSplit, 1, args, 0, textSplit.Length - 1);
+                                        bot.SubBotHandler.onCommand(cmd, args, sender);
+                                    }
+                                }
+                            }
                         }
                     }
                     break;
