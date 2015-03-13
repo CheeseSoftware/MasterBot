@@ -17,7 +17,15 @@ namespace MasterBot.SubBot
         int y;
         int oldX;
         int oldY;
-        int blockId;
+        int blockPackToUse;
+        Random r = new Random();
+
+        public static int[][] blockPacks = new int[][] { 
+            new int[] { 12, 40, 20, 80, 51, 70, 129, 189 },  //red blocks 
+            new int[] { 14, 38, 19, 56, 74, 134, 191, 82 },  //green blocks 
+            new int[] { 10, 39, 1023, 54, 72, 81, 132, 187 }  //blue blocks
+        };
+
 
         public GodPlayer(IPlayer player, int x, int y, int blockId)
         {
@@ -26,7 +34,7 @@ namespace MasterBot.SubBot
             this.y = y;
             this.oldX = x;
             this.oldY = y;
-            this.blockId = blockId;
+            this.blockPackToUse = r.Next(blockPacks.Length);
         }
 
         public void UpdatePosition()
@@ -37,7 +45,7 @@ namespace MasterBot.SubBot
             y = player.BlockY;
         }
 
-        public void DrawLine(IBot bot, IBlockDrawer blockDrawer, Random random) 
+        public void DrawLine(IBot bot, IBlockDrawer blockDrawer, Random random)
         {
             int x1, x2, y1, y2;
             int sign = 1;
@@ -66,8 +74,8 @@ namespace MasterBot.SubBot
                 y2 = y;
             }
 
-            int dx = x2-x1;
-            int dy = y2-y1;
+            int dx = x2 - x1;
+            int dy = y2 - y1;
 
             if (dx == 0 && dy == 0)
                 return;
@@ -76,41 +84,41 @@ namespace MasterBot.SubBot
             {
                 for (int xx = x1; xx <= x2; ++xx)
                 {
-                    int yy = y + sign*((dy *(xx-x))/dx);
-                        if (random.Next(10) >= 8)
-                            continue;
+                    int yy = y + sign * ((dy * (xx - x)) / dx);
+                    if (random.Next(10) >= 8)
+                        continue;
 
-                        int blockId = bot.Room.getBlock(0, xx, yy).Id;
+                    int blockId = bot.Room.getBlock(0, xx, yy).Id;
 
-                        if (blockId != 4 && blockId != 414)
-                            continue;
+                    if (blockId != 4 && blockId != 414)
+                        continue;
 
-                        BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(this.blockId));
-                        blockDrawer.PlaceBlock(block);
-                    
+                    BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(BlockId));
+                    blockDrawer.PlaceBlock(block);
+
                 }
             }
             else
             {
                 for (int yy = y1; yy <= y2; ++yy)
                 {
-                    int xx = x + sign*((dx *(yy-y))/dy);
-                        if (random.Next(10) >= 8)
-                            continue;
+                    int xx = x + sign * ((dx * (yy - y)) / dy);
+                    if (random.Next(10) >= 8)
+                        continue;
 
-                        int blockId = bot.Room.getBlock(0, xx, yy).Id;
+                    int blockId = bot.Room.getBlock(0, xx, yy).Id;
 
-                        if (blockId != 4 && blockId != 414)
-                            continue;
+                    if (blockId != 4 && blockId != 414)
+                        continue;
 
-                        BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(this.blockId));
-                        blockDrawer.PlaceBlock(block);
-                    
+                    BlockWithPos block = new BlockWithPos(xx, yy, new NormalBlock(BlockId));
+                    blockDrawer.PlaceBlock(block);
+
                 }
             }
         }
 
-
+        public int BlockId { get { return blockPacks[blockPackToUse][r.Next(blockPacks[blockPackToUse].Length)]; } }
         public int X { get { return x; } }
         public int Y { get { return y; } }
         public int OldX { get { return oldX; } }
@@ -120,10 +128,10 @@ namespace MasterBot.SubBot
 
     public class RunFromGods : ASubBot
     {
-        Dictionary<IPlayer, GodPlayer> gods = new Dictionary<IPlayer,GodPlayer>();
+        Dictionary<IPlayer, GodPlayer> gods = new Dictionary<IPlayer, GodPlayer>();
         List<IPlayer> survivors = new List<IPlayer>();
 
-        enum State 
+        enum State
         {
             Start,
             RunFromSpawn,
@@ -159,7 +167,7 @@ namespace MasterBot.SubBot
             // 100ms is the player physics.
 
             this.blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(127);
-            
+
 
         }
 
@@ -214,7 +222,7 @@ namespace MasterBot.SubBot
             //{
             //    switch (cmd)
             //    {
-                    
+
             //    }
             //}
             ////else
@@ -248,7 +256,7 @@ namespace MasterBot.SubBot
 
                 this.stateTimer.Restart();
 
-                switch(this.state)
+                switch (this.state)
                 {
                     case State.Start:
                         this.stateTime = startTime;
@@ -278,20 +286,20 @@ namespace MasterBot.SubBot
                 }
             }
 
-                switch(this.state)
-                {
-                    case State.Start:
-                        this.TickStart();
-                        break;
-                    case State.RunFromSpawn:
-                        this.TickRunFromSpawn();
-                        break;
-                    case State.RunFromGods:
-                        this.TickRunFromGods();
-                        break;
-                    case State.End:
-                        break;
-                }
+            switch (this.state)
+            {
+                case State.Start:
+                    this.TickStart();
+                    break;
+                case State.RunFromSpawn:
+                    this.TickRunFromSpawn();
+                    break;
+                case State.RunFromGods:
+                    this.TickRunFromGods();
+                    break;
+                case State.End:
+                    break;
+            }
         }
 
         private void InitStart()
@@ -324,7 +332,7 @@ namespace MasterBot.SubBot
         }
         private void InitEnd()
         {
-            foreach(GodPlayer god in this.gods.Values)
+            foreach (GodPlayer god in this.gods.Values)
             {
                 bot.Say("/godoff " + god.Player.Name);
             }
