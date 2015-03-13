@@ -188,7 +188,7 @@ namespace MasterBot
             {
                 client.Multiplayer.CreateJoinRoom(
                     roomId,
-                    "Everybodyedits189",
+                    "Everybodyedits190",
                     true,
                     null,
                     null,
