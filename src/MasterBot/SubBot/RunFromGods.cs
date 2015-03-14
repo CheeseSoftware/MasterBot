@@ -34,7 +34,7 @@ namespace MasterBot.SubBot
             new int[] { 162, 163, 193, 199, 211, 212}, // non-square blocks 
             new int[] { 146, 147, 148, 149, 150, 151, 152, 153}, // industrial blocks 
             new int[] { 202, 203, 204, 416, 416, 416, 416, 416, 119}, // lava blocks 
-            new int[] { 416, 368, 203}, // deadly blocks 
+            new int[] { 416, 203}, // deadly blocks 
             new int[] { 92, 92, 92, 92, 92, 261}, // prison blocks 
             new int[] { 114, 115, 116, 117, 114, 115, 116, 117, 114, 115, 116, 117, 114, 115, 116, 117, 416}, // boostup blocks 
             //new int[] { 0, 0, 0, 0, 0 }, // gravity down blocks 
