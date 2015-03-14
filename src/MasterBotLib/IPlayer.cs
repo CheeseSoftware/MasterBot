@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,8 +46,12 @@ namespace MasterBot
         int OldBlockY { get; }
         int OldBlockX { get; }
 
+        Stopwatch AfkStopwatch { get; }
+
         void Respawn();
         void tick();
+
+
         #endregion
 
 

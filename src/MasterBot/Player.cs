@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MasterBot.Movement;
 using MasterBot.Room;
+using System.Diagnostics;
 
 namespace MasterBot
 {
@@ -15,6 +16,7 @@ namespace MasterBot
         private int id;
         private Dictionary<string, object> metadata = new Dictionary<string, object>();
         public bool hascrownsilver;
+        Stopwatch afkStopwatch = new Stopwatch();
 
         public int Id { get { return id; } }
 
@@ -25,6 +27,8 @@ namespace MasterBot
             this.bot = bot;
 
             physicsPlayer = new PhysicsPlayer(bot, id, name, smiley, xPos, yPos, isGod, isMod, hasChat, coins, purple, isFriend, level);
+
+            afkStopwatch.Start();
         }
 
         public void Reply(string message)
@@ -72,6 +76,8 @@ namespace MasterBot
             get { return Name == "ostkaka" || Name == "gustav9797" || Name == "gbot" || Name == "botost" || bot.Room.Owner == Name; }
         }
 
+        public Stopwatch AfkStopwatch { get { return afkStopwatch; } }
+
 #region PhysicsPlayer
         public int BlockX { get { return physicsPlayer.BlockX; } set { physicsPlayer.BlockX = value; } }
 
@@ -81,17 +87,17 @@ namespace MasterBot
 
         public double Y { get { return physicsPlayer.y; } set { physicsPlayer.y = value; } }
 
-        public double SpeedX { get { return physicsPlayer.speedX; } set { physicsPlayer.speedX = value; } }
+        public double SpeedX { get { return physicsPlayer.speedX; } set { physicsPlayer.speedX = value; afkStopwatch.Restart(); } }
 
-        public double SpeedY { get { return physicsPlayer.speedY; } set { physicsPlayer.speedY = value; } }
+        public double SpeedY { get { return physicsPlayer.speedY; } set { physicsPlayer.speedY = value; afkStopwatch.Restart(); } }
 
-        public double ModifierX { get { return physicsPlayer.modifierX; } set { physicsPlayer.modifierX = value; } }
+        public double ModifierX { get { return physicsPlayer.modifierX; } set { physicsPlayer.modifierX = value; afkStopwatch.Restart(); } }
 
-        public double ModifierY { get { return physicsPlayer.modifierY; } set { physicsPlayer.modifierY = value; } }
+        public double ModifierY { get { return physicsPlayer.modifierY; } set { physicsPlayer.modifierY = value; afkStopwatch.Restart(); } }
 
-        public int Horizontal { get { return physicsPlayer.horizontal; } set { physicsPlayer.horizontal = value; } }
+        public int Horizontal { get { return physicsPlayer.horizontal; } set { physicsPlayer.horizontal = value; afkStopwatch.Restart(); } }
 
-        public int Vertical { get { return physicsPlayer.vertical; } set { physicsPlayer.vertical = value; } }
+        public int Vertical { get { return physicsPlayer.vertical; } set { physicsPlayer.vertical = value; afkStopwatch.Restart(); } }
 
         public int Coins { get { return physicsPlayer.coins; } set { physicsPlayer.coins = value; } }
 

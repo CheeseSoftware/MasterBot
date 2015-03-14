@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterBot.SubBot.Houses
+namespace MasterBot
 {
-    abstract class Furniture
+    public abstract class Furniture
     {
         protected House house = null;
 
@@ -27,7 +27,7 @@ namespace MasterBot.SubBot.Houses
         public House House { get { return house; } }
     }
 
-    class LockedDoor : Furniture
+    public class LockedDoor : Furniture
     {
         public LockedDoor(int x, int y)
         {
@@ -56,7 +56,7 @@ namespace MasterBot.SubBot.Houses
         }
     }
 
-    class SwitchDoor : Furniture
+    public class SwitchDoor : Furniture
     {
         int playerId;
 
@@ -88,7 +88,7 @@ namespace MasterBot.SubBot.Houses
         }
     }
 
-    class Switch : Furniture
+    public class Switch : Furniture
     {
         int playerId;
 
@@ -110,7 +110,7 @@ namespace MasterBot.SubBot.Houses
         }
     }
 
-    class FurnitureManager
+    public class FurnitureManager
     {
         IBot bot = null;
         HouseManager houseManager;

@@ -49,6 +49,8 @@
     <Compile Include="Gui\RickTextConsole.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Houses\FurnitureManager.cs" />
+    <Compile Include="Houses\HouseManager.cs" />
     <Compile Include="IChatSayer.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />

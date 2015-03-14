@@ -93,6 +93,11 @@ namespace MasterBot
             }
          }
 
+        public void Command(string command)
+         {
+             bot.Connection.Send(Message.Create("say", command));
+         }
+
         public void onDisconnect()
         {
             chatThread.Stop();
