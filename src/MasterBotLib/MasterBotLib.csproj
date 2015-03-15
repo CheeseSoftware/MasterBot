@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractControlDescriptionProvider.cs" />
+    <Compile Include="Bot\EEConnection.cs" />
     <Compile Include="Bot\IBot.cs" />
     <Compile Include="Gui\RickTextConsole.cs">
       <SubType>Component</SubType>
