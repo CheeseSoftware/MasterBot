@@ -39,11 +39,18 @@ namespace MasterBot.SubBot
             hugeHouse.AddCost("gold", 50);
 
             HouseType weirdHouse = new HouseType("weirdhouse", 17, 5, 80, 82, 548);
+            weirdHouse.AddCost("stone", 400);
             HouseType strangeHouse = new HouseType("strangehouse", 3, 15, 50, 156, 575);
+            strangeHouse.AddCost("stone", 300);
             HouseType candyHouse = new HouseType("candyhouse", 11, 11, 67, 60, 539);
+            candyHouse.AddCost("stone", 400);
+            candyHouse.AddCost("copper", 50);
             HouseType basicHouse = new HouseType("basichouse", 11, 11, 9, 10, 501);
+            basicHouse.AddCost("stone", 400);
             HouseType brickHouse = new HouseType("brickhouse", 11, 11, 1024, 1023, 647);
+            brickHouse.AddCost("stone", 400);
             HouseType coinHouse = new HouseType("coinhouse", 5, 5, 41, 100, 581);
+            coinHouse.AddCost("stone", 400);
 
             this.houseManager.RegisterHouseType(tinyHouse);
             this.houseManager.RegisterHouseType(smallHouse);
