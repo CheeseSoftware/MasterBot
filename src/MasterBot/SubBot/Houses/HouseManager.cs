@@ -16,6 +16,8 @@ namespace MasterBot.SubBot.Houses
 		int wallBlock;
 		int backgroundBlock;
 
+        Dictionary<string, int> cost = new Dictionary<string, int>();
+
 		public HouseType(string name, int width = 9, int height = 9, int wallBlock = 9, int baseBlock = 16, int backgroundBlock = 555, HashSet<int> alloweGroundBlocks = null)
 		{
 			this.name = name;
@@ -37,6 +39,70 @@ namespace MasterBot.SubBot.Houses
 			}
 
 		}
+
+        public void AddCost(string item, int value)
+        {
+            if (cost.ContainsKey(item))
+                cost[item] += value;
+            else
+                cost.Add(item, value);
+        }
+
+        public bool CanBuy(IPlayer player)
+        {
+            MasterDig.DigPlayer digPlayer = MasterDig.DigPlayer.FromPlayer(player);
+
+            // Check if we can buy the house.
+            foreach (var pair in cost)
+            {
+                if (digPlayer.inventory.GetItemCount(pair.Key) < pair.Value)
+                {
+                    player.Reply("You don't have enough resources to build " + this.name + ".");
+                    PrintCost(player);
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
+
+        public bool Buy(IPlayer player)
+        {
+            //int cost = houseType.Cost; ?
+            MasterDig.DigPlayer digPlayer = MasterDig.DigPlayer.FromPlayer(player);
+
+            if (!CanBuy(player))
+                return false;
+
+            // Buy it.
+            foreach (var pair in cost)
+            {
+                digPlayer.inventory.RemoveItem(pair.Key, pair.Value);
+            }
+
+            return true;
+        }
+        public void PrintCost(IPlayer player)
+        {
+            string text = "";
+            foreach (var pair in cost)
+            {
+                string str = pair.Key + ": " + pair.Value;
+                if (text == "")
+                {
+                    text = str;
+                }
+                else
+                {
+                    player.Reply(text + ",    " + str);
+                    text = "";
+                }
+            }
+
+            if (text != "")
+                player.Reply(text);
+        }
 
 		public bool isGroundBlockAllowed(int blockId)
 		{
@@ -159,7 +225,6 @@ namespace MasterBot.SubBot.Houses
 
 		public bool BuildHouse(IPlayer builder, string houseTypeStr)
 		{
-			return false;
 			if (buildingHouses.ContainsKey(builder))
 				return false;
 
@@ -196,25 +261,15 @@ namespace MasterBot.SubBot.Houses
 
 			houseType = houseTypes[houseTypeStr];
 
-			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
-			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
-			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
 
-			//int cost = houseType.Cost; ?
-			/*MasterDig.DigPlayer digPlayer = MasterDig.DigPlayer.FromPlayer(builder);
-			if (digPlayer.inventory.GetItemCount("stone") > 5)
-			{
-				digPlayer.inventory.RemoveItem("stone", 5);
-			}
-			else
-			{
-				builder.Reply("You do not have enough resources to build this house type!");
-				return false;
-			}*/
+            // Make sure the player cna buy the house!
+            if (!houseType.CanBuy(builder))
+            {
+                builder.Reply("You don't have enough resources to build " + houseType.Name + ".");
+                houseType.PrintCost(builder);
+                return false;
+            }
 
-			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
-			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
-			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
 
 			int x = builder.BlockX - houseType.Width / 2;
 			int y = builder.BlockY - houseType.Height / 2;
@@ -231,9 +286,6 @@ namespace MasterBot.SubBot.Houses
 			{
 				for (int yy = 0; yy < houseType.Height; ++yy)
 				{
-
-
-
 					int blockId = 22;
 					int backgroundBlock = houseType.BackgroundBlock;
 
@@ -261,6 +313,9 @@ namespace MasterBot.SubBot.Houses
 			}
 
 			bot.ChatSayer.Command("/tp " + builder.Name + " " + builder.BlockX + " " + builder.BlockY);
+
+            // Nothing went wrong, let the player pay for his house.
+            houseType.Buy(builder);
 
 			return true;
 		}
@@ -391,6 +446,19 @@ namespace MasterBot.SubBot.Houses
 			houseTypes.Add(houseType.Name, houseType);
 			return true;
 		}
+
+        public HouseType GetHouseType(string name)
+        {
+            if (!houseTypes.ContainsKey(name))
+                return null;
+            else
+                return houseTypes[name];
+        }
+
+        public void ListHouseTypes(IPlayer player)
+        {
+            player.Reply("TODO: ListHouseTypes");
+        }
 
 		public House FindHouse(int x, int y)
 		{

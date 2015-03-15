@@ -20,11 +20,23 @@ namespace MasterBot.SubBot
 
 
             HouseType tinyHouse = new HouseType("tinyhouse", 7, 7, 46, 48, 541);
+            tinyHouse.AddCost("stone", 25);
             HouseType smallHouse = new HouseType("smallhouse", 9, 9, 93, 93);
+            smallHouse.AddCost("stone", 100);
             HouseType mediumHouse = new HouseType("mediumhouse", 11, 11, 1023, 1024);
+            mediumHouse.AddCost("stone", 400);
+            mediumHouse.AddCost("copper", 20);
             HouseType largeHouse = new HouseType("largehouse", 13, 13, 14, 1018, 505);
+            largeHouse.AddCost("stone", 600);
+            largeHouse.AddCost("iron", 30);
             HouseType veryLargeHouse = new HouseType("verylargehouse", 15, 15, 1021, 42);
+            veryLargeHouse.AddCost("stone", 800);
+            veryLargeHouse.AddCost("gold", 50);
             HouseType hugeHouse = new HouseType("hugehouse", 17, 17, 196, 195, 618);
+            hugeHouse.AddCost("stone", 1000);
+            hugeHouse.AddCost("copper", 50);
+            hugeHouse.AddCost("iron", 50);
+            hugeHouse.AddCost("gold", 50);
 
             HouseType weirdHouse = new HouseType("weirdhouse", 17, 5, 80, 82, 548);
             HouseType strangeHouse = new HouseType("strangehouse", 3, 15, 50, 156, 575);
@@ -209,6 +221,25 @@ namespace MasterBot.SubBot
                         IPlayer builder = cmdSource as IPlayer;
 
                         //houseManager.PaintHouse(builder);
+                    }
+                    break;
+
+                case "houseinfo":
+                    if (cmdSource is IPlayer && args.Length >= 1)
+                    {
+                        IPlayer player = cmdSource as IPlayer;
+
+                        HouseType houseType = houseManager.GetHouseType(args[0]);
+
+                        if (houseType == null)
+                        {
+                            houseManager.ListHouseTypes(player);
+                        }
+                        else
+                        {
+                            player.Reply(houseType.Name + "   " + "Size: " + houseType.Width + "*"+ houseType.Height);
+                            houseType.PrintCost(player);
+                        }
                     }
                     break;
 
