@@ -1,6 +1,7 @@
 ﻿using MasterBot.Inventory;
 using MasterBot.IO;
 using MasterBot.Room.Block;
+using MasterBot.SubBot.Houses.Furnitures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,6 +127,7 @@ namespace MasterBot.SubBot.Houses
 		public int y;
 		public int width;
 		public int height;
+		private Dictionary<BlockPos, Furniture> furniture = new Dictionary<BlockPos, Furniture>();
 
 		public House(HouseType houseType,
 			IPlayer builder,
@@ -143,6 +145,13 @@ namespace MasterBot.SubBot.Houses
 			this.width = width;
 			this.height = height;
 		}
+
+		public Boolean IsValidFurniturePosition(int x, int y)
+		{
+			return x > this.x && y > this.y && x < this.x + this.width && y < this.y + this.height;
+		}
+
+		public Dictionary<BlockPos, Furniture> Furniture { get { return furniture; } }
 	}
 	struct CurrentMiningBlock
 	{
@@ -157,29 +166,6 @@ namespace MasterBot.SubBot.Houses
 			health = 3;
 		}
 	}
-
-	//enum isHouseValidReasonEnum
-	//{
-	//    BadLocation,
-	//    ToNearNeighbor,
-	//    NotEnoughResources
-	//}
-
-	//interface class InvalidHouseReason
-	//{
-	//}
-
-	//class InvalidHouseBadLocation : InvalidHouseReason{
-	//    public string badLocation = "something";
-	//}
-
-	//class InvalidHouseBadLocation : InvalidHouseReason{
-	//    public string neighbor = "neighbors";
-	//}
-
-	//class InvalidHouseNotEnoughResources : InvalidHouseReason {
-	//    List<string, int>
-	//}
 
 	public class HouseManager
 	{
@@ -363,7 +349,7 @@ namespace MasterBot.SubBot.Houses
 					|| builder.BlockY < house.y || builder.BlockY >= house.y + house.height)
 				{
 					buildingHouses.Remove(builder);
-
+					Save();
 					builder.Reply("You got a nice house there! :P");
 				}
 				else
@@ -505,6 +491,40 @@ namespace MasterBot.SubBot.Houses
 				}
 			}
 			return null;
+		}
+
+		public void OnPlayerPush(IPlayer player, int x, int y, int dx, int dy)
+		{
+			lock (this)
+			{
+				BlockPos pos = new BlockPos(0, x + dx, y + dy);
+				House house = FindHouse(pos.X, pos.Y);
+
+				if (house != null && house.Furniture.ContainsKey(pos))
+				{
+					Furniture furniture = house.Furniture[pos];
+
+					furniture.OnPush(bot, player, house, x, y, dx, dy);
+				}
+			}
+		}
+
+		public void OnBlockPlace(IPlayer player, int x, int y, int layer, int blockId)
+		{
+			lock (this)
+			{
+				BlockPos pos = new BlockPos(layer, x, y);
+				House house = FindHouse(pos.X, pos.Y);
+
+				if (house != null && house.Furniture.ContainsKey(pos))
+				{
+					Furniture furniture = house.Furniture[pos];
+					if (blockId != furniture.getBlock(bot, player, house).Id)
+					{
+						house.Furniture.Remove(pos);
+					}
+				}
+			}
 		}
 
 	}

@@ -80,6 +80,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SubBot\Houses\FurnitureManager.cs" />
+    <Compile Include="SubBot\Houses\Furnitures\Furniture.cs" />
+    <Compile Include="SubBot\Houses\Furnitures\FurnitureLockedDoor.cs" />
+    <Compile Include="SubBot\Houses\Furnitures\FurnitureSwitch.cs" />
+    <Compile Include="SubBot\Houses\Furnitures\FurnitureSwitchDoor.cs" />
     <Compile Include="SubBot\Houses\HouseBuilding.cs">
       <SubType>Component</SubType>
     </Compile>
