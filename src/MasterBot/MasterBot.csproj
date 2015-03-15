@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MasterDig">
+      <HintPath>bin\Debug\plugins\MasterDig.dll</HintPath>
+    </Reference>
     <Reference Include="PlayerIOClient">
       <HintPath>..\PlayerIOClient.dll</HintPath>
     </Reference>
@@ -50,7 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACmdSource.cs" />
-    <Compile Include="ChatSayer.cs" />
+    <Compile Include="Chat\ChatSayer.cs" />
+    <Compile Include="Chat\Message.cs" />
+    <Compile Include="Chat\MessageCommand.cs" />
+    <Compile Include="Chat\MessagePM.cs" />
     <Compile Include="ConsoleCmdSource.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\Minimap.cs">
@@ -76,6 +82,7 @@
     <Compile Include="SubBot\BlockPlaceTest.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SubBot\Houses\FurnitureManager.cs" />
     <Compile Include="SubBot\Houses\HouseBuilding.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -83,6 +90,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SubBot\BoxCodes.cs" />
+    <Compile Include="SubBot\Houses\HouseManager.cs" />
     <Compile Include="SubBot\Protection.cs">
       <SubType>Component</SubType>
     </Compile>

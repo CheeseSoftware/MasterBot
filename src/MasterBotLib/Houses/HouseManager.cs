@@ -192,7 +192,28 @@ namespace MasterBot
             }
 
             houseType = houseTypes[houseTypeStr];
-            int x = builder.BlockX - houseType.Width/2;
+
+			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
+			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
+			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
+
+			//int cost = houseType.Cost; ?
+			MasterDig.DigPlayer digPlayer = MasterDig.DigPlayer.FromPlayer(builder);
+			if (digPlayer.inventory.GetItemCount("stone") > 5)
+			{
+				digPlayer.inventory.RemoveItem("stone", 5);
+			}
+			else
+			{
+				builder.Reply("You do not have enough resources to build this house type!");
+				return false;
+			}
+
+			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
+			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
+			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
+
+			int x = builder.BlockX - houseType.Width/2;
             int y = builder.BlockY - houseType.Height/2;
 
             House house = new House(houseType, builder, x, y, houseType.Width, houseType.Height, HouseState.Building);
