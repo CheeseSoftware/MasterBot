@@ -469,8 +469,8 @@ namespace MasterBot.Room
             isTutorialRoom = m.GetBoolean(14);
             gravity = m.GetFloat(15);
             potionsAllowed = m.GetBoolean(16);
-            int unknownValue = m.GetInt(17);
-            bool unknownBoolean = m.GetBoolean(18);
+            //int unknownValue = m.GetInt(17);
+            //bool unknownBoolean = m.GetBoolean(18);
 
             uint we = LoadWorld(m, 19, width, height);
 
@@ -581,7 +581,8 @@ namespace MasterBot.Room
                     {
                         DeserializeInit(m);
                         bot.Connection.Send("init2");
-                        break;
+						bot.Connection.Send("init2");
+						break;
                     }
                 case "reset":
                     {
