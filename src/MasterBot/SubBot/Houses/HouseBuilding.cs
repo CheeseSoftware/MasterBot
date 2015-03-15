@@ -1,4 +1,5 @@
-﻿using MasterBot.SubBot.Houses;
+﻿using MasterBot.Inventory;
+using MasterBot.SubBot.Houses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,31 +156,57 @@ namespace MasterBot.SubBot
         {
             switch (cmd)
             {
+				case "helphouse":
+				case "househelp":
+					if (cmdSource is IPlayer)
+					{
+						IPlayer player = cmdSource as IPlayer;
+						player.Send("House commands: !houseinfo, !build, !finishhouse, !edithouse, !destroyhouse, !place");
+                    }
+					break;
+				case "deletehouse":
+				case "removehouse":
+				case "destroyhouse":
+					if (cmdSource is IPlayer)
+					{
+						IPlayer builder = cmdSource as IPlayer;
+						houseManager.DestroyHouse(builder);
+					}
+					break;
+				case "changehouse":
                 case "edithouse":
                     if (cmdSource is IPlayer)
                     {
                         IPlayer builder = cmdSource as IPlayer;
-
                         houseManager.EditHouse(builder);
                     }
                     break;
+				case "buildhouse":
                 case "build":
-                    if (cmdSource is IPlayer && args.Count() >= 1)
+                    if (cmdSource is IPlayer)
                     {
-                        int width = 12;
-                        int height = 12;
-                        IPlayer builder = cmdSource as IPlayer;
+						IPlayer builder = cmdSource as IPlayer;
+						if (args.Count() >= 1)
+						{
+							int width = 12;
+							int height = 12;
 
-                        int x = builder.BlockX - width;
-                        int y = builder.BlockY - height;
+							int x = builder.BlockX - width;
+							int y = builder.BlockY - height;
 
-                        string houseType = args[0];
+							string houseType = args[0];
 
-                        if (houseManager.BuildHouse(builder, houseType))
-                            builder.Reply("say !finishhouse when you're done!");
+							if (houseManager.BuildHouse(builder, houseType))
+								builder.Reply("say !finishhouse when you're done!");
+						}
+						else
+						{
+							houseManager.ShowHouses(builder);
+						}
                     }
                     break;
-
+				case "placefurniture":
+				case "placef":
                 case "place":
                     if (cmdSource is IPlayer && args.Length >= 1)
                     {
@@ -211,7 +238,6 @@ namespace MasterBot.SubBot
                         furnitureManager.PlaceFurniture(builder, furniture );
                     }
                     break;
-
                 case "finishouse":
                 case "finishhouse":
                     if (cmdSource is IPlayer)
@@ -221,16 +247,6 @@ namespace MasterBot.SubBot
                         houseManager.FinishHouse(builder);
                     }
                     break;
-
-                case "painthouse":
-                    if (cmdSource is IPlayer)
-                    {
-                        IPlayer builder = cmdSource as IPlayer;
-
-                        //houseManager.PaintHouse(builder);
-                    }
-                    break;
-
                 case "houseinfo":
                     if (cmdSource is IPlayer && args.Length >= 1)
                     {
@@ -244,8 +260,9 @@ namespace MasterBot.SubBot
                         }
                         else
                         {
-                            player.Reply(houseType.Name + "   " + "Size: " + houseType.Width + "*"+ houseType.Height);
-                            houseType.PrintCost(player);
+							IInventoryContainer inventoryPlayer = (IInventoryContainer)player.GetMetadata("digplayer");
+							player.Reply(houseType.Name + "   " + "Size: " + houseType.Width + "*"+ houseType.Height);
+                            houseType.PrintCost(player, inventoryPlayer.Inventory);
                         }
                     }
                     break;

@@ -1,4 +1,6 @@
 ﻿using MasterBot.Inventory;
+using MasterBot.IO;
+using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +62,7 @@ namespace MasterBot.SubBot.Houses
 				if (inventoryPlayer.Inventory.GetItemCount(pair.Key) < pair.Value)
 				{
 					player.Reply("You don't have enough resources to build " + this.name + ".");
-					PrintCost(player);
+					PrintCost(player, inventoryPlayer.Inventory);
 					return false;
 				}
 			}
@@ -86,25 +88,14 @@ namespace MasterBot.SubBot.Houses
 
 			return true;
 		}
-		public void PrintCost(IPlayer player)
+		public void PrintCost(IPlayer player, IInventory inventory)
 		{
 			string text = "";
 			foreach (var pair in cost)
 			{
-				string str = pair.Key + ": " + pair.Value;
-				if (text == "")
-				{
-					text = str;
-				}
-				else
-				{
-					player.Reply(text + ",    " + str);
-					text = "";
-				}
+				text += pair.Key + ": " + inventory.GetItemCount(pair.Key) + "/" + pair.Value + ",  ";
 			}
-
-			if (text != "")
-				player.Reply(text);
+			player.Reply(text);
 		}
 
 		public bool isGroundBlockAllowed(int blockId)
@@ -192,7 +183,7 @@ namespace MasterBot.SubBot.Houses
 
 	public class HouseManager
 	{
-		List<House> houses = new List<House>();
+		Dictionary<string, House> houses = new Dictionary<string, House>();
 		Dictionary<IPlayer, House> buildingHouses = new Dictionary<IPlayer, House>();
 		Dictionary<IPlayer, CurrentMiningBlock> miningBlocks = new Dictionary<IPlayer, CurrentMiningBlock>();
 		IBot bot = null;
@@ -209,56 +200,96 @@ namespace MasterBot.SubBot.Houses
 
 		}
 
+		public void Save()
+		{
+			SaveFile saveFile = new SaveFile("data/houses");
+			Node houses = new Node("houses");
+
+			//playerData.AddNode("digxp", new Node(xp.ToString()));
+			//playerData.AddNode("digmoney", new Node(digMoney_.ToString()));
+
+			saveFile.AddNode("houses", houses);
+			saveFile.Save();
+		}
+
+		public void Load()
+		{
+		}
+
+		public void DestroyHouse(IPlayer builder)
+		{
+            if (houses.ContainsKey(builder.Name))
+			{
+				House house = houses[builder.Name];
+				if (buildingHouses.ContainsKey(builder))
+					buildingHouses.Remove(builder);
+
+				for (int x = house.x; x < house.x + house.width; x++)
+				{
+					for (int y = house.y; y < house.y + house.height; y++)
+					{
+						bot.Room.setBlock(x, y, new NormalBlock(142, 0));
+						bot.Room.setBlock(x, y, new NormalBlock(0, 1));
+					}
+				}
+
+				houses.Remove(builder.Name);
+				Save();
+
+				builder.Send("House destroyed!");
+			}
+			else
+				builder.Send("You have no house to destroy.");
+		}
+
 		public void EditHouse(IPlayer builder)
 		{
-			bool editSuccess = false;
-			foreach (House house in houses)
+			if (houses.ContainsKey(builder.Name))
 			{
-				if (house.builder.Name.Equals(builder.Name))
-				{
-					buildingHouses.Add(builder, house);
-					editSuccess = true;
-				}
+				House house = houses[builder.Name];
+				buildingHouses.Add(builder, house);
+				builder.Send("You are now editing your house.");
 			}
-			if (editSuccess)
-				builder.Send("You are now able to edit your houses.");
 			else
-				builder.Send("You have no houses to edit.");
+				builder.Send("You have no house to edit.");
+		}
+
+		public void ShowHouses(IPlayer player)
+		{
+			List<string> houseTypeNames = new List<string>();
+			foreach (HouseType h in houseTypes.Values)
+				houseTypeNames.Add(h.Name);
+			string text = "You can build these houses: ";
+			for (int i = 0; i < houseTypeNames.Count; ++i)
+			{
+				if (i == houseTypeNames.Count - 1)
+					text += houseTypeNames[i];
+				else
+					text += houseTypeNames[i] + ", ";
+			}
+			player.Reply(text);
 		}
 
 		public bool BuildHouse(IPlayer builder, string houseTypeStr)
 		{
 			if (buildingHouses.ContainsKey(builder))
+			{
+				builder.Reply("You are already building a house, use !finishhouse to finish it.");
 				return false;
+			}
 
+			if (houses.ContainsKey(builder.Name))
+			{
+				builder.Reply("You already have a house. Use !destroyhouse to delete it. ;)");
+				return false;
+			}
 
 			HouseType houseType = null;
 
 			if (!houseTypes.ContainsKey(houseTypeStr))
 			{
 				builder.Reply("There is no building called '" + houseTypeStr + "'!");
-
-				List<string> houseTypeNames = new List<string>();
-
-				foreach (HouseType h in houseTypes.Values)
-					houseTypeNames.Add(h.Name);
-
-				string text = "You can build this: ";
-
-				for (int i = 0; i < houseTypeNames.Count; ++i)
-				{
-					if (i == houseTypeNames.Count - 1)
-						text += houseTypeNames[i];
-					else
-						text += houseTypeNames[i] + ", ";
-
-					if (i % 4 == 3 || i == 2 || i == houseTypeNames.Count - 1)
-					{
-						builder.Reply(text);
-						text = "";
-					}
-				}
-
+				ShowHouses(builder);
 				return false;
 			}
 
@@ -283,7 +314,7 @@ namespace MasterBot.SubBot.Houses
 				return false;
 
 			buildingHouses.Add(builder, house);
-			houses.Add(house);
+			houses.Add(builder.Name, house);
 
 			for (int xx = 0; xx < houseType.Width; ++xx)
 			{
@@ -385,7 +416,7 @@ namespace MasterBot.SubBot.Houses
 
 		bool isValidHousePosition(House house)
 		{
-			foreach (House other in houses)
+			foreach (House other in houses.Values)
 			{
 				bool xIntersects = false;
 				bool yIntersects = false;
@@ -467,7 +498,7 @@ namespace MasterBot.SubBot.Houses
 		{
 			lock (this)
 			{
-				foreach (House house in houses)
+				foreach (House house in houses.Values)
 				{
 					if (x >= house.x && x < house.x + house.width && y >= house.y && y < house.y + house.height)
 						return house;
