@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace MasterBot
 {
@@ -17,6 +18,7 @@ namespace MasterBot
         bool HasMetadata(string key);
         void RemoveMetadata(string key);
         object GetMetadata(string key);
+        Stopwatch AfkStopwatch { get; }
         #endregion
 
         #region PhysicsPlayer

@@ -150,6 +150,7 @@ namespace MasterBot.SubBot
     {
         Dictionary<IPlayer, GodPlayer> gods = new Dictionary<IPlayer, GodPlayer>();
         List<IPlayer> survivors = new List<IPlayer>();
+        List<IPlayer> playersThatDied = new List<IPlayer>();
         List<BlockPos> blocksToRemove = new List<BlockPos>();
 
         enum State
@@ -160,9 +161,9 @@ namespace MasterBot.SubBot
             End
         }
         State state = State.End;
-        float startTime = 10;
-        float runFromSpawnTime = 10;
-        float runFromGodsTime = 300;
+        float startTime = 1;
+        float runFromSpawnTime = 1;
+        float runFromGodsTime = 60;
         float stateTime = 1;
 
         Stopwatch stateTimer = new Stopwatch();
@@ -284,10 +285,10 @@ namespace MasterBot.SubBot
                         this.InitStart();
                         break;
                     case State.RunFromSpawn:
-                        if (bot.Room.Players.Count < 3)
+                        if (survivors.Count < 3)
                         {
                             this.bot.ChatSayer.Say("There are not enough players");
-                            this.bot.ChatSayer.Say("At least 5 players must be in the room.");
+                            this.bot.ChatSayer.Say("At least 3 players must be in the room.");
                             this.state = State.Start;
                         }
                         else
@@ -301,7 +302,7 @@ namespace MasterBot.SubBot
                         this.InitRunFromGods();
                         break;
                     case State.End:
-                        this.stateTime = 1;
+                        this.stateTime = 0.25F;
                         this.InitEnd();
                         break;
                 }
@@ -326,6 +327,27 @@ namespace MasterBot.SubBot
         private void InitStart()
         {
             this.bot.ChatSayer.Command("/reset");
+            this.bot.Connection.Send(bot.Room.WorldKey + "r");
+
+            survivors.Clear();
+
+            foreach (IPlayer player in bot.Room.Players)
+                survivors.Add(player);
+
+            foreach (IPlayer player in this.survivors)
+            {
+                if (player.AfkStopwatch.Elapsed.Seconds > 60)
+                {
+                    player.Reply("You are afk!");
+                    playersThatDied.Add(player);
+                }
+            }
+
+
+            foreach (IPlayer player in playersThatDied)
+            {
+                survivors.Remove(player);
+            }
         }
         private void InitRunFromSpawn()
         {
@@ -333,25 +355,40 @@ namespace MasterBot.SubBot
         }
         private void InitRunFromGods()
         {
-            survivors.Clear();
-
-            foreach (IPlayer player in bot.Room.Players)
-                survivors.Add(player);
-
-            for (int i = 0; i < 5 && i < survivors.Count - 2; ++i)
+            // Kill the afkers which are now "dead".
+            foreach (IPlayer player in playersThatDied)
             {
-                int randomIndex = random.Next(survivors.Count);
-                IPlayer player = survivors[randomIndex];
-                survivors.RemoveAt(randomIndex);
+                bot.ChatSayer.Command("/kill " + player.Name);
+            }
+            playersThatDied.Clear();
 
-                GodPlayer godPlayer = new GodPlayer(player, player.BlockX, player.BlockY, random.Next(9, 21));
-                this.gods.Add(player, godPlayer);
+            for (int i = 0; i < 4 && i < survivors.Count - 2; ++i)
+            {
+                for (int j = 0; j < 5; ++j)
+                {
+                    int randomIndex = random.Next(survivors.Count);
+                    IPlayer player = survivors[randomIndex];
+                    
 
-                bot.ChatSayer.Command("/godon " + player.Name);
-                bot.ChatSayer.Say(player.Name + " is god! RUN!!!");
-                player.Reply("You are a god, your goal is to block in the players!");
+
+                    // afker
+                    if (player.AfkStopwatch.Elapsed.Seconds > 30)
+                        continue;
+
+                    survivors.RemoveAt(randomIndex);
+
+                    GodPlayer godPlayer = new GodPlayer(player, player.BlockX, player.BlockY, random.Next(9, 21));
+                    this.gods.Add(player, godPlayer);
+
+                    bot.ChatSayer.Command("/godon " + player.Name);
+                    bot.ChatSayer.Say(player.Name + " is god! RUN!!!");
+                    player.Reply("You are a god, your goal is to block in the players!");
+
+                    break;
+                }
             }
         }
+
         private void InitEnd()
         {
             foreach (GodPlayer god in this.gods.Values)
@@ -360,13 +397,14 @@ namespace MasterBot.SubBot
             }
             this.gods.Clear();
             this.survivors.Clear();
-            this.bot.ChatSayer.Command("/reset");
+            this.bot.ChatSayer.Command("/loadlevel");
+            this.bot.Connection.Send(bot.Room.WorldKey + "r");
 
 
-            foreach(BlockPos blockPos in blocksToRemove)
-            {
-                this.blockDrawer.PlaceBlock(new BlockWithPos(blockPos.X, blockPos.Y, new NormalBlock(414)));
-            }
+            //foreach(BlockPos blockPos in blocksToRemove)
+            //{
+            //    this.blockDrawer.PlaceBlock(new BlockWithPos(blockPos.X, blockPos.Y, new NormalBlock(414)));
+            //}
             blocksToRemove.Clear();
         }
 
@@ -386,12 +424,8 @@ namespace MasterBot.SubBot
                 god.DrawLine(this.bot, this.blockDrawer, this.random, this.blocksToRemove);
             }
 
-            List<IPlayer> playersThatDied = new List<IPlayer>();
-
             foreach(IPlayer player in this.survivors)
             {
-
-
                 bool dead = true;
 
                 for (int i = 0; i < 9; ++i)
@@ -410,6 +444,11 @@ namespace MasterBot.SubBot
                 }
                 if (dead || bot.Room.getPlayer(player.Id) == null)
                     playersThatDied.Add(player);
+                else if (player.AfkStopwatch.Elapsed.Seconds > 5)
+                {
+                    player.Reply("You were afk or hiding for too long!");
+                    playersThatDied.Add(player);
+                }
             }
 
             foreach(IPlayer player in playersThatDied)
@@ -422,8 +461,15 @@ namespace MasterBot.SubBot
             playersThatDied.Clear();
 
             // Restart
-            if (survivors.Count == 1)
+            if (survivors.Count <= 1)
                 this.stateTime = 0;
+
+            if (survivors.Count == 1)
+            {
+                IPlayer winner = survivors[0];
+                bot.ChatSayer.Say(winner.Name + " won the game!");
+                bot.ChatSayer.Command("/givecrown " + winner.Name);
+            }
 
 
         }
