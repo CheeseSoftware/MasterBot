@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="libnoise">
+      <HintPath>..\MasterBot\bin\Debug\plugins\libnoise.dll</HintPath>
+    </Reference>
     <Reference Include="PlayerIOClient">
       <HintPath>..\PlayerIOClient.dll</HintPath>
     </Reference>
@@ -53,11 +56,15 @@
     <Compile Include="IChatSayer.cs" />
     <Compile Include="ICmdSource.cs" />
     <Compile Include="IMainForm.cs" />
+    <Compile Include="Inventory\IInventory.cs" />
+    <Compile Include="Inventory\IInventoryContainer.cs" />
+    <Compile Include="Inventory\IInventoryItem.cs" />
     <Compile Include="IO\NodeContainer.cs" />
     <Compile Include="IO\NodePath.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Gui\IRichTextConsole.cs" />
+    <Compile Include="Pair.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\MinimapColors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
