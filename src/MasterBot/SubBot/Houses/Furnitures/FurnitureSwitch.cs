@@ -18,5 +18,10 @@ namespace MasterBot.SubBot.Houses.Furnitures
 		{
 			return new BlockSwitch(player.Id % 100);
 		}
+
+		public override string getType()
+		{
+			return "switch";
+		}
 	}
 }

@@ -20,6 +20,7 @@ namespace MasterBot.SubBot.Houses
 			furnitureTypes.Add("door", new FurnitureLockedDoor());
 			furnitureTypes.Add("switch", new FurnitureSwitch());
 			furnitureTypes.Add("switchdoor", new FurnitureSwitchDoor());
+			furnitureTypes.Add("empty", new FurnitureEmpty());
 		}
 
 		public Furniture GetFurnitureType(string type)
@@ -29,7 +30,7 @@ namespace MasterBot.SubBot.Houses
 			return null;
 		}
 
-		public Dictionary<string, Furniture> FurnitureTypes { get { return furnitureTypes; } }
+		public static Dictionary<string, Furniture> FurnitureTypes { get { return furnitureTypes; } }
 
 	}
 }

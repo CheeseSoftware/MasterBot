@@ -11,5 +11,7 @@ namespace MasterBot.SubBot.Houses.Furnitures
 	{
 		public abstract void OnPush(IBot bot, IPlayer player, House house, int x, int y, int dx, int dy);
 		public abstract IBlock getBlock(IBot bot, IPlayer player, House house);
+
+		public abstract string getType();
 	}
 }

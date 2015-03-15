@@ -122,7 +122,7 @@ namespace MasterBot.SubBot.Houses
 	{
 		public HouseType houseType;
 		public HouseState houseState;
-		public IPlayer builder;
+		public string builder;
 		public int x;
 		public int y;
 		public int width;
@@ -130,7 +130,7 @@ namespace MasterBot.SubBot.Houses
 		private Dictionary<BlockPos, Furniture> furniture = new Dictionary<BlockPos, Furniture>();
 
 		public House(HouseType houseType,
-			IPlayer builder,
+			string builder,
 			int x,
 			int y,
 			int width,
@@ -182,29 +182,76 @@ namespace MasterBot.SubBot.Houses
 		public HouseManager(IBot bot)
 		{
 			this.bot = bot;
-
-
 		}
 
 		public void Save()
 		{
 			SaveFile saveFile = new SaveFile("data/houses");
 			Node houses = new Node("houses");
+			foreach (KeyValuePair<string, House> house in this.houses)
+			{
+				Node playername = new Node(house.Key);
+				playername.AddNode("x", new Node(house.Value.x.ToString()));
+				playername.AddNode("y", new Node(house.Value.y.ToString()));
+				playername.AddNode("type", new Node(house.Value.houseType.Name));
 
-			//playerData.AddNode("digxp", new Node(xp.ToString()));
-			//playerData.AddNode("digmoney", new Node(digMoney_.ToString()));
-
+				if (house.Value.Furniture.Count > 0)
+				{
+					Node furniture = new Node("furniture");
+					foreach (KeyValuePair<BlockPos, Furniture> f in house.Value.Furniture)
+					{
+						Node furnitureKey = new Node(f.Key.X + "|" + f.Key.Y);
+						furnitureKey.AddNode("x", new Node(f.Key.X.ToString()));
+						furnitureKey.AddNode("y", new Node(f.Key.Y.ToString()));
+						furnitureKey.AddNode("type", new Node(f.Value.getType()));
+						furniture.AddNode(f.Key.X + "|" + f.Key.Y, furnitureKey);
+					}
+					playername.AddNode("furniture", furniture);
+				}
+				houses.AddNode(house.Key, playername);
+			}
 			saveFile.AddNode("houses", houses);
 			saveFile.Save();
 		}
 
 		public void Load()
 		{
+			SaveFile saveFile = new SaveFile("data/houses");
+			saveFile.Load();
+			Dictionary<string, Node> nodes = saveFile.Nodes;
+			if (nodes.ContainsKey("houses"))
+			{
+				Node houses = nodes["houses"];
+				foreach (KeyValuePair<string, Node> house in houses.Nodes)
+				{
+					int x = int.Parse(house.Value.Nodes["x"].Value);
+					int y = int.Parse(house.Value.Nodes["y"].Value);
+					string type = house.Value.Nodes["type"].Value;
+
+					House newhouse = new House(houseTypes[type], house.Key, x, y, houseTypes[type].Width, houseTypes[type].Height);
+
+					if (house.Value.Nodes.ContainsKey("furniture"))
+					{
+						Node furniture = house.Value.Nodes["furniture"];
+						foreach (KeyValuePair<string, Node> furnitures in furniture.Nodes)
+						{
+							int furniturex = int.Parse(furnitures.Value.Nodes["x"].Value);
+							int furniturey = int.Parse(furnitures.Value.Nodes["y"].Value);
+							string furnituretype = furnitures.Value.Nodes["type"].Value;
+
+							Furniture newFurniture = FurnitureManager.FurnitureTypes[furnituretype];
+							newhouse.Furniture.Add(new BlockPos(0, furniturex, furniturey), newFurniture);
+						}
+					}
+					this.houses.Add(newhouse.builder, newhouse);
+					DrawHouse(newhouse);
+				}
+			}
 		}
 
 		public void DestroyHouse(IPlayer builder)
 		{
-            if (houses.ContainsKey(builder.Name))
+			if (houses.ContainsKey(builder.Name))
 			{
 				House house = houses[builder.Name];
 				if (buildingHouses.ContainsKey(builder))
@@ -285,59 +332,63 @@ namespace MasterBot.SubBot.Houses
 			// Make sure the player cna buy the house!
 			if (!houseType.CanBuy(builder))
 			{
-                //builder.Reply("You don't have enough resources to build " + houseType.Name + ".");
-                //houseType.PrintCost(builder);
+				//builder.Reply("You don't have enough resources to build " + houseType.Name + ".");
+				//houseType.PrintCost(builder);
 				return false;
 			}
-
 
 			int x = builder.BlockX - houseType.Width / 2;
 			int y = builder.BlockY - houseType.Height / 2;
 
-			House house = new House(houseType, builder, x, y, houseType.Width, houseType.Height, HouseState.Building);
-
+			House house = new House(houseType, builder.Name, x, y, houseType.Width, houseType.Height, HouseState.Building);
 			if (!isValidHousePosition(house))
 				return false;
-
 			buildingHouses.Add(builder, house);
 			houses.Add(builder.Name, house);
-
-			for (int xx = 0; xx < houseType.Width; ++xx)
-			{
-				for (int yy = 0; yy < houseType.Height; ++yy)
-				{
-					int blockId = 22;
-					int backgroundBlock = houseType.BackgroundBlock;
-
-					if (xx == 0 || xx == houseType.Width - 1 || yy == 0 || yy == houseType.Height - 1)
-					{
-						blockId = houseType.WallBlock;
-					}
-					else
-					{
-						blockId = houseType.BaseBlock;
-					}
-
-					if (builder.BlockX != x + xx || builder.BlockY != y + yy)
-					{
-						this.bot.Room.BlockDrawer.PlaceBlock(
-								new Room.Block.BlockWithPos(xx + x, yy + y,
-									new Room.Block.NormalBlock(blockId)));
-					}
-
-					this.bot.Room.BlockDrawer.PlaceBlock(
-							new Room.Block.BlockWithPos(xx + x, yy + y,
-								new Room.Block.NormalBlock(backgroundBlock)));
-
-				}
-			}
-
+			DrawHouse(house, builder);
 			bot.ChatSayer.Command("/tp " + builder.Name + " " + builder.BlockX + " " + builder.BlockY);
 
 			// Nothing went wrong, let the player pay for his house.
 			houseType.Buy(builder);
 
 			return true;
+		}
+
+		public void DrawHouse(House house, IPlayer builder = null)
+		{
+			for (int xx = 0; xx < house.houseType.Width; ++xx)
+			{
+				for (int yy = 0; yy < house.houseType.Height; ++yy)
+				{
+					int blockId = 22;
+					int backgroundBlock = house.houseType.BackgroundBlock;
+
+					if (xx == 0 || xx == house.houseType.Width - 1 || yy == 0 || yy == house.houseType.Height - 1)
+					{
+						blockId = house.houseType.WallBlock;
+					}
+					else
+					{
+						blockId = house.houseType.BaseBlock;
+					}
+
+					if (builder == null || (builder.BlockX != house.x + xx || builder.BlockY != house.y + yy))
+					{
+						this.bot.Room.BlockDrawer.PlaceBlock(
+								new Room.Block.BlockWithPos(xx + house.x, yy + house.y,
+									new Room.Block.NormalBlock(blockId)));
+					}
+
+					this.bot.Room.BlockDrawer.PlaceBlock(
+							new Room.Block.BlockWithPos(xx + house.x, yy + house.y,
+								new Room.Block.NormalBlock(backgroundBlock)));
+
+				}
+			}
+			foreach (var v in house.Furniture)
+			{
+				bot.Room.setBlock(v.Key.X, v.Key.Y, v.Value.getBlock(bot, builder, house));
+			}
 		}
 
 		public void FinishHouse(IPlayer builder)
@@ -387,6 +438,12 @@ namespace MasterBot.SubBot.Houses
 
 					if (currentMiningBLock.health == 0)
 					{
+						BlockPos pos = new BlockPos(0, x2, y2);
+						if (!house.Furniture.ContainsKey(pos))
+							house.Furniture.Add(pos, new FurnitureEmpty());
+						else
+							house.Furniture[pos] = new FurnitureEmpty();
+						Save();
 						miningBlocks.Remove(player);
 						bot.Room.BlockDrawer.PlaceBlock(
 							new Room.Block.BlockWithPos(x2, y2,
@@ -421,11 +478,15 @@ namespace MasterBot.SubBot.Houses
 
 				if (xIntersects && yIntersects)
 				{
-					IPlayer builder = house.builder;
-					IPlayer neighbor = other.builder;
+					IPlayer player = bot.Room.getPlayer(house.builder);
+					if (player != null)
+					{
+						string builder = house.builder;
+						string neighbor = other.builder;
 
-					builder.Reply("Your house would be too close to " + neighbor.Name + "'s house.");
-					house.builder.Reply("The size of the house is " + house.width + "x" + house.height + " blocks.");
+						player.Reply("Your house would be too close to " + neighbor + "'s house.");
+						player.Reply("The size of the house is " + house.width + "x" + house.height + " blocks.");
+					}
 
 					return false;
 				}
@@ -442,8 +503,12 @@ namespace MasterBot.SubBot.Houses
 
 					if (!house.houseType.isGroundBlockAllowed(blockId))
 					{
-						house.builder.Reply("You must build the house on empty space without dirt and ores!");
-						house.builder.Reply("The size of the house is " + house.width + "x" + house.height + " blocks.");
+						IPlayer player = bot.Room.getPlayer(house.builder);
+						if (player != null)
+						{
+							player.Reply("You must build the house on empty space without dirt and ores!");
+							player.Reply("The size of the house is " + house.width + "x" + house.height + " blocks.");
+						}
 						return false;
 					}
 				}

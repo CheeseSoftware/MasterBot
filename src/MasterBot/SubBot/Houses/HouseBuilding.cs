@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MasterBot.SubBot
@@ -68,6 +69,7 @@ namespace MasterBot.SubBot
 			this.houseManager.RegisterHouseType(basicHouse);
 			this.houseManager.RegisterHouseType(brickHouse);
 			this.houseManager.RegisterHouseType(coinHouse);
+
 
 		}
 
@@ -162,6 +164,14 @@ namespace MasterBot.SubBot
 		{
 			switch (cmd)
 			{
+				case "loadhouses":
+					if (cmdSource is IPlayer)
+					{
+						IPlayer player = cmdSource as IPlayer;
+						if (player.IsOp)
+							houseManager.Load();
+					}
+					break;
 				case "helphouse":
 				case "househelp":
 					if (cmdSource is IPlayer)
@@ -249,7 +259,7 @@ namespace MasterBot.SubBot
 							else
 							{
 								string s = "You can place: ";
-								foreach (var v in furnitureManager.FurnitureTypes)
+								foreach (var v in FurnitureManager.FurnitureTypes)
 									s += v.Key + ", ";
 								s = s.Remove(s.Length - 3, 2);
 								player.Reply(s);
@@ -258,7 +268,7 @@ namespace MasterBot.SubBot
 						else
 						{
 							string s = "You can place: ";
-							foreach (var v in furnitureManager.FurnitureTypes)
+							foreach (var v in FurnitureManager.FurnitureTypes)
 								s += v.Key + ", ";
 							s = s.Remove(s.Length - 3, 2);
 							player.Reply(s);
