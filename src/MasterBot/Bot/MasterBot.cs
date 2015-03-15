@@ -258,24 +258,9 @@ namespace MasterBot
             get { return room; }
         }
 
-        public void Say(string message)
+        public IChatSayer ChatSayer
         {
-            if (chatSayer == null)
-                return;
-
-            lock (chatSayer)
-            {
-                chatSayer.Say(message);
-            }
-        }
-
-        public void Say(IPlayer receiver, string message)
-        {
-            lock (chatSayer)
-            {
-                if (chatSayer != null)
-                    chatSayer.Say(receiver, message);
-            }
+            get { return chatSayer; }
         }
     }
 }

@@ -45,7 +45,7 @@ namespace MasterBot.SubBot.Houses
 				int yy = y + dy + 1;
 				string text = "/teleport " + player.Name + " " + xx + " " + yy;
 				if (player == house.builder)
-					bot.Say(text);
+					bot.ChatSayer.Say(text);
 			}
 
 		}
@@ -77,7 +77,7 @@ namespace MasterBot.SubBot.Houses
 				int yy = y + dy + 1;
 				string text = "/teleport " + player.Name + " " + xx + " " + yy;
 				if (player == house.builder)
-					bot.Say(text);
+					bot.ChatSayer.Say(text);
 			}
 
 		}

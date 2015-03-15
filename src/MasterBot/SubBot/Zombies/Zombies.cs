@@ -219,7 +219,7 @@ namespace MasterBot
         private void MakeZombie(IPlayer human)
         {
             human.SetMetadata("ost.zombieCreationTime", DateTime.Now);
-            bot.Say(human.Name + " has turned into a zombie! Run!!!");
+            bot.ChatSayer.Say(human.Name + " has turned into a zombie! Run!!!");
             ForceToZombie(human);
         }
 
@@ -237,13 +237,13 @@ namespace MasterBot
                 double oldY = human.BlockY;
 
                 if (this.hologram != null)
-                    bot.Say("/teleport " + human.Name + " " + (int)(hologram.X + 1) + " " + (int)(hologram.Y - 1));
+                    bot.ChatSayer.Command("/teleport " + human.Name + " " + (int)(hologram.X + 1) + " " + (int)(hologram.Y - 1));
 
                 System.Threading.Thread.Sleep(1000);
-                bot.Say("/kill " + human.Name);
-                //bot.Say("/teleport " + human.Name + " " + oldX + " " + oldY);
+                bot.ChatSayer.Command("/kill " + human.Name);
+                //bot.ChatSayer.Command("/teleport " + human.Name + " " + oldX + " " + oldY);
                 System.Threading.Thread.Sleep(1000);
-                bot.Say("/teleport " + human.Name + " " + oldX + " " + oldY);
+                bot.ChatSayer.Command("/teleport " + human.Name + " " + oldX + " " + oldY);
 
                 System.Threading.Thread.Sleep(1000);
                 human.RemoveMetadata("zombieForcing");
@@ -267,13 +267,13 @@ namespace MasterBot
                 double oldY = zombie.Y;
 
                 if (this.cake != null)
-                    bot.Say("/teleport " + zombie.Name + " " + (int)(cake.X + 1) + " " + (int)(cake.Y - 1));
+                    bot.ChatSayer.Command("/teleport " + zombie.Name + " " + (int)(cake.X + 1) + " " + (int)(cake.Y - 1));
 
                 System.Threading.Thread.Sleep(500);
-                bot.Say("/kill " + zombie.Name);
-                //bot.Say("/teleport " + zombie.Name + " " + oldX + " " + oldY);
+                bot.ChatSayer.Command("/kill " + zombie.Name);
+                //bot.ChatSayer.Command("/teleport " + zombie.Name + " " + oldX + " " + oldY);
                 System.Threading.Thread.Sleep(500);
-                bot.Say("/teleport " + zombie.Name + " " + oldX + " " + oldY);
+                bot.ChatSayer.Command("/teleport " + zombie.Name + " " + oldX + " " + oldY);
 
                 System.Threading.Thread.Sleep(1000);
                 zombie.RemoveMetadata("humanForcing");

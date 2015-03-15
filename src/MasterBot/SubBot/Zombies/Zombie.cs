@@ -126,8 +126,8 @@ namespace MasterBot.SubBot.Zombies
         private void KillPlayer(IPlayer player)
         {
             bot.Connection.Send("say", "Player " + player.Name + " was brutally murdered!");
-            bot.Say("/kill " + player.Name);
-            bot.Say("/teleport " + player.Name + " " + 1 + " " + 1);
+            bot.ChatSayer.Command("/kill " + player.Name);
+            bot.ChatSayer.Command("/teleport " + player.Name + " " + 1 + " " + 1);
         }
 
         private IPlayer GetNearestPlayer(int range)

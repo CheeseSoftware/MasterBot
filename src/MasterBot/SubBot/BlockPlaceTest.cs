@@ -79,7 +79,7 @@ namespace MasterBot.SubBot
         {
             if (newBlock.Placer != null && blockPlayers.Contains(newBlock.Placer.Id))
             {
-                bot.Say(newBlock.Placer, "That block is: " + oldBlock.Id + ", placed by " + (oldBlock.Placer != null ? oldBlock.Placer.Name : "undefined " + "X:" + x + " Y:" + y));
+                bot.ChatSayer.Say(newBlock.Placer, "That block is: " + oldBlock.Id + ", placed by " + (oldBlock.Placer != null ? oldBlock.Placer.Name : "undefined " + "X:" + x + " Y:" + y));
                 bot.Room.setBlock(x, y, oldBlock);
                 blockPlayers.Remove(newBlock.Placer.Id);
             }

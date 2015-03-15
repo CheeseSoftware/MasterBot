@@ -10,5 +10,6 @@ namespace MasterBot
     {
         void Say(string message);
         void Say(IPlayer receiver, string message);
+        void Command(string command);
     }
 }

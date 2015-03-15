@@ -21,7 +21,6 @@ namespace MasterBot.SubBot
         Random r = new Random();
 
         public static int[][] blockPacks = new int[][] { 
-<<<<<<< HEAD
             new int[] { 20, 21, 19, 17, 1023, 18, 1022, 1024 },  //brick blocks 
             //new int[] { 142, 138, 1022, 159, 30, 29, 31, 74 },  //digable blocks 
             new int[] { 182, 1021, 1024, 33, 1026, 50, 136 },  //dark blocks 
@@ -41,13 +40,8 @@ namespace MasterBot.SubBot
             //new int[] { 0, 0, 0, 0, 0 }, // gravity down blocks 
             //new int[] { 262, 263, 264, 265, 266, 267, 268, 269, 270, 54, 55}, // glass gravity down blocks 
 
-
             new int[] { 9, 42, 1022, 46, 68, 92, 95, 159, 144, 186, 193, 195 }  //gray blocks
-=======
-            new int[] { 12, 40, 20, 80, 51, 70, 129, 189 },  //red blocks 
-            new int[] { 14, 38, 19, 56, 74, 134, 191, 82 },  //green blocks 
-            new int[] { 10, 39, 1023, 54, 72, 81, 132, 187 }  //blue blocks
->>>>>>> origin/master
+
         };
 
 
@@ -292,8 +286,8 @@ namespace MasterBot.SubBot
                     case State.RunFromSpawn:
                         if (bot.Room.Players.Count < 3)
                         {
-                            this.bot.Say("There are not enough players");
-                            this.bot.Say("At least 5 players must be in the room.");
+                            this.bot.ChatSayer.Say("There are not enough players");
+                            this.bot.ChatSayer.Say("At least 5 players must be in the room.");
                             this.state = State.Start;
                         }
                         else
@@ -331,7 +325,7 @@ namespace MasterBot.SubBot
 
         private void InitStart()
         {
-            this.bot.Say("/reset");
+            this.bot.ChatSayer.Command("/reset");
         }
         private void InitRunFromSpawn()
         {
@@ -353,8 +347,8 @@ namespace MasterBot.SubBot
                 GodPlayer godPlayer = new GodPlayer(player, player.BlockX, player.BlockY, random.Next(9, 21));
                 this.gods.Add(player, godPlayer);
 
-                bot.Say("/godon " + player.Name);
-                bot.Say(player.Name + " is god! RUN!!!");
+                bot.ChatSayer.Command("/godon " + player.Name);
+                bot.ChatSayer.Say(player.Name + " is god! RUN!!!");
                 player.Reply("You are a god, your goal is to block in the players!");
             }
         }
@@ -362,11 +356,11 @@ namespace MasterBot.SubBot
         {
             foreach (GodPlayer god in this.gods.Values)
             {
-                bot.Say("/godoff " + god.Player.Name);
+                bot.ChatSayer.Command("/godoff " + god.Player.Name);
             }
             this.gods.Clear();
             this.survivors.Clear();
-            this.bot.Say("/reset");
+            this.bot.ChatSayer.Command("/reset");
 
 
             foreach(BlockPos blockPos in blocksToRemove)
@@ -421,7 +415,7 @@ namespace MasterBot.SubBot
             foreach(IPlayer player in playersThatDied)
             {
                 survivors.Remove(player);
-                bot.Say("/kill " + player.Name);
+                bot.ChatSayer.Command("/kill " + player.Name);
                 player.Reply("You died! :P");
             
             }

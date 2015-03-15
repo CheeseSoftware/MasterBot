@@ -875,7 +875,7 @@ namespace MasterBot.Room
                         break;
                     }
                 case "saved":
-                    bot.Say("World saved.");
+                    bot.ChatSayer.Say("World saved.");
                     break;
 
 

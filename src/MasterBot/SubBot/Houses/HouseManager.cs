@@ -260,7 +260,7 @@ namespace MasterBot.SubBot.Houses
 				}
 			}
 
-			bot.Say("/tp " + builder.Name + " " + builder.BlockX + " " + builder.BlockY);
+			bot.ChatSayer.Command("/tp " + builder.Name + " " + builder.BlockX + " " + builder.BlockY);
 
 			return true;
 		}

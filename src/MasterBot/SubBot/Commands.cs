@@ -39,7 +39,7 @@ namespace MasterBot
                     case "loadworld":
                         {
                             if (bot.Room.IsOwner && player.IsOp)
-                                bot.Say("/loadlevel");
+                                bot.ChatSayer.Command("/loadlevel");
                             else
                                 sender.Reply("You are not the owner.");
                             break;
