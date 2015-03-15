@@ -268,8 +268,8 @@ namespace MasterBot.SubBot.Houses
 			// Make sure the player cna buy the house!
 			if (!houseType.CanBuy(builder))
 			{
-				builder.Reply("You don't have enough resources to build " + houseType.Name + ".");
-				houseType.PrintCost(builder);
+                //builder.Reply("You don't have enough resources to build " + houseType.Name + ".");
+                //houseType.PrintCost(builder);
 				return false;
 			}
 
