@@ -25,7 +25,7 @@ namespace MasterBot.SubBot
             //new int[] { 142, 138, 1022, 159, 30, 29, 31, 74 },  //digable blocks 
             new int[] { 182, 1021, 1024, 33, 1026, 50, 136 },  //dark blocks 
             new int[] { 119, 416, 369, 202, 203, 204, 196, 197, 198 },  //liquid blocks 
-            new int[] { 23, 24, 25, 1005, 1006, 1007, 27, 7, 1018, 10, 11, 12, 13, 14, 15, 416 },  //doorgatekey+basic blocks 
+            new int[] { 23, 24, 25, 1005, 1006, 1007, 27, 7, 1018, 10, 11, 12, 13, 14, 15, 416, 119 },  //doorgatekey+basic blocks 
             new int[] { 176, 177, 178, 179, 416 },  //mars blocks 
             new int[] { 9, 9, 9, 9, 68 }, // gray basic, blood blocks 
             new int[] { 9, 10, 11, 12, 13, 14, 15, 1018, 182 }, // basic blocks 
@@ -36,7 +36,7 @@ namespace MasterBot.SubBot
             new int[] { 202, 203, 204, 416, 416, 416, 416, 416, 119}, // lava blocks 
             new int[] { 416, 203}, // deadly blocks 
             new int[] { 92, 92, 92, 92, 92, 261}, // prison blocks 
-            new int[] { 114, 115, 116, 117, 114, 115, 116, 117, 114, 115, 116, 117, 114, 115, 116, 117, 416}, // boostup blocks 
+            new int[] { 114, 115, 116, 117, 114, 115, 116, 117, 114, 115, 116, 117, 114, 115, 116, 117, 416, 119}, // boostup blocks 
             //new int[] { 0, 0, 0, 0, 0 }, // gravity down blocks 
             //new int[] { 262, 263, 264, 265, 266, 267, 268, 269, 270, 54, 55}, // glass gravity down blocks 
 
