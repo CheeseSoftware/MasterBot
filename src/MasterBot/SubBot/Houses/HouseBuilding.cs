@@ -156,7 +156,6 @@ namespace MasterBot.SubBot
 
                         string houseType = args[0];
 
-
                         if (houseManager.BuildHouse(builder, houseType))
                             builder.Reply("say !finishhouse when you're done!");
                     }
