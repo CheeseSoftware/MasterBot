@@ -350,11 +350,11 @@ namespace MasterBot.SubBot.WorldEdit
 								int.TryParse(args[0], out id);
 								if (id != -1)
 								{
-									int layer = (id >= 500 && id < 1000) || id == 1337 ? 1 : 0;
+									int layer = ((id >= 500 && id < 1000) || id == 1337 ? 1 : 0);
 									if (args.Length >= 2)
 										int.TryParse(args[1], out layer);
 
-                                    SetRegion(bot, region, new NormalBlock(id, layer));
+									SetRegion(bot, region, new NormalBlock(id, layer));
 								}
 								else
 									bot.ChatSayer.Say(player.Name + ": Invalid ID.");
