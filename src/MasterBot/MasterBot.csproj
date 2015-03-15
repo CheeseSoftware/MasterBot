@@ -53,7 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ACmdSource.cs" />
-    <Compile Include="ChatSayer.cs" />
+    <Compile Include="Chat\ChatSayer.cs" />
+    <Compile Include="Chat\Message.cs" />
+    <Compile Include="Chat\MessageCommand.cs" />
+    <Compile Include="Chat\MessagePM.cs" />
     <Compile Include="ConsoleCmdSource.cs" />
     <Compile Include="Minimap\ItemLayer.cs" />
     <Compile Include="Minimap\Minimap.cs">

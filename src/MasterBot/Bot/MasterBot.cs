@@ -265,8 +265,7 @@ namespace MasterBot
 
             lock (chatSayer)
             {
-                if (chatSayer != null)
-                    chatSayer.Say(message);
+                chatSayer.Say(message);
             }
         }
 

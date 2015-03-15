@@ -159,6 +159,7 @@ namespace MasterBot.SubBot.Houses
 
 		public bool BuildHouse(IPlayer builder, string houseTypeStr)
 		{
+			return false;
 			if (buildingHouses.ContainsKey(builder))
 				return false;
 
@@ -200,7 +201,7 @@ namespace MasterBot.SubBot.Houses
 			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
 
 			//int cost = houseType.Cost; ?
-			MasterDig.DigPlayer digPlayer = MasterDig.DigPlayer.FromPlayer(builder);
+			/*MasterDig.DigPlayer digPlayer = MasterDig.DigPlayer.FromPlayer(builder);
 			if (digPlayer.inventory.GetItemCount("stone") > 5)
 			{
 				digPlayer.inventory.RemoveItem("stone", 5);
@@ -209,7 +210,7 @@ namespace MasterBot.SubBot.Houses
 			{
 				builder.Reply("You do not have enough resources to build this house type!");
 				return false;
-			}
+			}*/
 
 			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
 			//////////TITTA HÄRRRRRRRRRRRRRRRRRR
