@@ -80,7 +80,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SubBot\Houses\FurnitureManager.cs" />
-    <Compile Include="SubBot\Houses\HouseManager.cs" />
     <Compile Include="SubBot\Houses\HouseBuilding.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -88,6 +87,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SubBot\BoxCodes.cs" />
+    <Compile Include="SubBot\Houses\HouseManager.cs" />
     <Compile Include="SubBot\Protection.cs">
       <SubType>Component</SubType>
     </Compile>
