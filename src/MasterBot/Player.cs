@@ -82,9 +82,9 @@ namespace MasterBot
 
         public int BlockY { get { return physicsPlayer.BlockY; } set { physicsPlayer.BlockY = value; } }
 
-        public double X { get { return physicsPlayer.x; } set { physicsPlayer.x = value; } }
+        public double X { get { return physicsPlayer.x; } set { physicsPlayer.x = value; afkStopwatch.Restart(); } }
 
-        public double Y { get { return physicsPlayer.y; } set { physicsPlayer.y = value; } }
+        public double Y { get { return physicsPlayer.y; } set { physicsPlayer.y = value; afkStopwatch.Restart(); } }
 
         public double SpeedX { get { return physicsPlayer.speedX; } set { physicsPlayer.speedX = value; afkStopwatch.Restart(); } }
 
