@@ -181,7 +181,7 @@ namespace MasterBot.SubBot
 
         public IPlayer Player { get { return player; } }
         public int Wins { get { return wins; } }
-        public int Kills { get { return wins; } }
+        public int Kills { get { return kills; } }
         public int Score { get { return 5*wins+2*kills; } }
 
 
