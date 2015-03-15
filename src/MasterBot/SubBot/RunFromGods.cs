@@ -146,12 +146,54 @@ namespace MasterBot.SubBot
         public IPlayer Player { get { return player; } }
     }
 
+    class GodRunPlayer
+    {
+        IPlayer player;
+        int wins;
+        int kills;
+        bool saved = true;
+
+        
+        public GodRunPlayer(IPlayer player)
+        {
+            wins = 0;
+            kills = 0;
+
+            Load(player.Name);
+        }
+
+        public void OnWin()
+        {
+            wins++;
+            saved = false;
+        }
+
+        public void OnKill()
+        {
+            kills++;
+            saved = false;
+        }
+
+        private void Load(string name)
+        {
+            
+        }
+
+        public IPlayer Player { get { return player; } }
+        public int Wins { get { return wins; } }
+        public int Kills { get { return wins; } }
+        public int Score { get { return 5*wins+2*kills; } }
+
+
+    }
+
     public class RunFromGods : ASubBot
     {
         Dictionary<IPlayer, GodPlayer> gods = new Dictionary<IPlayer, GodPlayer>();
         List<IPlayer> survivors = new List<IPlayer>();
         List<IPlayer> playersThatDied = new List<IPlayer>();
         List<BlockPos> blocksToRemove = new List<BlockPos>();
+        bool isOnTick = false;
 
         enum State
         {
@@ -162,7 +204,7 @@ namespace MasterBot.SubBot
         }
         State state = State.End;
         float startTime = 1;
-        float runFromSpawnTime = 1;
+        float runFromSpawnTime = 10;
         float runFromGodsTime = 60;
         float stateTime = 1;
 
@@ -186,8 +228,6 @@ namespace MasterBot.SubBot
         public RunFromGods(IBot bot)
             : base(bot)
         {
-            // 100ms is the player physics.
-
             this.blockDrawer = bot.Room.BlockDrawerPool.CreateBlockDrawer(127);
 
 
@@ -229,26 +269,33 @@ namespace MasterBot.SubBot
 
         public override void onCommand(string cmd, string[] args, ICmdSource cmdSource)
         {
-            //if (cmdSource is IPlayer)
-            //{
-            //    IPlayer player = (IPlayer)cmdSource;
-            //    if (!player.IsOp)
-            //        return;
-            //}
-            //IPlayer arg = null;
-            //if (args.Length >= 1 && bot.Room.getPlayer(args[0].Trim().ToLower()) != null)
-            //{
-            //    arg = bot.Room.getPlayer(args[0].Trim().ToLower());
-            //}
-            //if (arg != null)
-            //{
-            //    switch (cmd)
-            //    {
+            if (!(cmdSource is IPlayer))
+            {
+                return;
+            }
+            IPlayer player = cmdSource as IPlayer;
+            
 
-            //    }
-            //}
-            ////else
-            ////  cmdSource.Reply("Could not find player");
+            switch(cmd)
+            {
+                case "help":
+                    player.Reply("Godrun commands: !help, !stats, !kills, !wins, !score");
+                    break;
+                case "kills":
+                    player.Reply("You got " + getPlayerData(player).Kills + " kill!");
+                    break;
+                case "wins":
+                    player.Reply("You got " + getPlayerData(player).Wins + " wins!");
+                    break;
+                case "score":
+                    player.Reply("Your score is " + getPlayerData(player).Score );
+                    break;
+                case "stats":
+                    player.Reply("Your wins: " + getPlayerData(player).Wins);
+                    player.Reply("Your kills: " + getPlayerData(player).Kills);
+                    player.Reply("Your score: " + getPlayerData(player).Score);
+                break;
+            }
         }
 
         public override void onBlockChange(int x, int y, IBlock newBlock, IBlock oldBlock)
@@ -257,6 +304,14 @@ namespace MasterBot.SubBot
 
         public override void onTick()
         {
+            lock (this)
+            {
+                if (isOnTick)
+                    return;
+
+                isOnTick = true;
+            }
+
             if (stateTimer.Elapsed.Seconds >= stateTime)
             {
 
@@ -290,6 +345,8 @@ namespace MasterBot.SubBot
                             this.bot.ChatSayer.Say("There are not enough players");
                             this.bot.ChatSayer.Say("At least 3 players must be in the room.");
                             this.state = State.Start;
+                            InitStart();
+                            this.stateTime = 10;
                         }
                         else
                         {
@@ -322,6 +379,9 @@ namespace MasterBot.SubBot
                 case State.End:
                     break;
             }
+
+            lock (this)
+                isOnTick = false;
         }
 
         private void InitStart()
@@ -332,21 +392,17 @@ namespace MasterBot.SubBot
             survivors.Clear();
 
             foreach (IPlayer player in bot.Room.Players)
-                survivors.Add(player);
-
-            foreach (IPlayer player in this.survivors)
             {
-                if (player.AfkStopwatch.Elapsed.Seconds > 60)
+                if (player.AfkStopwatch.Elapsed.Seconds < 30)
+                {
+                    survivors.Add(player);
+                }
+                else
                 {
                     player.Reply("You are afk!");
                     playersThatDied.Add(player);
                 }
-            }
 
-
-            foreach (IPlayer player in playersThatDied)
-            {
-                survivors.Remove(player);
             }
         }
         private void InitRunFromSpawn()
@@ -428,6 +484,9 @@ namespace MasterBot.SubBot
             {
                 bool dead = true;
 
+                IPlayer latestGod = null;
+                DateTime latestPlaced = DateTime.MinValue;
+
                 for (int i = 0; i < 9; ++i)
                 {
                     int x = i % 3 + player.BlockX - 1;
@@ -436,18 +495,39 @@ namespace MasterBot.SubBot
                     if (x == 1 && y == 1)
                         continue;
 
-                    int blockId = bot.Room.getBlock(0, x, y).Id;
+                    IBlock block = bot.Room.getBlock(0, x, y);
 
-                    if (blockId == 4 || blockId == 414)
+                    if (block.Id == 4 || block.Id == 414)
                         dead = false;
+
+                    if (block.DatePlaced > latestPlaced)
+                    {
+                        latestGod = block.Placer;
+                        latestPlaced = block.DatePlaced;
+                    }
 
                 }
                 if (dead || bot.Room.getPlayer(player.Id) == null)
+                {
                     playersThatDied.Add(player);
+
+                    if (latestGod != null)
+                    {
+                        latestGod.Reply("You killed " + player.Name + "!");
+                        player.Reply("You were killed by " + latestGod.Name + "!");
+                        getPlayerData(latestGod).OnKill();
+                    }
+                }
                 else if (player.AfkStopwatch.Elapsed.Seconds > 5)
                 {
-                    player.Reply("You were afk or hiding for too long!");
+                    player.Reply("You were afk or hiding for too long! You must always move!");
                     playersThatDied.Add(player);
+
+                    if (latestGod != null)
+                    {
+                        latestGod.Reply("You killed " + player.Name + "!");
+                        getPlayerData(latestGod).OnKill();
+                    }
                 }
             }
 
@@ -469,9 +549,22 @@ namespace MasterBot.SubBot
                 IPlayer winner = survivors[0];
                 bot.ChatSayer.Say(winner.Name + " won the game!");
                 bot.ChatSayer.Command("/givecrown " + winner.Name);
+
+
+                GodRunPlayer godRunPlayer = getPlayerData(winner);
+                godRunPlayer.OnWin();
             }
 
 
+        }
+
+
+        private GodRunPlayer getPlayerData(IPlayer player)
+        {
+            if (!player.HasMetadata("GodRunPlayer"))
+                player.SetMetadata("GodRunPlayer", new GodRunPlayer(player));
+
+            return player.GetMetadata("GodRunPlayer") as GodRunPlayer;
         }
 
 
