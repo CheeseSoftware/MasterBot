@@ -1,4 +1,5 @@
-﻿using MasterBot.Room.Block;
+﻿using MasterBot.IO;
+using MasterBot.Room.Block;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,14 @@ namespace MasterBot.SubBot.Houses.Furnitures
 {
 	class FurnitureSwitch : Furniture
 	{
-		public override void OnPush(IBot bot, IPlayer player, House house, int x, int y, int dx, int dy)
+
+		public FurnitureSwitch(int x, int y)
+			: base(x, y)
+		{
+
+		}
+
+		public override void OnPush(IBot bot, IPlayer player, House house, int dx, int dy)
 		{
 			return;
 		}
@@ -19,9 +27,11 @@ namespace MasterBot.SubBot.Houses.Furnitures
 			return new BlockSwitch(player.Id % 100);
 		}
 
-		public override string getType()
+		public override Furniture FromNode(Node node)
 		{
-			return "switch";
+			return new FurnitureSwitch(int.Parse(node.Nodes["x"].Value), int.Parse(node.Nodes["y"].Value));
 		}
+
+		public override string Type { get { return "switch"; } }
 	}
 }

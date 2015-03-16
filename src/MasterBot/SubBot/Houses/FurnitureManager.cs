@@ -17,10 +17,10 @@ namespace MasterBot.SubBot.Houses
 		{
 			this.bot = bot;
 
-			furnitureTypes.Add("door", new FurnitureLockedDoor());
-			furnitureTypes.Add("switch", new FurnitureSwitch());
-			furnitureTypes.Add("switchdoor", new FurnitureSwitchDoor());
-			furnitureTypes.Add("empty", new FurnitureEmpty());
+			furnitureTypes.Add("door", new FurnitureDoor(-1, -1));
+			furnitureTypes.Add("switch", new FurnitureSwitch(-1, -1));
+			furnitureTypes.Add("switchdoor", new FurnitureSwitchDoor(-1, -1));
+			furnitureTypes.Add("empty", new FurnitureEmpty(-1, -1));
 		}
 
 		public Furniture GetFurnitureType(string type)
