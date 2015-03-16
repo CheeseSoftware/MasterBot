@@ -18,7 +18,7 @@ namespace MasterBot
         private int zombieTime = 30; //seconds before zombie turns to human
         private BlockWithPos cake = new BlockWithPos(3, 5, new NormalBlock(337));
         private BlockWithPos hologram = new BlockWithPos(1, 5, new NormalBlock(397));
-        public List<Zombie> zombies = new List<Zombie>(); //computer zombies
+        public static List<Zombie> zombies = new List<Zombie>(); //computer zombies
 
         public override bool HasTab
         {
@@ -95,7 +95,7 @@ namespace MasterBot
                         MakeZombie(player);
                         break;
                     case "zombie":
-                        zombies.Add(new Zombie(this, player.BlockX, player.BlockY, bot));
+                        zombies.Add(new Zombie(player.BlockX, player.BlockY, bot));
                         break;
                 }
             }

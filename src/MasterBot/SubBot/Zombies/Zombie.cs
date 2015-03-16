@@ -17,7 +17,6 @@ namespace MasterBot.SubBot.Zombies
 
         private IBot bot;
         public int x, y;
-        private int oldx, oldy;
         private int ticksToNextSearch = 0;
         private int ticksBetweenNewPath = 0;
         private IPlayer target = null;
@@ -25,16 +24,15 @@ namespace MasterBot.SubBot.Zombies
         private Stack<Node> currentPath = null;
         private static int msPerTick = 200;
         private Stopwatch playerTickStopwatch = new Stopwatch();
-        private ZombiesSubbot zombies;
 
-        public Zombie(ZombiesSubbot owner, int x, int y, IBot bot)
+		private Queue<BlockWithPos> tail = new Queue<BlockWithPos>();
+		private Dictionary<BlockPos, IBlock> tailDic = new Dictionary<BlockPos, IBlock>(); 
+
+        public Zombie(int x, int y, IBot bot)
         {
-            this.zombies = owner;
             this.bot = bot;
             this.x = x;
             this.y = y;
-            this.oldx = 0;
-            this.oldy = 0;
             pathFinding = new PathFinding();
 
             System.Timers.Timer updateTimer = new System.Timers.Timer();
@@ -71,7 +69,7 @@ namespace MasterBot.SubBot.Zombies
                         int xx = target.BlockX;
                         int yy = target.BlockY;
                         DateTime first = DateTime.Now;
-                        currentPath = pathFinding.FindPath(x, y, xx, yy, new List<Zombie>(zombies.zombies), bot);
+                        currentPath = pathFinding.FindPath(x, y, xx, yy, new List<Zombie>(ZombiesSubbot.zombies), bot);
                         DateTime second = DateTime.Now;
                         Console.WriteLine("Pahtfinding took " + (second - first).TotalMilliseconds);
                         ticksBetweenNewPath = 1;
@@ -83,27 +81,57 @@ namespace MasterBot.SubBot.Zombies
                 //Walk with path
                 if (currentPath != null && currentPath.Count > 0)
                 {
-                    //bot.Room.setBlock(oldx, oldy, new NormalBlock(0));
                     Node next = currentPath.Pop();
-                    oldx = x;
-                    oldy = y;
                     x = next.x;
                     y = next.y;
-                    while (x == oldx && y == oldy && currentPath.Count > 0)
+					BlockPos pos = new BlockPos(0, x, y);
+
+					while (tailDic.ContainsKey(pos) && currentPath.Count > 0)
                     {
                         next = currentPath.Pop();
-                        oldx = x;
-                        oldy = y;
                         x = next.x;
                         y = next.y;
+						pos = new BlockPos(0, x, y);
+					}
+
+					if (tailDic.ContainsKey(pos))
+						return;
+
+
+					pos = new BlockPos(0, x, y); // tail-free block we are moving to
+					IBlock toReplace = bot.Room.getBlock(0, pos.X, pos.Y);
+                    tailDic.Add(pos, toReplace);
+					tail.Enqueue(new BlockWithPos(pos.X, pos.Y, toReplace));
+
+					bot.Room.setBlock(pos.X, pos.Y, new NormalBlock(196, 0));
+
+					//As we move, remove the last block of the tail
+					if (tail.Count > 10)
+					{
+						BlockWithPos toRemove = tail.Dequeue();
+						BlockPos toRemovePos = new BlockPos(0, toRemove.X, toRemove.Y);
+
+						if (toRemove.Block != null)
+						{
+							bot.Room.setBlock(toRemove.X, toRemove.Y, toRemove.Block);
+						}
+
+						if (tailDic.ContainsKey(toRemovePos))
+							tailDic.Remove(toRemovePos);
                     }
 
+					//Console.WriteLine("Moving to x:" + x + " y:" + y);
 
-                    //Console.WriteLine("Moving to x:" + x + " y:" + y);
+					//bot.Room.setBlock(oldx, oldy, new NormalBlock(0, 0));
+					//bot.Room.setBlock(x, y, new NormalBlock(32, 0));
+					//bot.Room.setBlock(oldx, oldy, new NormalBlock(0));
 
-                    //bot.Room.setBlock(oldx, oldy, new NormalBlock(0, 0));
-                    //bot.Room.setBlock(x, y, new NormalBlock(32, 0));
-                    //bot.Room.setBlock(oldx, oldy, new NormalBlock(0));
+					/*if ()
+					{
+						//we aren't moving on the tail
+					}
+
+
                     if (!(x == oldx && y == oldy))
                     {
                         if (target != null && !target.IsGod && target.BlockX == x && target.BlockY == y)
@@ -116,7 +144,7 @@ namespace MasterBot.SubBot.Zombies
                         //bot.Connection.Send(bot.Room.WorldKey, 0, oldx, oldy, 0);
                         bot.Room.setBlock(x, y, new NormalBlock(32, 0));
                         bot.Room.setBlock(oldx, oldy, new NormalBlock(4));
-                    }
+                    }*/
                 }
             }
             else if (elapsed > 2)

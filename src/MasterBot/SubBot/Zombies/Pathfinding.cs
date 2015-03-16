@@ -130,7 +130,7 @@ namespace MasterBot.SubBot.Zombies
                     int y = adjacentNodes[i].y + current.y;
                     //Console.WriteLine("X:" + x + " Y:" + y + " " + room.GetMapBlock(x, y));
                     int id = bot.Room.BlockMap.getForegroundBlockIdFast(x, y);
-                    if (x >= 0 && x <= bot.Room.Width - 1 && y >= 0 && y <= bot.Room.Height - 1 && (id == 4 || id == 32) && (isStartingSquare ? !isZombie(x, y, zombies): true))
+                    if (x >= 0 && x <= bot.Room.Width - 1 && y >= 0 && y <= bot.Room.Height - 1 && (isStartingSquare ? !isZombie(x, y, zombies): true))
                     {
                         int totalAddCost = adjacentNodes[i].cost;// + (room.GetMapBlock(x, y) != 0 ? wallCost : 0);
                         Node baby = new Node(x, y);

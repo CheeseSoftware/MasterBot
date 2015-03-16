@@ -66,7 +66,7 @@ namespace MasterBot
             subBotHandler.AddSubBot(new Commands(this));
             subBotHandler.AddSubBot(new WorldEdit(this));
             subBotHandler.AddSubBot(new Protection(this));
-            subBotHandler.AddSubBot(new ZombiesSubbot(this));
+            subBotHandler.AddSubBot(new ZombiesSubbot(this), false);
             subBotHandler.AddSubBot(new HouseBuilding(this));
             subBotHandler.AddSubBot(new RunFromGods(this), false);
 
