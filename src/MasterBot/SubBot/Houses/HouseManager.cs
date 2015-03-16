@@ -203,7 +203,7 @@ namespace MasterBot.SubBot.Houses
 						Node furnitureKey = new Node(f.Key.X + "|" + f.Key.Y);
 						furnitureKey.AddNode("x", new Node(f.Key.X.ToString()));
 						furnitureKey.AddNode("y", new Node(f.Key.Y.ToString()));
-						furnitureKey.AddNode("type", new Node(f.Value.getType()));
+						furnitureKey.AddNode("type", new Node(f.Value.Type));
 						furniture.AddNode(f.Key.X + "|" + f.Key.Y, furnitureKey);
 					}
 					playername.AddNode("furniture", furniture);
@@ -216,13 +216,14 @@ namespace MasterBot.SubBot.Houses
 
 		public void Load()
 		{
+			houses.Clear();
 			SaveFile saveFile = new SaveFile("data/houses");
 			saveFile.Load();
 			Dictionary<string, Node> nodes = saveFile.Nodes;
 			if (nodes.ContainsKey("houses"))
 			{
-				Node houses = nodes["houses"];
-				foreach (KeyValuePair<string, Node> house in houses.Nodes)
+				Node houses2 = nodes["houses"];
+				foreach (KeyValuePair<string, Node> house in houses2.Nodes)
 				{
 					int x = int.Parse(house.Value.Nodes["x"].Value);
 					int y = int.Parse(house.Value.Nodes["y"].Value);
@@ -230,16 +231,17 @@ namespace MasterBot.SubBot.Houses
 
 					House newhouse = new House(houseTypes[type], house.Key, x, y, houseTypes[type].Width, houseTypes[type].Height);
 
-					if (house.Value.Nodes.ContainsKey("furniture"))
+					if (house.Value.Nodes.ContainsKey("furniture"))						// <furniture>
 					{
-						Node furniture = house.Value.Nodes["furniture"];
+						Node furniture = house.Value.Nodes["furniture"]; 
 						foreach (KeyValuePair<string, Node> furnitures in furniture.Nodes)
 						{
+							// <x|y>
 							int furniturex = int.Parse(furnitures.Value.Nodes["x"].Value);
 							int furniturey = int.Parse(furnitures.Value.Nodes["y"].Value);
 							string furnituretype = furnitures.Value.Nodes["type"].Value;
 
-							Furniture newFurniture = FurnitureManager.FurnitureTypes[furnituretype];
+							Furniture newFurniture = FurnitureManager.FurnitureTypes[furnituretype].FromNode(furnitures.Value);
 							newhouse.Furniture.Add(new BlockPos(0, furniturex, furniturey), newFurniture);
 						}
 					}
@@ -280,8 +282,12 @@ namespace MasterBot.SubBot.Houses
 			if (houses.ContainsKey(builder.Name))
 			{
 				House house = houses[builder.Name];
-				buildingHouses.Add(builder, house);
-				builder.Send("You are now editing your house.");
+				if (!buildingHouses.ContainsKey(builder))
+				{
+					buildingHouses.Add(builder, house);
+					builder.Send("You are now editing your house.");
+				}
+				else builder.Send("You are already editing your house.");
 			}
 			else
 				builder.Send("You have no house to edit.");
@@ -364,31 +370,23 @@ namespace MasterBot.SubBot.Houses
 					int backgroundBlock = house.houseType.BackgroundBlock;
 
 					if (xx == 0 || xx == house.houseType.Width - 1 || yy == 0 || yy == house.houseType.Height - 1)
-					{
 						blockId = house.houseType.WallBlock;
-					}
 					else
-					{
 						blockId = house.houseType.BaseBlock;
-					}
 
 					if (builder == null || (builder.BlockX != house.x + xx || builder.BlockY != house.y + yy))
 					{
-						this.bot.Room.BlockDrawer.PlaceBlock(
-								new Room.Block.BlockWithPos(xx + house.x, yy + house.y,
-									new Room.Block.NormalBlock(blockId)));
+						if (!house.Furniture.ContainsKey(new BlockPos(0, xx + house.x, yy + house.y)))
+							this.bot.Room.setBlock(xx + house.x, yy + house.y, new Room.Block.NormalBlock(blockId));
 					}
 
-					this.bot.Room.BlockDrawer.PlaceBlock(
-							new Room.Block.BlockWithPos(xx + house.x, yy + house.y,
-								new Room.Block.NormalBlock(backgroundBlock)));
+					this.bot.Room.setBlock(xx + house.x, yy + house.y, new Room.Block.NormalBlock(backgroundBlock));
 
 				}
 			}
+
 			foreach (var v in house.Furniture)
-			{
 				bot.Room.setBlock(v.Key.X, v.Key.Y, v.Value.getBlock(bot, builder, house));
-			}
 		}
 
 		public void FinishHouse(IPlayer builder)
@@ -440,9 +438,9 @@ namespace MasterBot.SubBot.Houses
 					{
 						BlockPos pos = new BlockPos(0, x2, y2);
 						if (!house.Furniture.ContainsKey(pos))
-							house.Furniture.Add(pos, new FurnitureEmpty());
+							house.Furniture.Add(pos, new FurnitureEmpty(x2, y2));
 						else
-							house.Furniture[pos] = new FurnitureEmpty();
+							house.Furniture[pos] = new FurnitureEmpty(x2, y2);
 						Save();
 						miningBlocks.Remove(player);
 						bot.Room.BlockDrawer.PlaceBlock(
@@ -569,7 +567,7 @@ namespace MasterBot.SubBot.Houses
 				{
 					Furniture furniture = house.Furniture[pos];
 
-					furniture.OnPush(bot, player, house, x, y, dx, dy);
+					furniture.OnPush(bot, player, house, dx, dy);
 				}
 			}
 		}

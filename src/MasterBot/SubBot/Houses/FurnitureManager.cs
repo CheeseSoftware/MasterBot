@@ -17,11 +17,11 @@ namespace MasterBot.SubBot.Houses
 		{
 			this.bot = bot;
 
-			furnitureTypes.Add("door", new FurnitureLockedDoor());
-			furnitureTypes.Add("switch", new FurnitureSwitch());
-			furnitureTypes.Add("switchdoor", new FurnitureSwitchDoor());
-			furnitureTypes.Add("empty", new FurnitureEmpty());
-            furnitureTypes.Add("spawn", new FurnitureSpawn());
+			furnitureTypes.Add("door", new FurnitureDoor(0, 0));
+            furnitureTypes.Add("switch", new FurnitureSwitch(0, 0));
+            furnitureTypes.Add("switchdoor", new FurnitureSwitchDoor(0, 0));
+            furnitureTypes.Add("empty", new FurnitureEmpty(0, 0));
+            furnitureTypes.Add("spawn", new FurnitureSpawn(0, 0));
 		}
 
 		public Furniture GetFurnitureType(string type)

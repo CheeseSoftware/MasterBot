@@ -16,6 +16,9 @@ namespace MasterBot.SubBot
 		HouseManager houseManager;
 		FurnitureManager furnitureManager;
 
+		DateTime dateConnected;
+		bool connected = false;
+
 		public HouseBuilding(IBot bot)
 			: base(bot)
 		{
@@ -70,6 +73,7 @@ namespace MasterBot.SubBot
 			this.houseManager.RegisterHouseType(brickHouse);
 			this.houseManager.RegisterHouseType(coinHouse);
 
+			EnableTick(5000);
 
 		}
 
@@ -81,16 +85,20 @@ namespace MasterBot.SubBot
 
 		public override void onDisable()
 		{
+			connected = false;
 			return;
 		}
 
 		public override void onConnect()
 		{
+			dateConnected = DateTime.Now;
+			connected = true;
 			return;
 		}
 
 		public override void onDisconnect(string reason)
 		{
+			connected = false;
 			return;
 		}
 
@@ -228,8 +236,9 @@ namespace MasterBot.SubBot
 						if (args.Length >= 1)
 						{
 							string furnitureType = args[0];
-							Furniture furniture = furnitureManager.GetFurnitureType(furnitureType);
-							if (furnitureType != null && furniture != null)
+
+                            Furniture furniture = (Furniture)Activator.CreateInstance(furnitureManager.GetFurnitureType(furnitureType).GetType(), new object[] {-1, -1});
+							if (furnitureType != null)
 							{
 								House house = houseManager.FindHouse(player.BlockX, player.BlockY);
 								if (house != null)
@@ -237,11 +246,17 @@ namespace MasterBot.SubBot
 									if (house.IsValidFurniturePosition(player.BlockX, player.BlockY))
 									{
 										BlockPos pos = new BlockPos(0, player.BlockX, player.BlockY);
+										furniture.X = pos.X;
+										furniture.Y = pos.Y;
 										bot.Room.setBlock(pos.X, pos.Y, furniture.getBlock(bot, player, house));
 										if (house.Furniture.ContainsKey(pos))
 										{
+											if (house.Furniture[pos].Type != "empty")
+												player.Reply("Replaced old furniture.");
+											else
+												player.Reply("Furniture placed.");
+
 											house.Furniture[pos] = furniture;
-											player.Reply("Replaced old furniture.");
 										}
 										else
 										{
@@ -344,6 +359,12 @@ namespace MasterBot.SubBot
 
 		public override void onTick()
 		{
+			if (connected && (DateTime.Now - dateConnected).Seconds > 2)
+			{
+				bot.ChatSayer.Say("Loading houses..");
+				houseManager.Load();
+				DisableTick();
+			}
 			return;
 		}
 

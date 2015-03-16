@@ -82,8 +82,8 @@
     <Compile Include="SubBot\Houses\FurnitureManager.cs" />
     <Compile Include="SubBot\Houses\Furnitures\Furniture.cs" />
     <Compile Include="SubBot\Houses\Furnitures\FurnitureEmpty.cs" />
-    <Compile Include="SubBot\Houses\Furnitures\FurnitureLockedDoor.cs" />
     <Compile Include="SubBot\Houses\Furnitures\FurnitureSpawn.cs" />
+    <Compile Include="SubBot\Houses\Furnitures\FurnitureDoor.cs" />
     <Compile Include="SubBot\Houses\Furnitures\FurnitureSwitch.cs" />
     <Compile Include="SubBot\Houses\Furnitures\FurnitureSwitchDoor.cs" />
     <Compile Include="SubBot\Houses\HouseBuilding.cs">
