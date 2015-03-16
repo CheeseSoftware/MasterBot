@@ -1,0 +1,71 @@
+﻿Github is not very bright. Merge remote-tracking branch 'origin/master'
+
+Conflicts:
+	src/MasterBot/Room/Room.cs
+	src/MasterBot/SubBot/Houses/FurnitureManager.cs
+	src/MasterBot/SubBot/Houses/HouseBuilding.cs
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 3 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .gitignore
+#	modified:   src/MasterBot/MasterBot.csproj
+#	modified:   src/MasterBot/Room/Room.cs
+#	modified:   src/MasterBot/SubBot/Houses/FurnitureManager.cs
+#	modified:   src/MasterBot/SubBot/Houses/Furnitures/Furniture.cs
+#	modified:   src/MasterBot/SubBot/Houses/Furnitures/FurnitureEmpty.cs
+#	deleted:    src/MasterBot/SubBot/Houses/Furnitures/FurnitureLockedDoor.cs
+#	modified:   src/MasterBot/SubBot/Houses/Furnitures/FurnitureSpawn.cs
+#	modified:   src/MasterBot/SubBot/Houses/Furnitures/FurnitureSwitch.cs
+#	modified:   src/MasterBot/SubBot/Houses/Furnitures/FurnitureSwitchDoor.cs
+#	modified:   src/MasterBot/SubBot/Houses/HouseBuilding.cs
+#	modified:   src/MasterBot/SubBot/Houses/HouseManager.cs
+#	deleted:    src/MasterBot/bin/Release/AntiGodEdit/AntiGodEdit.cs
+#	deleted:    src/MasterBot/bin/Release/AntiGodEdit/AntiGodEdit.csproj
+#	deleted:    src/MasterBot/bin/Release/AntiGodEdit/Properties/AssemblyInfo.cs
+#	deleted:    src/MasterBot/bin/Release/Class1.cs
+#	deleted:    src/MasterBot/bin/Release/Install Me (Plugin Template).vstemplate
+#	deleted:    src/MasterBot/bin/Release/MasterBotPlugins.sln
+#	deleted:    src/MasterBot/bin/Release/PluginExample/PluginExample.cs
+#	deleted:    src/MasterBot/bin/Release/PluginExample/PluginExample.csproj
+#	deleted:    src/MasterBot/bin/Release/PluginExample/PluginExample.resx
+#	deleted:    src/MasterBot/bin/Release/PluginExample/Properties/AssemblyInfo.cs
+#	deleted:    src/MasterBot/bin/Release/PluginTemplate.csproj
+#	deleted:    src/MasterBot/bin/Release/PluginTemplate/Class1.cs
+#	deleted:    src/MasterBot/bin/Release/PluginTemplate/PluginTemplate.csproj
+#	deleted:    src/MasterBot/bin/Release/PluginTemplate/Properties/AssemblyInfo.cs
+#	deleted:    src/MasterBot/bin/Release/Properties/AssemblyInfo.cs
+#	deleted:    src/MasterBot/bin/Release/SandCelluralAutomaton/Properties/AssemblyInfo.cs
+#	deleted:    src/MasterBot/bin/Release/SandCelluralAutomaton/SandCelluralAutomaton.cs
+#	deleted:    src/MasterBot/bin/Release/SandCelluralAutomaton/SandCelluralAutomaton.csproj
+#	deleted:    src/MasterBot/bin/Release/SimpleChat/Gui/RichTextBoxConsoleChild.cs
+#	deleted:    src/MasterBot/bin/Release/SimpleChat/Properties/AssemblyInfo.cs
+#	deleted:    src/MasterBot/bin/Release/SimpleChat/SimpleChat.cs
+#	deleted:    src/MasterBot/bin/Release/SimpleChat/SimpleChat.csproj
+#	deleted:    src/MasterBot/bin/Release/SimpleChat/SimpleChat.resx
+#	deleted:    src/MasterBot/bin/Release/__PreviewImage.png
+#	deleted:    src/MasterBot/bin/Release/__TemplateIcon.png
+#	deleted:    src/MasterBot/bin/Release/data/gbot
+#	deleted:    src/MasterBot/bin/Release/data/houses
+#	deleted:    src/MasterBot/bin/Release/data/pikachu516
+#	deleted:    src/MasterBot/bin/Release/image 1000.png
+#	deleted:    src/MasterBot/bin/Release/image 979.png
+#	deleted:    src/MasterBot/bin/Release/image 994.png
+#
+# Untracked files:
+#	src/MasterBot/SubBot/Houses/Furnitures/FurnitureDoor.cs
+#
+
