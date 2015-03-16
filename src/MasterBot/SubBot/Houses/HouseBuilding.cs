@@ -237,7 +237,13 @@ namespace MasterBot.SubBot
 						{
 							string furnitureType = args[0];
 
-                            Furniture furniture = (Furniture)Activator.CreateInstance(furnitureManager.GetFurnitureType(furnitureType).GetType(), new object[] {-1, -1});
+							if (furnitureManager.GetFurnitureType(furnitureType) == null)
+							{
+								player.Reply("That is not a valid furniture.");
+								return;
+							}
+
+							Furniture furniture = (Furniture)Activator.CreateInstance(furnitureManager.GetFurnitureType(furnitureType).GetType(), new object[] {-1, -1});
 							if (furnitureType != null)
 							{
 								House house = houseManager.FindHouse(player.BlockX, player.BlockY);

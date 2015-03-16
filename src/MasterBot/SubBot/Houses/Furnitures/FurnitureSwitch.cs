@@ -24,7 +24,7 @@ namespace MasterBot.SubBot.Houses.Furnitures
 
 		public override IBlock getBlock(IBot bot, IPlayer player, House house)
 		{
-			return new BlockSwitch(player.Id % 100);
+			return new BlockSwitch((player != null ? player.Id % 100 : 0));
 		}
 
 		public override Furniture FromNode(Node node)
