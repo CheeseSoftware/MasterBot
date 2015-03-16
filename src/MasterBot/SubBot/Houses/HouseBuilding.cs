@@ -19,8 +19,8 @@ namespace MasterBot.SubBot
 		public HouseBuilding(IBot bot)
 			: base(bot)
 		{
-			this.houseManager = new HouseManager(bot);
 			this.furnitureManager = new FurnitureManager(bot);
+            this.houseManager = new HouseManager(bot);
 
 
 			HouseType tinyHouse = new HouseType("tinyhouse", 7, 7, 46, 48, 541);
@@ -177,7 +177,7 @@ namespace MasterBot.SubBot
 					if (cmdSource is IPlayer)
 					{
 						IPlayer player = cmdSource as IPlayer;
-						player.Send("House commands: !houseinfo, !build, !finishhouse, !edithouse, !destroyhouse, !place");
+						player.Send("House commands: !houseinfo, !build, !finishhouse, !edithouse, !destroyhouse, !place, !trust, !untrust, !whoistrusted");
 					}
 					break;
 				case "deletehouse":
@@ -229,7 +229,7 @@ namespace MasterBot.SubBot
 						{
 							string furnitureType = args[0];
 							Furniture furniture = furnitureManager.GetFurnitureType(furnitureType);
-							if (furnitureType != null)
+							if (furnitureType != null && furniture != null)
 							{
 								House house = houseManager.FindHouse(player.BlockX, player.BlockY);
 								if (house != null)
@@ -258,20 +258,17 @@ namespace MasterBot.SubBot
 							}
 							else
 							{
-								string s = "You can place: ";
-								foreach (var v in FurnitureManager.FurnitureTypes)
-									s += v.Key + ", ";
-								s = s.Remove(s.Length - 3, 2);
-								player.Reply(s);
+                                furnitureManager.PrintFurnitures(player);
 							}
 						}
 						else
 						{
-							string s = "You can place: ";
-							foreach (var v in FurnitureManager.FurnitureTypes)
-								s += v.Key + ", ";
-							s = s.Remove(s.Length - 3, 2);
-							player.Reply(s);
+                            furnitureManager.PrintFurnitures(player);
+                            //string s = "You can place: ";
+                            //foreach (var v in FurnitureManager.FurnitureTypes)
+                            //    s += v.Key + ", ";
+                            //s = s.Remove(s.Length - 3, 2);
+                            //player.Reply(s);
 						}
 					}
 					break;
@@ -303,6 +300,38 @@ namespace MasterBot.SubBot
 					}
 					break;
 
+                case "trust":
+                    if (cmdSource is IPlayer && args.Length >= 1)
+                    {
+                        HousePlayer housePlayer = HousePlayer.Get(cmdSource as IPlayer);
+                        housePlayer.Trust(args[0]);
+                        housePlayer.PrintTrusted();
+                    }
+                    break;
+
+                case "untrust":
+                    if (cmdSource is IPlayer && args.Length >= 1)
+                    {
+                        HousePlayer housePlayer = HousePlayer.Get(cmdSource as IPlayer);
+                        if (housePlayer.IsTrusted(args[0]))
+                        {
+                            housePlayer.Untrust(args[0]);
+                            cmdSource.Reply("You no longer trust" + args[0] + ".");
+                            housePlayer.PrintTrusted();
+                        }
+                        else
+                        {
+                            cmdSource.Reply("You never trusted " + args[0] + ".");
+                        }
+                    }
+                    break;
+
+                case "whoistrusted":
+                    if (cmdSource is IPlayer && args.Length >= 1)
+                    {
+                        HousePlayer.Get(cmdSource as IPlayer).PrintTrusted();
+                    }
+                    break;
 				default:
 					break;
 			}

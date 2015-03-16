@@ -21,6 +21,7 @@ namespace MasterBot.SubBot.Houses
 			furnitureTypes.Add("switch", new FurnitureSwitch());
 			furnitureTypes.Add("switchdoor", new FurnitureSwitchDoor());
 			furnitureTypes.Add("empty", new FurnitureEmpty());
+            furnitureTypes.Add("spawn", new FurnitureSpawn());
 		}
 
 		public Furniture GetFurnitureType(string type)
@@ -29,6 +30,15 @@ namespace MasterBot.SubBot.Houses
 				return furnitureTypes[type];
 			return null;
 		}
+
+        public void PrintFurnitures(ICmdSource receiver)
+        {
+            string s = "You can place: ";
+            foreach (var pair in furnitureTypes)
+                s += pair.Key + ", ";
+            s = s.Remove(s.Length - 3, 2);
+            receiver.Reply(s);
+        }
 
 		public static Dictionary<string, Furniture> FurnitureTypes { get { return furnitureTypes; } }
 

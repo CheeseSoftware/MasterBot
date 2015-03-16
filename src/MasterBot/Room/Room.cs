@@ -263,6 +263,12 @@ namespace MasterBot.Room
                                 result = new BlockCoinDoor(coins);
                             else if (blockId == 165)
                                 result = new BlockCoinGate(coins);
+                            else if (blockId == 113)
+                                result = new BlockSwitch(coins);
+                            else if (blockId == 184)
+                                result = new BlockSwitchDoor(coins);
+                            else if (blockId == 185)
+                                result = new BlockSwitchGate(coins);
                             break;
                         }
                     case "bs":
