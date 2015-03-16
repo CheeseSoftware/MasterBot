@@ -236,7 +236,8 @@ namespace MasterBot.SubBot
 						if (args.Length >= 1)
 						{
 							string furnitureType = args[0];
-							Furniture furniture = furnitureManager.GetFurnitureType(furnitureType);
+
+                            Furniture furniture = (Furniture)Activator.CreateInstance(furnitureManager.GetFurnitureType(furnitureType).GetType(), new object[] {-1, -1});
 							if (furnitureType != null)
 							{
 								House house = houseManager.FindHouse(player.BlockX, player.BlockY);
@@ -245,6 +246,8 @@ namespace MasterBot.SubBot
 									if (house.IsValidFurniturePosition(player.BlockX, player.BlockY))
 									{
 										BlockPos pos = new BlockPos(0, player.BlockX, player.BlockY);
+										furniture.X = pos.X;
+										furniture.Y = pos.Y;
 										bot.Room.setBlock(pos.X, pos.Y, furniture.getBlock(bot, player, house));
 										if (house.Furniture.ContainsKey(pos))
 										{

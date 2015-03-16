@@ -1,0 +1,15 @@
+<inventory>
+	<emerald>
+		amount: 13
+	</emerald>
+	<gold>
+		amount: 4
+	</gold>
+	<diamond>
+		amount: 21
+	</diamond>
+</inventory>
+<playerdata>
+	digxp: 36084,53
+	digmoney: 1485
+</playerdata>

@@ -1,0 +1,25 @@
+<inventory>
+	<dynamite>
+		amount: 4
+		<data>
+			<data>
+			</data>
+		</data>
+	</dynamite>
+	<iron>
+		amount: 41
+	</iron>
+	<copper>
+		amount: 137
+	</copper>
+	<stone>
+		amount: 246
+	</stone>
+	<gold>
+		amount: 51
+	</gold>
+</inventory>
+<playerdata>
+	digxp: 24952,01
+	digmoney: 248
+</playerdata>

@@ -1,0 +1,9 @@
+<inventory>
+	<stone>
+		amount: 12
+	</stone>
+</inventory>
+<playerdata>
+	digxp: 120,1004
+	digmoney: 4
+</playerdata>

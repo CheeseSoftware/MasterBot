@@ -1,0 +1,12 @@
+<inventory>
+	<stone>
+		amount: 420
+	</stone>
+	<copper>
+		amount: 110
+	</copper>
+</inventory>
+<playerdata>
+	digxp: 5082,554
+	digmoney: 0
+</playerdata>

@@ -27,8 +27,8 @@ namespace MasterBot.SubBot.Houses.Furnitures
 
 		public abstract string Type { get; }
 
-		public int X { get { return this.x; } }
+		public int X { get { return this.x; } set { x = value; } }
 
-		public int Y { get { return this.y; } }
+		public int Y { get { return this.y; } set { y = value; } }
 	}
 }

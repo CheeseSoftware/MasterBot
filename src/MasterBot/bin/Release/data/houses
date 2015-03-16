@@ -1,0 +1,161 @@
+<houses>
+	<gustav9797>
+		x: 85
+		y: 81
+		type: mediumhouse
+		<furniture>
+			<89|86>
+				x: 89
+				y: 86
+				type: empty
+			</89|86>
+			<89|87>
+				x: 89
+				y: 87
+				type: empty
+			</89|87>
+			<90|87>
+				x: 90
+				y: 87
+				type: empty
+			</90|87>
+			<91|87>
+				x: 91
+				y: 87
+				type: empty
+			</91|87>
+			<91|86>
+				x: 91
+				y: 86
+				type: empty
+			</91|86>
+			<91|85>
+				x: 91
+				y: 85
+				type: empty
+			</91|85>
+			<90|85>
+				x: 90
+				y: 85
+				type: empty
+			</90|85>
+			<89|85>
+				x: 89
+				y: 85
+				type: empty
+			</89|85>
+			<88|85>
+				x: 88
+				y: 85
+				type: empty
+			</88|85>
+			<88|86>
+				x: 88
+				y: 86
+				type: empty
+			</88|86>
+			<88|87>
+				x: 88
+				y: 87
+				type: empty
+			</88|87>
+			<88|88>
+				x: 88
+				y: 88
+				type: empty
+			</88|88>
+			<89|88>
+				x: 89
+				y: 88
+				type: empty
+			</89|88>
+			<90|88>
+				x: 90
+				y: 88
+				type: empty
+			</90|88>
+			<91|88>
+				x: 91
+				y: 88
+				type: empty
+			</91|88>
+			<91|89>
+				x: 91
+				y: 89
+				type: empty
+			</91|89>
+			<91|90>
+				x: 91
+				y: 90
+				type: empty
+			</91|90>
+			<91|91>
+				x: 91
+				y: 91
+				type: door
+			</91|91>
+			<95|87>
+				x: 95
+				y: 87
+				type: door
+			</95|87>
+			<94|87>
+				x: 94
+				y: 87
+				type: empty
+			</94|87>
+			<93|87>
+				x: 93
+				y: 87
+				type: empty
+			</93|87>
+			<92|87>
+				x: 92
+				y: 87
+				type: empty
+			</92|87>
+		</furniture>
+	</gustav9797>
+	<super>
+		x: 112
+		y: 94
+		type: smallhouse
+		<furniture>
+			<115|98>
+				x: 115
+				y: 98
+				type: empty
+			</115|98>
+			<114|98>
+				x: 114
+				y: 98
+				type: empty
+			</114|98>
+			<113|98>
+				x: 113
+				y: 98
+				type: empty
+			</113|98>
+			<112|98>
+				x: 112
+				y: 98
+				type: empty
+			</112|98>
+			<116|97>
+				x: 116
+				y: 97
+				type: empty
+			</116|97>
+			<116|96>
+				x: 116
+				y: 96
+				type: empty
+			</116|96>
+			<116|95>
+				x: 116
+				y: 95
+				type: empty
+			</116|95>
+		</furniture>
+	</super>
+</houses>

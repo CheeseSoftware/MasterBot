@@ -1,0 +1,19 @@
+<inventory>
+	<dynamite>
+		amount: 3
+		<data>
+			explosionstrength: 15
+			dateplaced: 2015-03-15 15:43:15
+		</data>
+	</dynamite>
+	<stone>
+		amount: 1
+	</stone>
+	<copper>
+		amount: 1
+	</copper>
+</inventory>
+<playerdata>
+	digxp: 8657,814
+	digmoney: 107
+</playerdata>

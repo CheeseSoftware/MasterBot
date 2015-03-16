@@ -1,0 +1,18 @@
+<inventory>
+	<stone>
+		amount: 151
+	</stone>
+	<copper>
+		amount: 62
+	</copper>
+	<gold>
+		amount: 1
+	</gold>
+	<emerald>
+		amount: 1
+	</emerald>
+</inventory>
+<playerdata>
+	digxp: 4150,654
+	digmoney: 18
+</playerdata>

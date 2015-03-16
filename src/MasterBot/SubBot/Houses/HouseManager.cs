@@ -282,8 +282,12 @@ namespace MasterBot.SubBot.Houses
 			if (houses.ContainsKey(builder.Name))
 			{
 				House house = houses[builder.Name];
-				buildingHouses.Add(builder, house);
-				builder.Send("You are now editing your house.");
+				if (!buildingHouses.ContainsKey(builder))
+				{
+					buildingHouses.Add(builder, house);
+					builder.Send("You are now editing your house.");
+				}
+				else builder.Send("You are already editing your house.");
 			}
 			else
 				builder.Send("You have no house to edit.");

@@ -1,0 +1,30 @@
+<inventory>
+	<diamond>
+		amount: 3
+	</diamond>
+	<ruby>
+		amount: 1
+	</ruby>
+	<gold>
+		amount: 1
+	</gold>
+	<iron>
+		amount: 1
+	</iron>
+	<copper>
+		amount: 3
+	</copper>
+	<sapphire>
+		amount: 1
+	</sapphire>
+	<emerald>
+		amount: 1
+	</emerald>
+	<stone>
+		amount: 25
+	</stone>
+</inventory>
+<playerdata>
+	digxp: 2177,11
+	digmoney: 162
+</playerdata>

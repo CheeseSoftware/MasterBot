@@ -1,12 +1,24 @@
 <inventory>
 	<stone>
-		amount: 49783
+		amount: 99
 	</stone>
 	<copper>
-		amount: 29113
+		amount: 107
 	</copper>
+	<iron>
+		amount: 21
+	</iron>
+	<gold>
+		amount: 4
+	</gold>
+	<emerald>
+		amount: 6
+	</emerald>
+	<ruby>
+		amount: 10
+	</ruby>
 </inventory>
 <playerdata>
-	digxp: 1,62
-	digmoney: 0
+	digxp: 2651,044
+	digmoney: 2
 </playerdata>
