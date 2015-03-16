@@ -10,6 +10,8 @@
 *.cache
 *.FileListAbsolute.txt
 *.exe.config
+data/
+data
 
 
 *obj/
